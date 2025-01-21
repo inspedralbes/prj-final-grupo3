@@ -8,7 +8,6 @@ Un cop comenceu heu de canviar aquesta explicació amb la corresponent al vostre
 
 # Aquest fitxer ha de contenir com a mínim:
  * Nom dels integrants
- * * Jehgo Aivan Antonio
  * Nom del projecte
  * Petita descripció
  * Adreça del gestor de tasques (taiga, jira, trello...)
