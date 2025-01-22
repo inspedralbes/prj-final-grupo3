@@ -7,17 +7,16 @@
 - Eduard Villaseca
 
 ## Descripció
-- TriPlan és una eina integral per planificar i gaudir del teu viatge de manera personalitzada. Els usuaris poden registrar-se i adaptar completament la seva experiència seleccionant la destinació, la durada, el tipus de viatge (familiar, en parella, amb amics o en solitari) i el pressupost, oferint plans optimitzats segons les seves necessitats i preferències.
+- **TriPlan és l’eina definitiva per planificar i gaudir d’un viatge totalment personalitzat.** Registra’t i adapta la teva experiència escollint la destinació, la durada, el tipus de viatge (familiar, en parella, amb amics o en solitari) i el pressupost. TriPlan crea plans optimitzats que s’ajusten a les teves necessitats i preferències, perquè puguis viure una experiència única i inoblidable.
 
 ## Gestor de tasques
-- Taiga:
-- Trello:
+- Taiga: [Scrum]('https://tree.taiga.io/project/eduardv1-projecte-final/timeline')
 
 ## Prototip gràfic
-- PenPot:
+- PenPot: [Pototip]('')
 
 ## Producció
-- URL:
+- URL: [triplan.cat]('')
 
 ## Estat
-- 
+- En desenvolupament
