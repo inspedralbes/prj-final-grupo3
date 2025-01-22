@@ -8,7 +8,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">Correu</label>
                     <input type="email" v-model="email" required
                         class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="your@email.com" />
+                        placeholder="elteucorreu@gmail.com" />
                 </div>
 
                 <div>
