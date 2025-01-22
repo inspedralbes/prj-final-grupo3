@@ -15,5 +15,9 @@ class ImportJson extends Seeder
     public function run(): void
     {
         $path = database_path("./public/country_data.json");
+        $json = File::get($path);
+        $data = json_decode($json , true);
+
+        
     }
 }
