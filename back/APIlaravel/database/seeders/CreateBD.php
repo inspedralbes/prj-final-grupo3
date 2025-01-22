@@ -14,6 +14,6 @@ class CreateBD extends Seeder
      */
     public function run(): void
     {
-        DB::statement("CREATE DATABASE IF NOT EXISTS triplan");
+        DB::connection("db")->statement("CREATE DATABASE IF NOT EXISTS triplan");
     }
 }

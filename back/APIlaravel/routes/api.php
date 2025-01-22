@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
-Route::get('/example', function () {
+Route::get('/message', function () {
     return response()->json([
-        'message' => 'Hello from the API'
+        'message' => 'Aquest és el missatge que vols enviar en format JSON.'
     ]);
 });
