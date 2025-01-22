@@ -11,8 +11,8 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - ./mysql_data:/var/lib/mysql
-      - ./back/triplan.sql:/docker-entrypoint-initdb.d/dades.sql
+      - ./back/mysql_data:/var/lib/mysql
+      # - ./back/triplan.sql:/docker-entrypoint-initdb.d/dades.sql
 
   # ADMINER
   adminer:
@@ -33,18 +33,18 @@ services:
     working_dir: /var/www/
     depends_on:
       - db
-    command: bash -c "composer install && php artisan key:generate && php artisan serve --port=8000"    
+    command: bash -c 'composer install && composer update && php artisan migrate:fresh && php artisan migrate:rollback && php artisan migrate --seed && php artisan key:generate && php artisan serve --host=0.0.0.0'   
 
-  # VUE
-  vue:
+  # NUXT
+  nuxt:
     build: 
       context: ./front
     ports:
-      - 3000:3000
+      - 3010:3000
     volumes:
       - ./front:/app
     depends_on:
       - laravel
     environment:
-      VUE_APP_API_URL: http://laravel:8000
+      NUXT_APP_API_URL: http://laravel:8000
     command: bash -c "npm install && npm run dev"
