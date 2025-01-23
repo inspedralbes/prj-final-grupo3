@@ -42,7 +42,7 @@
               v-model="email"
               required
               class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              placeholder="your@email.com"
+              placeholder="elteucorreu@gmail.com"
             >
           </div>
 
@@ -53,7 +53,7 @@
               v-model="emailalternative"
               required
               class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              placeholder="your@email.com"
+              placeholder="elteucorreu@gmail.com"
             >
           </div>
   
@@ -67,7 +67,7 @@
               class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="••••••••"
             >
-            <p class="mt-1 text-sm text-gray-500">Miním  8 caràcters</p>
+            <p class="mt-1 text-sm text-gray-500">Mínim  8 caràcters</p>
           </div>
   
           <button 
