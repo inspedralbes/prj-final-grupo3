@@ -7,36 +7,27 @@
     <title>TriPlan | Pagina d'administració</title>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <style>
-        .login-container {
-            padding: 5vh;
-            width: 400px;
-        }
-    </style>
 </head>
 
 <body>
     <div class="min-h-screen flex flex-col">
         <!-- Header -->
         <div class="bg-gray-800 text-white py-10 text-center">
-            <p class="text-3xl font-bold">PÀGINA D'ADMINISTRACIÓ</p>
-            <p class="text-xs">CRUD | TRIPLAN</p>
+            <a href="{{ route('home') }}">
+                <p class="text-3xl font-bold">PÀGINA D'ADMINISTRACIÓ</p>
+                <p class="text-xs">CRUD | TRIPLAN</p>
+            </a>
             <div class="flex flex-row justify-center gap-4 mt-4">
-                <p class="cursor-pointer text-basefont-medium hover:text-blue-600">Gestió de usuaris</p>
-                <p class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de viatges</p>
-                <p class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de publicacions</p>
+                <a href="{{ route('users') }}" class="cursor-pointer text-basefont-medium hover:text-blue-600">Gestió de usuaris</a>
+                <a href="{{ route('countries') }}" class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de paissos</a>
+                <a href="{{ route('countries') }}" class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de viatges</a>
+                <a href="{{ route('countries') }}" class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de publicacions</a>
             </div>
         </div>
 
         <!-- Content Section -->
-        <div class="flex-grow flex items-center justify-center">
+        <div class="flex-grow bg-gray-100">
             @yield('content')
-            
-        </div>
-
-        <!-- Content Section -->
-        <div class="mt-12 bg-blue-800 shadow rounded-lg p-8">
-
         </div>
 
         <!-- Footer -->

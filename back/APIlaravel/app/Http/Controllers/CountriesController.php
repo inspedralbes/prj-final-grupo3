@@ -12,7 +12,7 @@ class CountriesController extends Controller
     public function index()
     {
         $countries = Country::all();
-        return response()->json($countries);
+        return view('admin.countries', compact('countries'));
     }
 
     /**
