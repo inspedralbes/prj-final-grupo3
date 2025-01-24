@@ -430,6 +430,15 @@
             'aliases' => array(),
             'dev_requirement' => true,
         ),
+        'laravel/sanctum' => array(
+            'pretty_version' => 'v4.0.7',
+            'version' => '4.0.7.0',
+            'reference' => '698064236a46df016e64a7eb059b1414e0b281df',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../laravel/sanctum',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'laravel/serializable-closure' => array(
             'pretty_version' => 'v2.0.1',
             'version' => '2.0.1.0',
@@ -581,9 +590,9 @@
             'dev_requirement' => false,
         ),
         'nunomaduro/collision' => array(
-            'pretty_version' => 'v8.5.0',
-            'version' => '8.5.0.0',
-            'reference' => 'f5c101b929c958e849a633283adff296ed5f38f5',
+            'pretty_version' => 'v8.6.1',
+            'version' => '8.6.1.0',
+            'reference' => '86f003c132143d5a2ab214e19933946409e0cae7',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nunomaduro/collision',
             'aliases' => array(),

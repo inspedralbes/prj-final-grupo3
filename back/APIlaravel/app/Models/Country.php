@@ -7,12 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Country extends Model
 {
-    // use HasFactory;
+    use HasFactory;
 
-    // protected $table = "countries";
-
-    public $timestamps = false;  // Si no estás usando los campos 'created_at' y 'updated_at'
-
+    protected $table = "countries";
 
     protected $fillable = [ "name", "code" ];
 
