@@ -1,4 +1,7 @@
 <template>
+    <header>
+        <title>Triplan</title>
+    </header>
     <div class="min-h-screen bg-gray-50 flex items-center justify-center">
         <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
             <h2 class="text-3xl font-bold text-center mb-8">Benvingut de nou!</h2>

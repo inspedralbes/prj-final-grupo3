@@ -1,4 +1,7 @@
 <template>
+  <header>
+    <title>Triplan</title>
+  </header>
   <div class="min-h-screen bg-gray-50">
     <!-- Main Content -->
     <main class="container mx-auto mt-10 p-4">
@@ -47,12 +50,12 @@
                     @input="syncWithBudget" />
                   <!-- Range Slider-->
                   <input type="range" v-model="budgetMin" :min="0" :max="budgetMax" step="100"
-                    class="w-full h-2 bg-blue-200 rounded-md mt-2" @input="syncWithBudget" />                    
+                    class="w-full h-2 bg-blue-200 rounded-md mt-2" @input="syncWithBudget" />
                 </div>
               </div>
               <div>
-                <!-- Budget Min --> 
-                <div class="w-3/3"> 
+                <!-- Budget Min -->
+                <div class="w-3/3">
                   <label for="maxBudget" class="text-sm text-gray-600">Màxim (€)</label>
                   <input id="maxBudget" type="number" v-model="budgetMax" min="0"
                     class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
