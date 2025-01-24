@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Country;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
+use Illuminate\Database\QueryException;
 
 class ImportJson extends Seeder
 {
@@ -14,10 +14,23 @@ class ImportJson extends Seeder
      */
     public function run(): void
     {
-        $path = database_path("./public/country_data.json");
-        $json = File::get($path);
-        $data = json_decode($json , true);
+        try {
 
-        
+            $file_json = "./public/country_data.json";
+            $json = file_get_contents($file_json);
+            $countries = json_decode($json, true);
+
+            // Insert data
+            foreach ($countries["countries"] as $country) {
+                Country::create([
+                    'name' => $country['name'],
+                    'code' => $country['code'],
+                ]);
+            }
+
+            echo "Datos insertados correctamente";
+        } catch (QueryException $e) {
+            echo "Error al conectarse a la base de datos: " . $e->getMessage();
+        }
     }
 }
