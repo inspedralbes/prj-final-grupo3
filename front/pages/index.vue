@@ -2,27 +2,28 @@
   <header>
     <title>Triplan</title>
   </header>
-  <!-- Fons amb carrusel -->
   <div class="relative min-h-screen bg-gray-50 flex items-center justify-center">
-    <!-- Carrusel com a fons -->
+    <!-- carrusel background -->
     <div class="absolute inset-0 w-full h-full">
-      <Swiper class="mySwiper" :slides-per-view="1" :space-between="0" loop navigation pagination>
-        <SwiperSlide>          
-          <img src="~/assets/images/img1.png" alt="Destinació 1" class="w-full h-full object-cover" />
+      <!-- carrusel -->
+      <Swiper class="mySwiper" :slides-per-view="1" :space-between="0" loop pagination :autoplay="{ delay: 2500 }">
+        <SwiperSlide>
+          <img src="~/assets/images/img1.png" alt="Destí 1" class="w-full h-full object-cover" />
         </SwiperSlide>
         <SwiperSlide>
-          <img src="~/assets/images/img2.png" alt="Destinació 2" class="w-full h-full object-cover" />
+          <img src="~/assets/images/img2.png" alt="Destí 2" class="w-full h-full object-cover" />
         </SwiperSlide>
         <SwiperSlide>
-          <img src="~/assets/images/img3.png" alt="Destinació 3" class="w-full h-full object-cover" />
+          <img src="~/assets/images/img3.png" alt="Destí 3" class="w-full h-full object-cover" />
         </SwiperSlide>
         <SwiperSlide>
-          <img src="~/assets/images/img4.png" alt="Destinació 4" class="w-full h-full object-cover" />
+          <img src="~/assets/images/img4.png" alt="Destí 4" class="w-full h-full object-cover" />
         </SwiperSlide>
+        
       </Swiper>
     </div>
 
-    <!-- Contingut principal al mig -->
+    <!-- welcome -->
     <div class="relative z-10 max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-12 text-center">
       <h1 class="text-5xl font-bold text-blue-600 mb-6">Benvingut a Triplan!</h1>
       <p class="text-xl text-gray-600 mb-8">El teu viatge comença aquí. Planifica el teu viatge perfecte amb nosaltres!
@@ -42,11 +43,12 @@
 </template>
 
 <script setup>
-import { Swiper, SwiperSlide } from 'swiper/vue'; // Importem components de Swiper
-import 'swiper/swiper-bundle.css'; // Estils de Swiper
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/css';
+import 'swiper/swiper-bundle.css'; 
+
 
 const user = useState('user', () => null);
-
 const handlePlanTrip = () => {
   if (user.value) {
     navigateTo('/planner');
@@ -54,6 +56,8 @@ const handlePlanTrip = () => {
     navigateTo('/login');
   }
 };
+
+
 </script>
 
 <style scoped>
