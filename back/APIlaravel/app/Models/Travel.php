@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+// use App\Models\Country;
 
 class Travel extends Model
 {
@@ -21,5 +22,9 @@ class Travel extends Model
 
     public function country(){
         return $this->hasOne(Country::class);
+    }
+
+    public function budget(){
+        return $this->hasOne(Budget::class);
     }
 }
