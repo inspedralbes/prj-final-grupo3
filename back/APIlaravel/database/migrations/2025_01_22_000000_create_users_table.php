@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamp('email_alternative')->nullable();
             $table->string('password');
             $table->unsignedBigInteger('id_travel');
-            $table->foreign('id_travel')->references('id')->on('travel')->onDelete('cascade');
+            $table->foreign('id_travel')->references('id')->on('travels')->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
         });
