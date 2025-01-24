@@ -33,7 +33,7 @@ services:
     working_dir: /var/www/
     depends_on:
       - db
-    command: bash -c 'composer install && composer update && php artisan migrate:fresh && php artisan migrate:rollback && php artisan migrate --seed && php artisan key:generate && php artisan serve --host=0.0.0.0'   
+    command: bash -c 'composer install && composer update && php artisan migrate:fresh && php artisan migrate:rollback && php artisan migrate --seed && php artisan key:generate && php artisan serve --host=0.0.0.0 && npm run dev'   
 
   # NUXT
   nuxt:
