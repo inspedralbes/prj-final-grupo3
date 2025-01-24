@@ -6,40 +6,42 @@
     <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
       <h2 class="text-3xl font-bold text-center mb-8">Crear un compte</h2>
 
-      <!--name-->
+      <!--name and surname-->
       <form @submit.prevent="handleRegister" class="space-y-6">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Nom</label>
-          <input type="text" v-model="name" required
-            class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Carles">
+        <div class="flex space-x-4">
+          <div class="flex-1">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Nom</label>
+            <input type="text" v-model="name" required
+              class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Carles">
+          </div>
+
+          <div class="flex-1">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Cognoms</label>
+            <input type="text" v-model="surname" required
+              class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Fernández">
+          </div>
         </div>
 
-        <!--surname-->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Cognom</label>
-          <input type="text" v-model="surname" required
-            class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Fernández">
+        <!--gender and birthdate-->
+        <div class="flex space-x-4">
+          <div class="flex-1">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Gènere</label>
+            <select name="gender" id="" class="border p-2 rounded ">
+              <option value="male">Masculí</option>
+              <option value="female">Femení</option>
+            </select>
+          </div>
+
+          <div class="flex-1">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Data de naixement</label>
+            <input type="date" v-model="formData.dates"
+              class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+          </div>
         </div>
 
-        <!--gender-->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Gènere</label>
-          <select name="gender" id="" class="border p-2 rounded">
-            <option value="male">Masculí</option>
-            <option value="female">Femení</option>
-          </select>
-        </div>
-
-        <!--birthdate-->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Data de naixement</label>
-          <input type="date" v-model="formData.dates"
-            class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-        </div>
-
-        <!--phone-->
+        <!--phone -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">Número de telèfon</label>
           <input type="text" v-model="formData.phone" placeholder="Número de telèfon"
@@ -59,43 +61,26 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">Correu alternatiu</label>
           <input type="email" v-model="emailalternative" required
             class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-            placeholder="elteucorreu@gmail.com">
+            placeholder="elteucorreualternatiu@gmail.com">          
         </div>
 
-        <!--type-->
-        <div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Amb qui viatges?</label>
-            <select v-model="selectedType" name="type" id="" class="border p-2 rounded">
-              <option value="alone">Sol</option>
-              <option value="friends">Amics</option>
-              <option value="family">Família</option>
-              <option value="partner">Parella</option>
-            </select>
+        <!--password and password confirmation-->
+        <div class="flex space-x-4">
+          <div class="flex-1">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Contrasenya</label>
+            <input type="password" v-model="password" required minlength="8"
+              class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              placeholder="••••••••">
+            <p class="mt-1 text-sm text-gray-500">Mínim 8 caràcters</p>
           </div>
-          <!-- if selectedtype is friends or family -->
-          <div v-if="selectedType === 'friends' || selectedType === 'family'" class="mt-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Quantitat de persones:</label>
-            <input type="number" v-model="numberOfPeople" min="1" class="border p-2 rounded w-full"
-              placeholder="Introdueix el nombre de persones" />
+
+          <div class="flex-1">
+            <label for="" class="block text-sm font-medium text-gray-700 mb-2">Confirmar contrasenya</label>
+            <input type="password" v-model="password_confirmation" required minlength="8"
+              class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              placeholder="••••••••">
+
           </div>
-        </div>
-
-        <!--password-->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Contrasenya</label>
-          <input type="password" v-model="password" required minlength="8"
-            class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-            placeholder="••••••••">
-          <p class="mt-1 text-sm text-gray-500">Mínim 8 caràcters</p>
-        </div>
-
-        <div>
-          <label for="" class="block text-sm font-medium text-gray-700">Confirmar Contrasenya</label>
-          <input type="password" v-model="formData.password_confirmation" required minlength="8"
-            class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-            placeholder="••••••••">
-          <p class="mt-1 text-sm text-gray-500">Mínim 8 caràcters</p>
         </div>
 
         <button type="submit"
@@ -128,12 +113,11 @@ const password = ref('');
 const emailalternative = ref('');
 const formData = ref({});
 const selectedType = ref('alone');
-const persons = ref(null);
+const password_confirmation = ref('');
+const numberofpeople = ref(1);
 
 
 const handleRegister = () => {
-  // Here you would typically make an API call to create a new user
-  // For demo purposes, we'll just simulate a successful registration
   user.value = { name: name.value, email: email.value };
   navigateTo('/app');
 };

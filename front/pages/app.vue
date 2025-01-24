@@ -17,11 +17,24 @@
                 class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="On vols anar?">
             </div>
-            <!-- Number of Travelers -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Nombre de viatgers</label>
-              <input type="number" v-model="formData.travelers" min="1"
-                class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+
+            <!--type of trip -->
+            <div class="flex items-center space x-4">
+              <div class="w-1/2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Amb qui viatges?</label>
+                <select v-model="selectedType" name="type" id="" class="border p-2 rounded">
+                  <option value="alone">Sol</option>
+                  <option value="friends">Amics</option>
+                  <option value="family">Família</option>
+                  <option value="partner">Parella</option>
+                </select>
+              </div>
+              <!-- if selectedtype is friends or family -->
+              <div v-if="selectedType === 'friends' || selectedType === 'family'" class="w-1/2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Quantitat de persones:</label>
+                <input type="number" v-model="formData.travelers" min="1" class="border p-2 rounded w-full"
+                  placeholder="Introdueix el nombre de persones" />
+              </div>
             </div>
 
             <!-- Init date -->
@@ -40,11 +53,10 @@
 
             <!-- Budget -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Estableix el pressupost mínim i màxim</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Estableix el pressupost mínim (€)</label>
               <div>
                 <!-- Budget Min -->
-                <div class="w-3/3"> <!-- He canviat w-1/2 per w-2/3 per fer-lo més llarg -->
-                  <label for="minBudget" class="text-sm text-gray-600">Mínim (€)</label>
+                <div class="w-3/3"> 
                   <input id="minBudget" type="number" v-model="budgetMin" min="0"
                     class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                     @input="syncWithBudget" />
@@ -53,19 +65,19 @@
                     class="w-full h-2 bg-blue-200 rounded-md mt-2" @input="syncWithBudget" />
                 </div>
               </div>
+            </div>
               <div>
                 <!-- Budget Min -->
+                 <label class="block text-sm font-medium text-gray-700 mb-2">Estableix el pressupost màxim (€)</label>
                 <div class="w-3/3">
-                  <label for="maxBudget" class="text-sm text-gray-600">Màxim (€)</label>
                   <input id="maxBudget" type="number" v-model="budgetMax" min="0"
                     class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                    @input="syncWithBudget" />
+                    @input="syncWithBudget"/>
                   <!-- Range Slider -->
                   <input type="range" v-model="budgetMax" :min="budgetMin" :max="10000" step="100"
                     class="w-full h-2 bg-blue-500 rounded-md mt-2" @input="syncWithBudget" />
                 </div>
               </div>
-            </div>
           </div>
 
           <!-- Interests -->
@@ -102,6 +114,7 @@ const formData = ref({
 const budgetMax = ref(7500);
 const budgetMin = ref(250);
 
+const selectedType = ref('alone');
 // Funció per sincronitzar mínim i màxim
 const syncWithBudget = () => {
   // Assegura que el mínim no sigui més gran que el màxim
