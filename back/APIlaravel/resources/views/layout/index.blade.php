@@ -16,7 +16,7 @@
 </head>
 
 <body>
-    <div class="min-h-screen">
+    <div class="min-h-screen flex flex-col">
         <!-- Header -->
         <div class="bg-gray-800 text-white py-10 text-center">
             <p class="text-3xl font-bold">PÀGINA D'ADMINISTRACIÓ</p>
@@ -28,25 +28,15 @@
             </div>
         </div>
 
-        <!-- Login Section -->
+        <!-- Content Section -->
         <div class="flex-grow flex items-center justify-center">
-            <div class="login-container shadow-lg rounded-lg">
-                <p class="text-2xl font-bold text-center mb-4">Login</p>
-                <form action="" class="flex flex-col gap-4">
-                    <label for="username" class="font-medium">Username</label>
-                    <input type="text" name="username" id="username" class="w-full p-2 border rounded-md">
-                    <label for="password" class="font-medium">Password</label>
-                    <input type="password" name="password" id="password" class="w-full p-2 border rounded-md">
-                    <button type="submit" class="border-solid text-black p-2 rounded-md hover:bg-blue-700">
-                        Iniciar sesión
-                    </button>
-                </form>
-            </div>
+            @yield('content')
+            
         </div>
 
         <!-- Content Section -->
-        <div class="mt-12 bg-white shadow rounded-lg p-8">
-            @yield('content')
+        <div class="mt-12 bg-blue-800 shadow rounded-lg p-8">
+
         </div>
 
         <!-- Footer -->
