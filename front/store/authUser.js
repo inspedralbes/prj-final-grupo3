@@ -14,8 +14,8 @@ export const useAuthStore = defineStore('auth', {
     },
     actions: {
         login(userData, userToken) {
-            console.log('User logged in:', userData);
-            console.log('User token:', userToken);
+            // console.log('User logged in:', userData);
+            // console.log('User token:', userToken);
             
             this.isAuthenticated = true;
             this.user = userData;
@@ -23,7 +23,7 @@ export const useAuthStore = defineStore('auth', {
 
             sessionStorage.setItem('token', userToken);
             sessionStorage.setItem('user', JSON.stringify(userData));
-            console.log('Token guardado en sessionStorage:', sessionStorage.getItem('token'));
+            // console.log('Token guardado en sessionStorage:', sessionStorage.getItem('token'));
         },
         logout() {
             this.isAuthenticated = false;

@@ -28,7 +28,10 @@
 </template> 
 
 <script setup>
-const user = useState('user', () => null);
+import { useAuthStore } from '~/store/authUser';
+
+const authStore = useAuthStore();
+const user = useState('user', () => null); // <- en caso de que haya iniciado sesion no aparece el div
 
 const handlePlanTrip = () => {
   if (user.value) {
@@ -37,4 +40,10 @@ const handlePlanTrip = () => {
     navigateTo('/login');
   }
 };
+
+onMounted(() => {
+    if (authStore.isAuthenticated) {
+      navigateTo('/');
+    }
+  });
 </script> 

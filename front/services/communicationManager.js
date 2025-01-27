@@ -20,3 +20,22 @@ export const register = async (userData) => {
     return json;
 
 }
+export const login = async (userData) => {
+
+    const URL = HOST + '/auth/login';
+
+    console.log(userData);
+
+    const response = await fetch(URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+          },
+        body: JSON.stringify(userData),
+    })
+
+    const json = await response.json();
+    console.log(json);
+    return json;
+
+}

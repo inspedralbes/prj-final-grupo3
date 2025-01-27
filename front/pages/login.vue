@@ -3,17 +3,17 @@
         <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
             <h2 class="text-3xl font-bold text-center mb-8">Benvingut de nou!</h2>
 
-            <form @submit.prevent="handleLogin" class="space-y-6">
+            <form @submit.prevent="loginAuth.loginUser" class="space-y-6">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Correu</label>
-                    <input type="email" v-model="loginAuth.email" required
+                    <input type="email" v-model="loginAuth.loginData.email" required
                         class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                         placeholder="elteucorreu@gmail.com" />
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Contrasenya</label>
-                    <input type="password" v-model="loginAuth.password" required
+                    <input type="password" v-model="loginAuth.loginData.password" required
                         class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                         placeholder="••••••••" />
                 </div>
@@ -42,7 +42,12 @@
 import { useLoginAuth } from '~/composable/useLoginAuth';
 
 const loginAuth = useLoginAuth();
-const handleLogin = () => {
-    loginAuth.loginUser();
-};
+// const handleLogin = () => {
+
+//     const userData = {
+//         email: loginAuth.email.value,
+//         password: loginAuth.password.value
+//     }
+//     loginAuth.loginUser(userData);
+// };
 </script>

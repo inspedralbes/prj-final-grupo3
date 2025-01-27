@@ -86,9 +86,9 @@ class AuthenticatorController extends Controller
     public function logout(Request $request)
     {
         // Revocar el token del usuario autenticado
-        $request->user()->currentAccessToken()->delete();
+        // Auth::logout(); // Cierra la sesión
 
-        return response()->json(['message' => 'Successfully logged out']);
+        return response()->json(['message' => 'Successfully logged out','debug' => Auth::logout()]);
     }
 
     public function currentUser()

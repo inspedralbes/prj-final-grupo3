@@ -3,7 +3,7 @@
     <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
       <h2 class="text-3xl font-bold text-center mb-8">Crear un compte</h2>
 
-      <form @submit.prevent="handleRegister" class="space-y-6">
+      <form @submit.prevent="registerAuth.registerUser(registerAuth.registerData)" class="space-y-6">
         <!-- <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">Nom</label>
           <input type="text" v-model="registerAuth.name.value" required
@@ -73,32 +73,9 @@ import { useRegisterAuth } from '~/composable/useRegisterAuth';
 const registerAuth = useRegisterAuth();
 
 // Register manager
-const handleRegister = async () => {
-  const userData = {
-    name: "Jhon",
-    surname: "Doe",
-    email: "jhon@example.com",
-    email_alternative: "jhonalternativ@example.com",
-    password: "password123",
-    password_confirmation: "password123",
-    birth_date: "1990-02-11",
-    phone_number: "123456789",
-    gender: "male"
-  };
-  // const userData = {
-  //   name : registerAuth.name.value,
-  //   surname: registerAuth.surname.value,
-  //   email: registerAuth.email.value,
-  //   emailalternative: registerAuth.emailalternative.value,
-  //   password: registerAuth.password.value,
-  //   password_confirmation: registerAuth.password.value,
-  //   birth_date: registerAuth.formData.dates,
-  //   phone_number: "123456789",
-  //   gender: "male",
-  // };
+// const handleRegister = async () => {
 
-  console.log(userData);
 
-  await registerAuth.registerUser(userData);
-};
+//   await registerAuth.registerUser(userData);
+// };
 </script>

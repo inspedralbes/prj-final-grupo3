@@ -2,53 +2,60 @@ import * as com from '../services/communicationManager';
 import { useAuthStore } from '~/store/authUser';
 
 export function useLoginAuth() {
+    const authStore = useAuthStore();
+
     const loading = ref(false); // Loadin state
     const error = ref(null); // For server errors
     const success = ref(false); // For success register
-    const registerError = ref('');
-
-    const authStore = useAuthStore();
+    const loginError = ref('');
 
     // Form variables
-    const email = ref("");
-    const password = ref("");
+    const loginData = reactive({
+        email: '',
+        password: '',
+        rememberMe: false
+    });
 
-
-    const loginUser = async (userData) => {
+    const loginUser = async () => {
         loading.value = true;
-        error.value = null;
         success.value = false;
 
-        if (userData.password != userData.password_confirmation) {
-            registerError.value = 'Les contrasenyes no coincideixen.';
-            return;
-        }
+        console.log(loginData);
 
         try {
-            const response = await com.register(userData);
-            // Here pass the info to a store
-            authStore.login(response.user, response.token);
-            console.log(authStore.token, authStore.user);
+            const response = await com.login(loginData);
 
-            authStore.
-                navigateTo('/');
+            if (response.status === 'error') {
+                loginError.value = "Error en el login";
+                console.error("Error en el login", error.value);
+            } else {
+                authStore.login(response.user, response.token);
+                if (rememberMe) {
+                    console.log('El mensaje es exitoso para el login');
+
+                    sessionStorage.setItem('token', response.token);
+                    sessionStorage.setItem('user', JSON.stringify(response.user));
+                }
+            }
+
+            navigateTo('/');
             success.value = true; // Indicate success register
-            return response;
+            console.log("Login exitoso", response);
+
         } catch (err) {
             error.value = err.message || 'Error al registrar el usuario';
         } finally {
             loading.value = false; // Stop loading state
         }
+
     };
 
     return {
-        registerUser,
         loading,
         error,
         success,
-        registerError,
-        email,
-        password,
+        loginError,
+        loginData,
         loginUser
     };
 }

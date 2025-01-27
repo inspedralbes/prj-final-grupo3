@@ -6,7 +6,7 @@ use App\Http\Controllers\CountriesController;
 use App\Http\Controllers\Auth\AuthenticatorController;
 
 Route::prefix('auth')->group(function () {
-    Route::post('/logout', [AuthenticatorController::class, 'logout']);
+    Route::get('/logout', [AuthenticatorController::class, 'logout']);
     Route::post('/login', [AuthenticatorController::class, 'authenticate']);
     Route::post('/register', [AuthenticatorController::class, 'register']);
 });
