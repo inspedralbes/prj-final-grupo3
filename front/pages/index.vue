@@ -1,6 +1,30 @@
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col items-center justify-center text-center">
-    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-12">
+  <header>
+    <title>Triplan</title>
+  </header>
+  <div class="relative min-h-screen bg-gray-50 flex items-center justify-center">
+    <!-- carrusel background -->
+    <div class="absolute inset-0 w-full h-full">
+      <!-- carrusel -->
+      <Swiper class="mySwiper" :slides-per-view="1" :space-between="0" loop pagination :autoplay="{ delay: 2500 }">
+        <SwiperSlide>
+          <img src="~/assets/images/img1.png" alt="Destí 1" class="w-full h-full object-cover" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="~/assets/images/img2.png" alt="Destí 2" class="w-full h-full object-cover" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="~/assets/images/img3.png" alt="Destí 3" class="w-full h-full object-cover" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="~/assets/images/img4.png" alt="Destí 4" class="w-full h-full object-cover" />
+        </SwiperSlide>
+        
+      </Swiper>
+    </div>
+
+    <!-- welcome -->
+    <div class="relative z-10 max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-12 text-center">
       <h1 class="text-5xl font-bold text-blue-600 mb-6">Benvingut a Triplan!</h1>
       <p class="text-xl text-gray-600 mb-8">El teu viatge comença aquí. Planifica el teu viatge perfecte amb nosaltres!
       </p>
@@ -11,25 +35,20 @@
           Fes clic aquí per planificar el teu viatge! </button>
 
         <div v-if="!user" class="pt-4">
-          <p class="text-gray-600 mb-4">Necessites iniciar sessió per planificar el teu viatge.</p>
-          <div class="space-x-4">
-            <NuxtLink to="/login" class="text-blue-600 hover:text-blue-800 underline">
-              Iniciar sessió
-            </NuxtLink>
-            <span class="text-gray-400">o</span>
-            <NuxtLink to="/register" class="text-blue-600 hover:text-blue-800 underline">
-              Registrar-se
-            </NuxtLink>
-          </div>
+          <p class="text-gray-600 mb-4">Inicia sessió per planificar el teu viatge.</p>
         </div>
       </div>
     </div>
   </div>
-</template> 
+</template>
 
 <script setup>
-const user = useState('user', () => null);
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/css';
+import 'swiper/swiper-bundle.css'; 
 
+
+const user = useState('user', () => null);
 const handlePlanTrip = () => {
   if (user.value) {
     navigateTo('/planner');
@@ -37,4 +56,17 @@ const handlePlanTrip = () => {
     navigateTo('/login');
   }
 };
-</script> 
+
+
+</script>
+
+<style scoped>
+.mySwiper {
+  width: 100%;
+  height: 100%;
+}
+
+img {
+  object-fit: cover;
+}
+</style>
