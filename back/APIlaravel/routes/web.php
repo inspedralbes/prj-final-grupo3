@@ -16,7 +16,16 @@ Route::get('/login', function () {
 });
 
 Route::get('/usuaris', [UsersController::class, 'index'])->name('users');
+
 Route::get('/countries', [CountriesController::class, 'index'])->name('countries');
+Route::post('/countries', [CountriesController::class, 'store'])->name('countries.store');
+Route::delete('/countries/{id}', [CountriesController::class, 'destroy'])->name('countries.destroy');
+// Mostrar el formulario de edición de país
+Route::get('/countries/{id}/edit', [CountriesController::class, 'edit'])->name('countries.edit');
+
+// Actualizar un país
+Route::put('/countries/{id}', [CountriesController::class, 'update'])->name('countries.update');
+
 // Route::get('/countries', [TravelsController::class, 'index'])->name('travels');
 // Route::get('/countries', [PublicationsController::class, 'index'])->name('publications');
 
