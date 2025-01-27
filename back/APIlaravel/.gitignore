@@ -5,7 +5,9 @@
 /public/storage
 /storage/*.key
 /storage/pail
+/storage/logs
 /vendor
+.env
 .env
 .env.backup
 .env.production
@@ -21,3 +23,4 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+mysql_data/

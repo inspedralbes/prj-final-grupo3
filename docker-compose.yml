@@ -1,0 +1,50 @@
+services:
+  # DATABASE
+  db:
+    image: mysql:8.2.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: triplan
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    ports:
+      - 3306:3306
+    volumes:
+      - ./back/mysql_data:/var/lib/mysql
+      # - ./back/triplan.sql:/docker-entrypoint-initdb.d/dades.sql
+
+  # ADMINER
+  adminer:
+    image: adminer
+    restart: always
+    depends_on:
+    - db
+    ports:
+    - "8080:8080"
+
+  # LARAVEL
+  laravel:
+    build: ./back/APIlaravel
+    ports:
+      - 8000:8000
+    volumes:
+      - ./back/APIlaravel:/var/www/
+    working_dir: /var/www/
+    depends_on:
+      - db
+    command: bash -c 'composer install && composer update && php artisan migrate && php artisan migrate:fresh && php artisan db:seed && php artisan key:generate && php artisan serve --host=0.0.0.0'   
+
+  # NUXT
+  nuxt:
+    build: 
+      context: ./front
+    ports:
+      - 3010:3000
+    volumes:
+      - ./front:/app
+    depends_on:
+      - laravel
+    environment:
+      NUXT_APP_API_URL: http://laravel:8000
+    command: bash -c "npm install && npm run dev"

@@ -5,14 +5,22 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "start": "nuxt start",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "autoprefixer": "^10.4.20",
     "nuxt": "^3.15.2",
     "pinia": "^2.3.1",
+<<<<<<< HEAD
     "swiper": "^11.2.1",
+=======
+    "postcss": "^8.5.1",
+    "prettier": "^3.4.2",
+    "tailwindcss": "^3.4.17",
+>>>>>>> origin/dev
     "vue": "latest",
     "vue-router": "latest"
   },

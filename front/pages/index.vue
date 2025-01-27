@@ -40,7 +40,11 @@
       </div>
     </div>
   </div>
+<<<<<<< HEAD
 </template>
+=======
+</template> 
+>>>>>>> origin/dev
 
 <script setup>
 import { Swiper, SwiperSlide } from 'swiper/vue';
