@@ -8,12 +8,12 @@ use App\Http\Controllers\PublicationsController;
 use App\Http\Controllers\TravelsController;
 
 Route::get('/', function () {
-    return view('layout.index');
-})->name('home');
-
-Route::get('/login', function () {
     return view('admin.login');
 });
+
+Route::get('/home', function () {
+    return view('layout.index');
+})->name('home');
 
 Route::get('/usuaris', [UsersController::class, 'index'])->name('users');
 
