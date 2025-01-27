@@ -6,6 +6,7 @@
         <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
             <h2 class="text-3xl font-bold text-center mb-8">Benvingut de nou!</h2>
 
+            <!--form for login (mail and password)-->
             <form @submit.prevent="handleLogin" class="space-y-6">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Correu</label>
@@ -16,9 +17,16 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Contrasenya</label>
-                    <input type="password" v-model="password" required
-                        class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="••••••••" />
+                    <div class="relative">
+                        <input :type="isPasswordVisible ? 'text' : 'password'" v-model="password" required minlength="8"
+                            class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="••••••••" />
+                        <button type="button" @click="togglePasswordVisibility('password')"
+                            class="absolute right-2 top-1/2 transform -translate-y-1/2">
+                            <span v-if="isPasswordVisible">👁️</span>
+                            <span v-else>👁️‍🗨️</span>
+                        </button>
+                    </div>
                 </div>
 
                 <button type="submit"
@@ -45,11 +53,16 @@
 const user = useState("user");
 const email = ref("");
 const password = ref("");
+const isPasswordVisible = ref(false);
 
 const handleLogin = () => {
-    // Here you would typically make an API call to verify credentials
-    // For demo purposes, we'll just simulate a successful login
     user.value = { email: email.value };
     navigateTo("/planner");
+};
+
+const togglePasswordVisibility = (field) => {
+    if (field === "password") {
+        isPasswordVisible.value = !isPasswordVisible.value;
+    }
 };
 </script>
