@@ -4,10 +4,18 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     '@nuxtjs/tailwindcss',
+    // '@nuxtjs/proxy',
   ],
   css: [
     '~/assets/css/tailwind.css',
-  ]
+  ],
+  // proxy: {
+  //   '/api/': {
+  //     target: 'http://localhost:8000', // URL del backend
+  //     pathRewrite: { '^/api/': '/api/' },
+  //     changeOrigin: true,
+  //   },
+  // },
 })
 
 
