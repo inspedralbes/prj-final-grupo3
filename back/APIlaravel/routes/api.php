@@ -15,4 +15,4 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', [AuthenticatorController::class, 'currentUser']);
 });
 
-Route::get('/countries', [CountriesController::class, 'index']);
+Route::get('/countries', action: [CountriesController::class, 'index']);

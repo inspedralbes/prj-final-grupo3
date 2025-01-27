@@ -72,28 +72,33 @@ import { useRegisterAuth } from '~/composable/useRegisterAuth';
 
 const registerAuth = useRegisterAuth();
 
-// Manejo del registro
+// Register manager
 const handleRegister = async () => {
- 
   const userData = {
-    name : registerAuth.name.value,
-    surname: registerAuth.surname.value,
-    email: registerAuth.email.value,
-    emailalternative: registerAuth.emailalternative.value,
-    password: registerAuth.password.value,
-    password_confirmation: registerAuth.password.value,
-    birth_date: registerAuth.formData.dates,
+    name: "Jhon",
+    surname: "Doe",
+    email: "jhon@example.com",
+    email_alternative: "jhonalternativ@example.com",
+    password: "password123",
+    password_confirmation: "password123",
+    birth_date: "1990-02-11",
     phone_number: "123456789",
-    gender: "male",
+    gender: "male"
   };
+  // const userData = {
+  //   name : registerAuth.name.value,
+  //   surname: registerAuth.surname.value,
+  //   email: registerAuth.email.value,
+  //   emailalternative: registerAuth.emailalternative.value,
+  //   password: registerAuth.password.value,
+  //   password_confirmation: registerAuth.password.value,
+  //   birth_date: registerAuth.formData.dates,
+  //   phone_number: "123456789",
+  //   gender: "male",
+  // };
 
   console.log(userData);
 
-
   await registerAuth.registerUser(userData);
-
-  // if (success.value) {
-  //   navigateTo('/app'); // Redirigir tras registro exitoso
-  // }
 };
 </script>

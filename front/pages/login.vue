@@ -6,14 +6,14 @@
             <form @submit.prevent="handleLogin" class="space-y-6">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Correu</label>
-                    <input type="email" v-model="email" required
+                    <input type="email" v-model="loginAuth.email" required
                         class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                         placeholder="elteucorreu@gmail.com" />
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Contrasenya</label>
-                    <input type="password" v-model="password" required
+                    <input type="password" v-model="loginAuth.password" required
                         class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                         placeholder="••••••••" />
                 </div>
@@ -39,14 +39,10 @@
 </template>
 
 <script setup>
-const user = useState("user");
-const email = ref("");
-const password = ref("");
+import { useLoginAuth } from '~/composable/useLoginAuth';
 
+const loginAuth = useLoginAuth();
 const handleLogin = () => {
-    // Here you would typically make an API call to verify credentials
-    // For demo purposes, we'll just simulate a successful login
-    user.value = { email: email.value };
-    navigateTo("/planner");
+    loginAuth.loginUser();
 };
 </script>

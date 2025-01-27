@@ -1,7 +1,7 @@
 import * as com from '../services/communicationManager';
 import { useAuthStore } from '~/store/authUser';
 
-export function useRegisterAuth() {
+export function useLoginAuth() {
     const loading = ref(false); // Loadin state
     const error = ref(null); // For server errors
     const success = ref(false); // For success register
@@ -10,19 +10,14 @@ export function useRegisterAuth() {
     const authStore = useAuthStore();
 
     // Form variables
-    const name = ref('');
-    const surname = ref('');
-    const email = ref('');
-    const emailalternative = ref('');
-    const password = ref('');
-    const formData = ref({
-        birth_date: '',
-    });
+    const email = ref("");
+    const password = ref("");
 
-    const registerUser = async (userData) => {
+
+    const loginUser = async (userData) => {
         loading.value = true;
         error.value = null;
-        success.value = false;        
+        success.value = false;
 
         if (userData.password != userData.password_confirmation) {
             registerError.value = 'Les contrasenyes no coincideixen.';
@@ -34,9 +29,9 @@ export function useRegisterAuth() {
             // Here pass the info to a store
             authStore.login(response.user, response.token);
             console.log(authStore.token, authStore.user);
-            
+
             authStore.
-            navigateTo('/');
+                navigateTo('/');
             success.value = true; // Indicate success register
             return response;
         } catch (err) {
@@ -51,12 +46,9 @@ export function useRegisterAuth() {
         loading,
         error,
         success,
-        name,
-        surname,
+        registerError,
         email,
-        emailalternative,
         password,
-        formData,
-        registerError
+        loginUser
     };
 }

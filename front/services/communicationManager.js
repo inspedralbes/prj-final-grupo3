@@ -16,7 +16,7 @@ export const register = async (userData) => {
     })
 
     const json = await response.json();
-    console.log(json);
+    // console.log(json);
     return json;
 
 }
