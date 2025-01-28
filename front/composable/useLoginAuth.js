@@ -30,17 +30,15 @@ export function useLoginAuth() {
                 console.error("Error en el login", error.value);
             } else {
                 authStore.login(response.user, response.token);
+                success.value = true; // Indicate success register
+                navigateTo('/');
                 if (rememberMe) {
-                    console.log('El mensaje es exitoso para el login');
-
+                    console.log('El mensaje es exitoso para el login con remember me');
+                    
                     sessionStorage.setItem('token', response.token);
                     sessionStorage.setItem('user', JSON.stringify(response.user));
                 }
             }
-            navigateTo('/');
-
-            success.value = true; // Indicate success register
-            console.log("Login exitoso", response);
 
         } catch (err) {
             error.value = err.message || 'Error al registrar el usuario';
