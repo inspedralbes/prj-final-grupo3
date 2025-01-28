@@ -83,12 +83,24 @@ class AuthenticatorController extends Controller
         }
     }
 
-    public function logout(Request $request)
+    public function logout()
     {
-        // Revocar el token del usuario autenticado
-        // Auth::logout(); // Cierra la sesión
 
-        return response()->json(['message' => 'Successfully logged out','debug' => Auth::logout()]);
+        // Obtener el usuario autenticado
+        $user = Auth::user();
+
+        if ($user) {
+            // Revocar el token actual del usuario
+            $user->currentAccessToken()->delete();
+
+            return response()->json([
+                'message' => 'Sesión cerrada correctamente',
+            ], 200);
+        }
+
+        return response()->json([
+            'message' => 'Usuario no autenticado',
+        ], 401);
     }
 
     public function currentUser()
