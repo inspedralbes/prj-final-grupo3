@@ -18,7 +18,7 @@ export function useLoginAuth() {
 
     const loginUser = async () => {
         loading.value = true;
-        success.value = false;
+        // success.value = false;
 
         console.log(loginData);
 
@@ -37,8 +37,8 @@ export function useLoginAuth() {
                     sessionStorage.setItem('user', JSON.stringify(response.user));
                 }
             }
-
             navigateTo('/');
+
             success.value = true; // Indicate success register
             console.log("Login exitoso", response);
 
