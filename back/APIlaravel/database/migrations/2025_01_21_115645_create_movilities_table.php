@@ -13,10 +13,7 @@ return new class extends Migration
     {
         Schema::create('movilities', function (Blueprint $table) {
             $table->id();
-            $table->string('bike');
-            $table->string('car');
-            $table->string('moto');
-            $table->string('no_rent');
+            $table->enum('type', ['bike','car','moto','no_rent']);
             $table->timestamps();
         });
     }

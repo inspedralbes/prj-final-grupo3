@@ -1,18 +1,41 @@
 const HOST = 'http://localhost:8000/api';
 
 
-const register = () => {
+export const register = async (userData) => {
 
-    const URL = HOST + '/register';
+    const URL = HOST + '/auth/register';
 
-    const response = fetch(URL, {
+    console.log(userData);
+
+    const response = await fetch(URL, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
-        }
+          },
+        body: JSON.stringify(userData),
     })
-    
-    const json = response.json();
+
+    const json = await response.json();
+    // console.log(json);
+    return json;
+
+}
+export const login = async (userData) => {
+
+    const URL = HOST + '/auth/login';
+
+    console.log(userData);
+
+    const response = await fetch(URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+          },
+        body: JSON.stringify(userData),
+    })
+
+    const json = await response.json();
     console.log(json);
     return json;
+
 }

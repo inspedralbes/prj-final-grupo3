@@ -7,11 +7,11 @@
       <h2 class="text-3xl font-bold text-center mb-8">Crear un compte</h2>
 
       <!--name and surname-->
-      <form @submit.prevent="handleRegister" class="space-y-6">
+      <form @submit.prevent="registerAuth.registerUser" class="space-y-6">
         <div class="flex space-x-4">
           <div class="flex-1">
             <label class="block text-sm font-medium text-gray-700 mb-2">Nom</label>
-            <input type="text" v-model="name" required
+            <input type="text" v-model="registerAuth.registerData.name" required
               class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="Carles">
           </div>
@@ -118,17 +118,10 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
+import { useRegisterAuth } from '~/composable/useRegisterAuth';
 
-import { ssrInterpolate } from 'vue/server-renderer';
-
-const user = useState('user');
-const surname = ref('');
-const name = ref('');
-const email = ref('');
-const emailalternative = ref('');
-const password = ref('');
-const password_confirmation = ref('');
-const formData = ref({});
+const registerAuth = useRegisterAuth();
 
 const isPasswordVisible = ref(false);
 const isConfirmPasswordVisible = ref(false);
@@ -140,8 +133,6 @@ const togglePasswordVisibility = (field) => {
     isConfirmPasswordVisible.value = !isConfirmPasswordVisible.value;
   }
 };
-
-
 
 function handleRegister() {
   user.value = { name: name.value, email: email.value };
