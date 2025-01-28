@@ -4,7 +4,7 @@
       <h2 class="text-3xl font-bold text-center mb-8">Crear un compte</h2>
 
       <form @submit.prevent="registerAuth.registerUser(registerAuth.registerData)" class="space-y-6">
-        <!-- <div>
+        <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">Nom</label>
           <input type="text" v-model="registerAuth.name.value" required
             class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
@@ -44,7 +44,7 @@
             class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             placeholder="••••••••">
           <p class="mt-1 text-sm text-gray-500">Mínim 8 caràcters</p>
-        </div> -->
+        </div>
 
         <button type="submit"
           class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition duration-200">
