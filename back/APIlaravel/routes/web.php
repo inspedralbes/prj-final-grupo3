@@ -28,6 +28,7 @@ Route::put('/countries/{id}', [CountriesController::class, 'update'])->name('cou
 
 // Route::get('/countries', [TravelsController::class, 'index'])->name('travels');
 // Route::get('/countries', [PublicationsController::class, 'index'])->name('publications');
+// Proba canvi
 
 Route::get('/message', function () {
     return response()->json([
