@@ -1,9 +1,9 @@
 @extends('layout.index')
 
 @section('content')
-<div class="flex flex-col justify-center m-5 gap-5">
+<div class="flex flex-col justify-center m-5 gap-5 mb-20">
     <div class="flex justify-end" id="register-button">
-        <p id="toggle-form" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full cursor-pointer">Afegir pa&iacute;s</p>
+        <p id="toggle-form" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full cursor-pointer">Afegir un nou pa&iacute;s</p>
     </div>
 
     <div id="register-form" class="hidden">

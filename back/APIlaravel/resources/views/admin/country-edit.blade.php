@@ -2,7 +2,8 @@
 
 @section('content')
 <div class="flex flex-col justify-center items-center m-5 gap-5">
-    <form action="{{ route('countries.update', $country->id) }}" method="POST" class="space-y-6 w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
+    <form action="{{ route('countries.update', $country->id) }}" method="POST" class="relative space-y-6 w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
+        <button id="close-form" class="absolute top-2 right-4 text-2xl text-gray-600 font-bold hover:text-red-600">X</button>
         <h1 class="text-2xl font-bold text-gray-800 mb-6">Modificar País</h1>
         @csrf
         @method('PUT')

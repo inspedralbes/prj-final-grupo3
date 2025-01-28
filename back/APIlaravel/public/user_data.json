@@ -8,7 +8,7 @@
             "email_alternative": "johnd.alt@example.com",
             "password": "hashed_password_1",
             "phone_number": 600123456,
-            "gender": "male",
+            "gender": "Male",
             "remember_token": "randomtoken123"
         },
         {
@@ -19,7 +19,7 @@
             "email_alternative": null,
             "password": "hashed_password_2",
             "phone_number": 600654321,
-            "gender": "female",
+            "gender": "Female",
             "remember_token": "randomtoken456"
         },
         {
@@ -30,7 +30,7 @@
             "email_alternative": "mike.j.alt@example.com",
             "password": "hashed_password_3",
             "phone_number": 600789012,
-            "gender": "male",
+            "gender": "Male",
             "remember_token": "randomtoken789"
         },
         {
@@ -41,7 +41,7 @@
             "email_alternative": "laura.g.alt@example.com",
             "password": "hashed_password_4",
             "phone_number": 600112233,
-            "gender": "female",
+            "gender": "Female",
             "remember_token": "randomtoken101"
         },
         {
@@ -52,7 +52,7 @@
             "email_alternative": null,
             "password": "hashed_password_5",
             "phone_number": 600445566,
-            "gender": "male",
+            "gender": "Male",
             "remember_token": "randomtoken102"
         },
         {
@@ -63,7 +63,7 @@
             "email_alternative": "ana.alt@example.com",
             "password": "hashed_password_6",
             "phone_number": 600778899,
-            "gender": "female",
+            "gender": "Female",
             "remember_token": "randomtoken103"
         },
         {
@@ -74,7 +74,7 @@
             "email_alternative": null,
             "password": "hashed_password_7",
             "phone_number": 600889900,
-            "gender": "male",
+            "gender": "Male",
             "remember_token": "randomtoken104"
         },
         {
@@ -85,7 +85,7 @@
             "email_alternative": null,
             "password": "hashed_password_8",
             "phone_number": 600556677,
-            "gender": "female",
+            "gender": "Female",
             "remember_token": "randomtoken105"
         },
         {
@@ -96,7 +96,7 @@
             "email_alternative": "javi.r.alt@example.com",
             "password": "hashed_password_9",
             "phone_number": 600998877,
-            "gender": "male",
+            "gender": "Male",
             "remember_token": "randomtoken106"
         },
         {
@@ -107,7 +107,7 @@
             "email_alternative": "lucia.alt@example.com",
             "password": "hashed_password_10",
             "phone_number": 600334455,
-            "gender": "female",
+            "gender": "Female",
             "remember_token": "randomtoken107"
         },
         {
@@ -118,7 +118,7 @@
             "email_alternative": null,
             "password": "hashed_password_11",
             "phone_number": 600223344,
-            "gender": "male",
+            "gender": "Male",
             "remember_token": "randomtoken108"
         },
         {
@@ -129,7 +129,7 @@
             "email_alternative": null,
             "password": "hashed_password_12",
             "phone_number": 600778899,
-            "gender": "female",
+            "gender": "Female",
             "remember_token": "randomtoken109"
         },
         {
@@ -140,7 +140,7 @@
             "email_alternative": "pab.v.alt@example.com",
             "password": "hashed_password_13",
             "phone_number": 600445566,
-            "gender": "male",
+            "gender": "Male",
             "remember_token": "randomtoken110"
         },
         {
@@ -151,7 +151,7 @@
             "email_alternative": null,
             "password": "hashed_password_14",
             "phone_number": 600112233,
-            "gender": "female",
+            "gender": "Female",
             "remember_token": "randomtoken111"
         },
         {
@@ -162,7 +162,7 @@
             "email_alternative": null,
             "password": "hashed_password_15",
             "phone_number": 600778899,
-            "gender": "male",
+            "gender": "Male",
             "remember_token": "randomtoken112"
         }
     ]

@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('surname')->default('');
-            $table->date('birth_date');
+            $table->date('birth_date')->nullable();
             $table->string('email')->unique();
             $table->string('email_alternative')->nullable();
             $table->string('password')->default('');
             $table->integer('phone_number')->default(0);
-            $table->enum('gender', ['male','female']);
+            $table->enum('gender', ['Male','Female']);
             $table->unsignedBigInteger('id_travel')->nullable();
             $table->foreign('id_travel')->references('id')->on('travels')->onDelete('cascade');
             $table->rememberToken();

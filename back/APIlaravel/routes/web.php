@@ -16,6 +16,15 @@ Route::get('/home', function () {
 })->name('home');
 
 Route::get('/usuaris', [UsersController::class, 'index'])->name('users');
+Route::get('/usuaris/{id}', [UsersController::class, 'show'])->name('users.show');
+Route::post('/usuaris', [UsersController::class, 'store'])->name('users.store');
+Route::delete('/usuaris/{id}', [UsersController::class, 'destroy'])->name('users.destroy');
+// Mostrar el formulario de edición de usuari
+Route::get('/usuaris/{id}/edit', [UsersController::class, 'edit'])->name('users.edit');
+
+// Actualizar un usuari
+Route::put('/usuaris/{id}', [UsersController::class, 'update'])->name('users.update');
+
 
 Route::get('/countries', [CountriesController::class, 'index'])->name('countries');
 Route::post('/countries', [CountriesController::class, 'store'])->name('countries.store');

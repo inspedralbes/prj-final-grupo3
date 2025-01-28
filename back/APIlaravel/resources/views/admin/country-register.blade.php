@@ -1,12 +1,13 @@
-<div class="flex flex-col justify-center bg-gray-300 p-6 m-5 rounded-lg shadow-lg relative">
-    <p class="text-3xl flex">Registre de paissos</p>
-    <button id="close-form" class="absolute top-2 right-4 text-2xl text-red-500 font-bold hover:text-red-700">X</button>
-    {{-- <img src="../../icons/red-close-circle-20545.svg" alt="" srcset=""> --}}
-    <form action="{{ route('countries.store') }}" method="POST" class="flex gap-4 mt-5">
+<div class="flex flex-col justify-center bg-white p-8 m-6 rounded-lg shadow-2xl relative max-w-lg mx-auto">
+    <p class="text-4xl font-semibold text-center text-gray-800 mb-6">Registre de països</p>
+    <button id="close-form" class="absolute top-2 right-4 text-2xl text-gray-600 font-bold hover:text-red-600">X</button>
+    <form action="{{ route('countries.store') }}" method="POST" class="space-y-6">
         @csrf
-        <input type="text" name="name" id="name" class="border-2 border-gray-800 rounded-md p-2 shadow-lg" placeholder="Nom país">
-        <input type="text" name="code" id="code" class="border-2 border-gray-800 rounded-md p-2 shadow-lg" placeholder="Codi país">
-        <button type="submit" id="submit-button" disabled class="ml-auto p-2 px-3 rounded-full bg-blue-400 transition duration-200 hover:bg-blue-700 hover:text-white cursor-pointer">Afegir país</button>
+        <div class="grid grid-cols-1 gap-4">
+            <input type="text" name="name" id="name" class="p-4 border-2 border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nom país" required>
+            <input type="text" name="code" id="code" class="p-4 border-2 border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Codi país" required>
+        </div>
+        <button type="submit" id="submit-button" disabled class="ml-auto w-full p-4 rounded-lg bg-blue-500 text-white text-lg font-semibold transition duration-200 hover:bg-blue-700 disabled:bg-gray-400">Afegir país</button>
     </form>
 </div>
 
@@ -18,6 +19,7 @@
         form.classList.add('hidden');
         formButton.classList.remove('hidden');
     });
+
     function checkForm() {
         const name = document.getElementById('name').value.trim();
         const code = document.getElementById('code').value.trim();
