@@ -23,14 +23,14 @@
               <div class="w-1/2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Amb qui viatges?</label>
                 <select v-model="formData.type" name="type" id="" class="border p-2 rounded">
-                  <option value="alone">Sol</option>
-                  <option value="friends">Amics</option>
-                  <option value="family">Família</option>
-                  <option value="partner">Parella</option>
+                  <option value="sol">Sol</option>
+                  <option value="amics">Amics</option>
+                  <option value="familia">Família</option>
+                  <option value="parella">Parella</option>
                 </select>
               </div>
               <!-- if selectedtype is friends or family -->
-              <div v-if="selectedType === 'friends' || selectedType === 'family'" class="w-1/2">
+              <div v-if="selectedType === 'amics' || selectedType === 'familia'" class="w-1/2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Quantitat de persones:</label>
                 <input type="number" v-model="formData.travelers" min="1" class="border p-2 rounded w-full"
                   placeholder="2" />

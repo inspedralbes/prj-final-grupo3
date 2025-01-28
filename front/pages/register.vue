@@ -119,8 +119,6 @@
 
 <script setup>
 
-import { ssrInterpolate } from 'vue/server-renderer';
-
 const user = useState('user');
 const surname = ref('');
 const name = ref('');
