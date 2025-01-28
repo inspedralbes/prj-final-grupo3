@@ -15,7 +15,7 @@
               class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="Carles">
           </div>
-
+          
           <div class="flex-1">
             <label class="block text-sm font-medium text-gray-700 mb-2">Cognoms</label>
             <input type="text" v-model="surname" required
@@ -138,8 +138,6 @@ const togglePasswordVisibility = (field) => {
     isConfirmPasswordVisible.value = !isConfirmPasswordVisible.value;
   }
 };
-
-
 
 function handleRegister() {
   user.value = { name: name.value, email: email.value };

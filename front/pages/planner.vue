@@ -3,11 +3,12 @@
     <title>Triplan</title>
   </header>
   <div class="min-h-screen bg-gray-50">
-    <!-- Main Content -->
+
     <main class="container mx-auto mt-10 p-4">
       <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6">
         <h2 class="text-3xl font-bold text-center mb-8">Planifica el viatge dels teus somnis</h2>
 
+        <!--form for planner-->
         <form @submit.prevent="handleSubmit" class="space-y-6">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Destination -->
@@ -112,31 +113,28 @@ const formData = ref({
   type: '',
   budgetmin: '',
   budgetmax: ''
-
 });
 
-// Definició dels pressupostos per defecte predefinits
+// definitions for budget min and max for defect
 const budgetMax = ref(7500);
 const budgetMin = ref(250);
 
-//asignar el tipus de viatge
+//asign type of travel
 const selectedType = computed(() => formData.value.type);
-// Funció per sincronitzar mínim i màxim
 
-const syncWithBudget = () => {
-  // Assegura que el mínim no sigui més gran que el màxim
+// function to synchronize budget min and max
+const syncWithBudget = () => {  
   if (budgetMin.value > budgetMax.value) {
     budgetMin.value = budgetMax.value - 100;
   }
 
-  // Assegura que el màxim no sigui més petit que el mínim
   if (budgetMax.value < budgetMin.value) {
     budgetMax.value = budgetMin.value + 100;
   }
 };
 
 
-//funció perque estigui atent de sincronitzar els pressupostos amb el formulari
+//function to stay alert and watch budget min and max
 watch(budgetMin, (newValue) => {
   formData.value.budgetmin = newValue;
 })
@@ -147,7 +145,8 @@ watch(budgetMax, (newValue) => {
 
 
 const router = useRouter();
-// Enviar el formulari
+
+// function to submit the form
 const handleSubmit = async () => {
   try {
     if (budgetMin.value >= budgetMax.value) {
@@ -158,7 +157,9 @@ const handleSubmit = async () => {
     formData.value.budgetmin = budgetMin.value;
     formData.value.budgetmax = budgetMax.value;
 
-    // Crea el text per enviar a Gemini
+    router.push({ name: 'loading' });
+
+    // generate the prompt for gemini AI
     const requestText = `
       Planifica un viatge per a ${formData.value.travelers} persones ${formData.value.type === 'alone' ? 'sol' : `amb ${formData.value.type}`}.
       Destí: ${formData.value.destination}.
@@ -167,9 +168,9 @@ const handleSubmit = async () => {
       Interessos: ${formData.value.interests}.
     `;
 
-    console.log('Text a enviar a Gemini:', requestText);  // Afegeix un log per veure què estàs enviant
+    console.log('Text a enviar a Gemini:', requestText); 
 
-    // Crida la ruta API de Nuxt per obtenir la resposta de Gemini
+    // call the gemini API 
     const response = await fetch('/api/gemini', {
       method: 'POST',
       headers: {
@@ -184,12 +185,12 @@ const handleSubmit = async () => {
 
     const result = await response.json();
 
-    // Redirigeix a la pàgina de result amb la resposta de Gemini
+    // redirect to the result page
     router.push({
       name: 'result',
       query: {
         response: JSON.stringify(result),
-        
+
       },
     });
 
@@ -197,5 +198,4 @@ const handleSubmit = async () => {
     console.error('Error al enviar el formulari:', error);
   }
 };
-
 </script>
