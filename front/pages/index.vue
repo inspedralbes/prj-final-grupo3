@@ -43,12 +43,15 @@
 </template>
 
 <script setup>
+import { useAuthStore } from '~/store/authUser';
+
+const authStore = useAuthStore();
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 import 'swiper/swiper-bundle.css'; 
 
 
-const user = useState('user', () => null);
+const user = useState('user', () => null); // <- en caso de que haya iniciado sesion no aparece el div
 const handlePlanTrip = () => {
   if (user.value) {
     navigateTo('/planner');
@@ -57,16 +60,9 @@ const handlePlanTrip = () => {
   }
 };
 
-
-</script>
-
-<style scoped>
-.mySwiper {
-  width: 100%;
-  height: 100%;
-}
-
-img {
-  object-fit: cover;
-}
-</style>
+onMounted(() => {
+    if (authStore.isAuthenticated) {
+      navigateTo('/');
+    }
+  });
+</script> 

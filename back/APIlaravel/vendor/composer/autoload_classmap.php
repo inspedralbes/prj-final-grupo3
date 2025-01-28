@@ -6,11 +6,19 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Http\\Controllers\\Auth\\AuthenticatorController' => $baseDir . '/app/Http/Controllers/Auth/AuthenticatorController.php',
+    'App\\Http\\Controllers\\BudgetController' => $baseDir . '/app/Http/Controllers/BudgetController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Controllers\\CountriesController' => $baseDir . '/app/Http/Controllers/CountriesController.php',
+<<<<<<< HEAD
     'App\\Http\\Controllers\\PublicationsController' => $baseDir . '/app/Http/Controllers/PublicationsController.php',
     'App\\Http\\Controllers\\TravelsController' => $baseDir . '/app/Http/Controllers/TravelsController.php',
     'App\\Http\\Controllers\\UsersController' => $baseDir . '/app/Http/Controllers/UsersController.php',
+=======
+    'App\\Http\\Middleware\\Authenticate' => $baseDir . '/app/Http/Middleware/Authenticate.php',
+    'App\\Http\\Middleware\\RedirectIfAuthenticated' => $baseDir . '/app/Http/Middleware/RedirectIfAuthenticated.php',
+    'App\\Models\\Budget' => $baseDir . '/app/Models/Budget.php',
+>>>>>>> authentication
     'App\\Models\\Country' => $baseDir . '/app/Models/Country.php',
     'App\\Models\\Publication' => $baseDir . '/app/Models/Publication.php',
     'App\\Models\\Travel' => $baseDir . '/app/Models/Travel.php',

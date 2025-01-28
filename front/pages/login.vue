@@ -7,10 +7,10 @@
             <h2 class="text-3xl font-bold text-center mb-8">Benvingut de nou!</h2>
 
             <!--form for login (mail and password)-->
-            <form @submit.prevent="handleLogin" class="space-y-6">
+            <form @submit.prevent="loginAuth.loginUser" class="space-y-6">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Correu</label>
-                    <input type="email" v-model="email" required
+                    <input type="email" v-model="loginAuth.loginData.email" required
                         class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                         placeholder="elteucorreu@gmail.com" />
                 </div>
@@ -18,7 +18,7 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Contrasenya</label>
                     <div class="relative">
-                        <input :type="isPasswordVisible ? 'text' : 'password'" v-model="password" required minlength="8"
+                        <input :type="isPasswordVisible ? 'text' : 'password'" v-model="loginAuth.loginData.password" required minlength="8"
                             class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                             placeholder="••••••••" />
                         <button type="button" @click="togglePasswordVisibility('password')"
@@ -50,19 +50,23 @@
 </template>
 
 <script setup>
-const user = useState("user");
-const email = ref("");
-const password = ref("");
-const isPasswordVisible = ref(false);
+import { useLoginAuth } from '~/composable/useLoginAuth';
 
-const handleLogin = () => {
-    user.value = { email: email.value };
-    navigateTo("/planner");
-};
+const loginAuth = useLoginAuth();
+
+const isPasswordVisible = ref(false);
 
 const togglePasswordVisibility = (field) => {
     if (field === "password") {
         isPasswordVisible.value = !isPasswordVisible.value;
     }
 };
+// const handleLogin = () => {
+
+//     const userData = {
+//         email: loginAuth.email.value,
+//         password: loginAuth.password.value
+//     }
+//     loginAuth.loginUser(userData);
+// };
 </script>

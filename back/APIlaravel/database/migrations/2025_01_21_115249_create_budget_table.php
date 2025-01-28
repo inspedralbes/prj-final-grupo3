@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('budget', function (Blueprint $table) {
             $table->id();
             $table->integer('min_budget');
-            $table->integer('mxn_budget');
+            $table->integer('max_budget');
             $table->integer('final_price');
             $table->timestamps();
         });

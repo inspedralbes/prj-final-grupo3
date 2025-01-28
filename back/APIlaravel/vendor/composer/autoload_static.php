@@ -521,11 +521,19 @@ class ComposerStaticInit626b9e7ddd47fb7eff9aaa53cce0c9ad
     );
 
     public static $classMap = array (
+        'App\\Http\\Controllers\\Auth\\AuthenticatorController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/AuthenticatorController.php',
+        'App\\Http\\Controllers\\BudgetController' => __DIR__ . '/../..' . '/app/Http/Controllers/BudgetController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\CountriesController' => __DIR__ . '/../..' . '/app/Http/Controllers/CountriesController.php',
+<<<<<<< HEAD
         'App\\Http\\Controllers\\PublicationsController' => __DIR__ . '/../..' . '/app/Http/Controllers/PublicationsController.php',
         'App\\Http\\Controllers\\TravelsController' => __DIR__ . '/../..' . '/app/Http/Controllers/TravelsController.php',
         'App\\Http\\Controllers\\UsersController' => __DIR__ . '/../..' . '/app/Http/Controllers/UsersController.php',
+=======
+        'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
+        'App\\Http\\Middleware\\RedirectIfAuthenticated' => __DIR__ . '/../..' . '/app/Http/Middleware/RedirectIfAuthenticated.php',
+        'App\\Models\\Budget' => __DIR__ . '/../..' . '/app/Models/Budget.php',
+>>>>>>> authentication
         'App\\Models\\Country' => __DIR__ . '/../..' . '/app/Models/Country.php',
         'App\\Models\\Publication' => __DIR__ . '/../..' . '/app/Models/Publication.php',
         'App\\Models\\Travel' => __DIR__ . '/../..' . '/app/Models/Travel.php',
