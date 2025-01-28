@@ -23,7 +23,7 @@ export const useAuthStore = defineStore('auth', {
 
             sessionStorage.setItem('token', userToken);
             sessionStorage.setItem('user', JSON.stringify(userData));
-            // console.log('Token guardado en sessionStorage:', sessionStorage.getItem('token'));
+            sessionStorage.setItem('isAuthenticated', true);
         },
         logout() {
             this.isAuthenticated = false;
@@ -44,8 +44,9 @@ export const useAuthStore = defineStore('auth', {
         enabled: true, // Activate persist
         strategies: [
             {
-                key: 'userStorage', // key storage
+                key: 'authStore', // key storage
                 storage: sessionStorage,
+                paths: ['isAuthenticated', 'token', 'user'] // Especifica qué guardar
             },
         ],
     },

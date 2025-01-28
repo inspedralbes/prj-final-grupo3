@@ -79,7 +79,14 @@ class AuthenticatorController extends Controller
             $user->birth_date = $data['birth_date'];
             $user->phone_number = $data['phone_number'];
             $user->gender = $data['gender'];
+            if($data['gender'] == 'male') {                
+                $user->avatar = './public/default_avatar_male.png';
+            } else {
+                $user->avatar = './public/default_avatar_female.png';
+            }
             $user->save();
+
+            // dd($data['gender']);
 
             // Crear el token de acceso
             $token = $user->createToken('auth_token')->plainTextToken;

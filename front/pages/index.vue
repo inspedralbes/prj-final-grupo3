@@ -43,9 +43,7 @@
 </template>
 
 <script setup>
-import { useAuthStore } from '~/store/authUser';
 
-const authStore = useAuthStore();
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 import 'swiper/swiper-bundle.css'; 
@@ -60,9 +58,4 @@ const handlePlanTrip = () => {
   }
 };
 
-onMounted(() => {
-    if (authStore.isAuthenticated) {
-      navigateTo('/');
-    }
-  });
 </script> 

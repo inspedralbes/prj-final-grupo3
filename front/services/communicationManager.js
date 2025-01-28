@@ -11,7 +11,7 @@ export const register = async (userData) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
-          },
+        },
         body: JSON.stringify(userData),
     })
 
@@ -30,12 +30,26 @@ export const login = async (userData) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
-          },
+        },
         body: JSON.stringify(userData),
     })
 
     const json = await response.json();
     console.log(json);
+    return json;
+
+}
+
+export async function logout() {
+
+    const URL = HOST + '/auth/logout';
+
+    const response = await fetch(URL);
+
+    const json = await response.json();
+
+    console.log(json);
+    
     return json;
 
 }

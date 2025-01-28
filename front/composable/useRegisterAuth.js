@@ -1,6 +1,7 @@
 import * as com from '../services/communicationManager';
 import { useAuthStore } from '~/store/authUser';
 import { useAlert } from './useAlert';
+import auth from '~/middleware/auth';
 
 export function useRegisterAuth() {
     const authStore = useAuthStore();
