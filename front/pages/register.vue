@@ -10,14 +10,14 @@
       <form @submit.prevent="registerAuth.registerUser" class="space-y-6">
         <div class="flex space-x-4">
           <div class="flex-1">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Nom</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Nom*</label>
             <input type="text" v-model="registerAuth.registerData.name" required
               class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="Carles">
           </div>
 
           <div class="flex-1">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Cognoms</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Cognoms*</label>
             <input type="text" v-model="registerAuth.registerData.surname" required
               class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="Fernández Marín">
@@ -27,7 +27,7 @@
         <!--gender and birthdate-->
         <div class="flex space-x-4">
           <div class="flex-1">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Gènere</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Gènere*</label>
             <select name="gender" v-model="registerAuth.registerData.gender" id="" class="border p-2 rounded ">
               <option selected disabled>Seleccióna</option>
               <option value="male">Masculí</option>
@@ -36,7 +36,7 @@
           </div>
 
           <div class="flex-1">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Data de naixement</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Data de naixement*</label>
             <input type="date" v-model="registerAuth.registerData.birth_date"
               class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
           </div>
@@ -44,14 +44,14 @@
 
         <!--phone -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Número de telèfon</label>
-          <input type="text" v-model="registerAuth.registerData.phone_number" placeholder="+34 655 767 876"
+          <label class="block text-sm font-medium text-gray-700 mb-2">Número de telèfon*</label>
+          <input type="text" v-model="registerAuth.registerData.phone_number" minlength="8" placeholder="+34 655 767 876"
             class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
         </div>
 
         <!--mail-->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Correu</label>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Correu*</label>
           <input type="email" v-model="registerAuth.registerData.email" required
             class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             placeholder="elteucorreu@gmail.com">
@@ -59,7 +59,7 @@
 
         <!--mailalternative-->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Correu alternatiu</label>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Correu alternatiu*</label>
           <input type="email" v-model="registerAuth.registerData.email_alternative" required
             class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             placeholder="elteucorreualternatiu@gmail.com">
@@ -68,7 +68,7 @@
         <!--password and password confirmation-->
         <div class="flex space-x-4">
           <div class="flex-1">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Contrasenya</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Contrasenya*</label>
             <div class="relative">
               <input :type="isPasswordVisible ? 'text' : 'password'" v-model="registerAuth.registerData.password" required minlength="8"
                 class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
@@ -83,7 +83,7 @@
           </div>
 
           <div class="flex-1">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Confirmar contrasenya</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Confirmar contrasenya*</label>
             <div class="relative">
               <input :type="isConfirmPasswordVisible ? 'text' : 'password'" v-model="registerAuth.registerData.password_confirmation" required
                 minlength="8"
