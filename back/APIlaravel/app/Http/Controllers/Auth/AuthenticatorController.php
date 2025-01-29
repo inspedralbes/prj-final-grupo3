@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthenticatorController extends Controller
 {
-
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([

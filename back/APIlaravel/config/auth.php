@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'admin' => [
+            'driver' => 'session',         // Usar sesión para el guard
+            'provider' => 'admins',        // Usar el proveedor 'admins' para el modelo Admin
+        ],
     ],
 
     /*
@@ -63,6 +67,10 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
+        ],
+        'admins' => [
+            'driver' => 'eloquent',        // Usar Eloquent ORM
+            'model' => App\Models\Admin::class, // Usar el modelo Admin
         ],
 
         // 'users' => [
