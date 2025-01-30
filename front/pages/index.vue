@@ -30,11 +30,11 @@
       </p>
 
       <div class="space-y-4">
-        <button @click="handlePlanTrip"
+        <button @click="index.handlePlanTrip"
           class="px-8 py-4 bg-blue-600 text-white text-lg rounded-lg hover:bg-blue-700 transition duration-200">
           Fes clic aquí per planificar el teu viatge! </button>
 
-        <div v-if="!user" class="pt-4">
+        <div v-if="!authStore.user" class="pt-4">
           <p class="text-gray-600 mb-4">Inicia sessió per planificar el teu viatge.</p>
         </div>
       </div>
@@ -48,16 +48,10 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 import 'swiper/swiper-bundle.css'; 
 import { useIndex } from '~/composable/useIndex';
+import { useAuthStore } from '~/store/authUser';
 
-useIndex();
-
-const user = useState('user', () => null); // <- en caso de que haya iniciado sesion no aparece el div
-const handlePlanTrip = () => {
-  if (user.value) {
-    navigateTo('/planner');
-  } else {
-    navigateTo('/login');
-  }
-};
+const authStore = useAuthStore();
+const index = useIndex();
+index
 
 </script> 

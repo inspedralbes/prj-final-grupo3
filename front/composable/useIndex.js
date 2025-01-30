@@ -5,6 +5,15 @@ export function useIndex() {
 
     const authStore = useAuthStore();
 
+
+    const handlePlanTrip = () => {
+        if (authStore.user) {
+            navigateTo('/planner');
+        } else {
+            navigateTo('/login');
+        }
+    };
+
     onMounted(async () => {
         if (process.client) {
             authStore.initialize();
@@ -17,7 +26,6 @@ export function useIndex() {
                     authStore.logout();
                     navigateTo('/login');
                 }
-
             } else {
                 navigateTo('/');
             }
@@ -25,6 +33,6 @@ export function useIndex() {
     });
 
     return {
-
+        handlePlanTrip,
     }
 }

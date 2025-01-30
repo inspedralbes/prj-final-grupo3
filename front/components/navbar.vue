@@ -10,7 +10,13 @@
         </div>
       </div>
       <div v-else>
-        <button @click="navBar.handleLogout">Tanca sessió</button>
+        <div class="container mx-auto flex justify-between items-center">
+          <h1 class="text-2xl font-bold text-blue-600"><NuxtLink to="/">Triplan</NuxtLink></h1>
+          <div class="space-x-4">
+            
+            <button @click="navBar.handleLogout">Tanca sessió</button>
+          </div>
+        </div>
       </div>
       </nav>
 </template>
