@@ -76,7 +76,7 @@
                   @input="syncWithBudget" />
                 <!-- Range Slider -->
                 <input type="range" v-model="budgetMax" :min="budgetMin" :max="10000" step="100"
-                  class="w-full h-2 bg-blue-500 rounded-md mt-2" @input="syncWithBudget" />
+                  class="w-full h-2 bg-blue-200 rounded-md mt-2" @input="syncWithBudget" />
               </div>
             </div>
           </div>
