@@ -29,7 +29,7 @@
   height: 100%;
   border-radius: 5px;
   background: repeating-linear-gradient(45deg, #0031F2 0 30px, #006DFE 0 40px) right/200% 100%;
-  animation: fillProgress 6s ease-in-out infinite, lightEffect 1s infinite linear;
+  animation: fillProgress 10s ease-in-out infinite, lightEffect 1s infinite linear;
   animation-fill-mode: forwards;
 }
 

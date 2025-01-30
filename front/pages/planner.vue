@@ -24,6 +24,7 @@
               <div class="w-1/2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Amb qui viatges?</label>
                 <select v-model="formData.type" name="type" id="" class="border p-2 rounded">
+                  <option disabled selected value="">Selecciona</option>
                   <option value="sol">Sol</option>
                   <option value="amics">Amics</option>
                   <option value="familia">Família</option>
@@ -38,18 +39,18 @@
               </div>
             </div>
 
-            <!-- Init date -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Anada</label>
-              <input type="date" v-model="formData.datesinit"
-                class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+            <!-- Select dates -->
+            <div class="max-w-full">
+              <label class="block text-sm font-medium text-gray-700 mb-5">Selecciona les dates</label>
+              <VueDatePicker v-model="dateRange" range multi-calendars :enable-time-picker="false" locale="ca"
+                class="w-full border p-2 rounded-md" :text-input="true" :text-input-options="{
+                  selectText: 'Confirmar',
+                  cancelText: 'Cancel·lar'
+                }" :min-date="new Date()" />
             </div>
 
-            <!-- Final date -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Tornada</label>
-              <input type="date" v-model="formData.datesfinal"
-                class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+              
             </div>
 
             <!-- Budget -->
@@ -101,9 +102,12 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { ref, computed, watch } from 'vue';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
 
-// Dades del formulari
+const router = useRouter();
+
 const formData = ref({
   destination: '',
   datesinit: '',
@@ -115,51 +119,81 @@ const formData = ref({
   budgetmax: ''
 });
 
-// definitions for budget min and max for defect
+const dateRange = ref([]);
 const budgetMax = ref(7500);
 const budgetMin = ref(250);
 
-//asign type of travel
+
 const selectedType = computed(() => formData.value.type);
 
-// function to synchronize budget min and max
-const syncWithBudget = () => {  
+// Watchers
+
+watch(dateRange, (newValue) => {
+  if (newValue.length === 2) {
+    formData.value.datesinit = newValue[0];
+    formData.value.datesfinal = newValue[1];
+  }
+});
+
+watch(budgetMin, (newValue) => {
+  formData.value.budgetmin = newValue;
+});
+
+watch(budgetMax, (newValue) => {
+  formData.value.budgetmax = newValue;
+});
+
+// methods
+const syncWithBudget = () => {
   if (budgetMin.value > budgetMax.value) {
     budgetMin.value = budgetMax.value - 100;
   }
-
   if (budgetMax.value < budgetMin.value) {
     budgetMax.value = budgetMin.value + 100;
   }
 };
 
+const validateForm = () => {
+  // validation of budget
+  if (budgetMin.value >= budgetMax.value) {
+    alert('El pressupost mínim ha de ser inferior al màxim.');
+    return false;
+  }
 
-//function to stay alert and watch budget min and max
-watch(budgetMin, (newValue) => {
-  formData.value.budgetmin = newValue;
-})
+  // validation of dates
+  if (!dateRange.value || dateRange.value.length !== 2) {
+    alert('Selecciona una data inicial i final per al viatge.');
+    return false;
+  }
 
-watch(budgetMax, (newValue) => {
-  formData.value.budgetmax = newValue;
-})
+  const startDate = new Date(formData.value.datesinit);
+  const endDate = new Date(formData.value.datesfinal);
+  const today = new Date();
 
+  // update dates at 00:00
+  today.setHours(0, 0, 0, 0);
+  startDate.setHours(0, 0, 0, 0);
+  endDate.setHours(0, 0, 0, 0);
 
-const router = useRouter();
+  if (startDate < today) {
+    alert('La data d\'inici no pot ser anterior a la data actual.');
+    return false;
+  }
 
-// function to submit the form
+  if (endDate <= startDate) {
+    alert('La data de tornada ha de ser posterior a la d\'anada.');
+    return false;
+  }
+
+  return true;
+};
+
+// Submit handle
 const handleSubmit = async () => {
+  if (!validateForm()) return;
+
   try {
-    if (budgetMin.value >= budgetMax.value) {
-      alert('El pressupost mínim ha de ser inferior al màxim.');
-      return;
-    }
-
-    formData.value.budgetmin = budgetMin.value;
-    formData.value.budgetmax = budgetMax.value;
-
-    router.push({ name: 'loading' });
-
-    // generate the prompt for gemini AI
+    // prepare request to API
     const requestText = `
       Planifica un viatge per a ${formData.value.travelers} persones ${formData.value.type === 'alone' ? 'sol' : `amb ${formData.value.type}`}.
       Destí: ${formData.value.destination}.
@@ -168,34 +202,33 @@ const handleSubmit = async () => {
       Interessos: ${formData.value.interests}.
     `;
 
-    console.log('Text a enviar a Gemini:', requestText); 
+    // navigate to loading
+    router.push({ name: 'loading' });
 
-    // call the gemini API 
     const response = await fetch('/api/gemini', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text: requestText }),
     });
 
-    if (!response.ok) {
-      throw new Error('Error al cridar la IA de Gemini');
-    }
+    if (!response.ok) throw new Error('Error al cridar la IA de Gemini');
 
     const result = await response.json();
 
-    // redirect to the result page
     router.push({
       name: 'result',
-      query: {
-        response: JSON.stringify(result),
-
-      },
+      query: { response: JSON.stringify(result) },
     });
 
   } catch (error) {
     console.error('Error al enviar el formulari:', error);
+    alert('S\'ha produït un error en processar la sol·licitud');
   }
 };
 </script>
+
+<style>
+.dp_main {
+  width: 100%;
+}
+</style>
