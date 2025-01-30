@@ -6,7 +6,7 @@
         <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
             <h2 class="text-3xl font-bold text-center mb-8">Benvingut de nou!</h2>
 
-            <!--form for login (mail and password)-->
+            <!--form for login-->
             <form @submit.prevent="handleLogin" class="space-y-6">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Correu</label>

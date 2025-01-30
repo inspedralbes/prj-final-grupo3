@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <navbar />
     <AppHeader />
     <slot />
