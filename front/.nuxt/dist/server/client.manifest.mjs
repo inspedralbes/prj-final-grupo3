@@ -7,12 +7,12 @@ export default {
     "module": true,
     "resourceType": "script"
   },
-  "/app/node_modules/nuxt/dist/app/entry.js": {
+  "/Users/aivanantonio/Desktop/prj-final-grupo3/front/node_modules/nuxt/dist/app/entry.js": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
     "preload": true,
     "isEntry": true,
-    "file": "/app/node_modules/nuxt/dist/app/entry.js"
+    "file": "/Users/aivanantonio/Desktop/prj-final-grupo3/front/node_modules/nuxt/dist/app/entry.js"
   }
 }

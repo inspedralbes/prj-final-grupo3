@@ -74,7 +74,7 @@
             }
         });
 
-        document.getElementById('close-register').addEventListener('click', function() {
+        document.getElementById('close-form').addEventListener('click', function() {
             const form = document.getElementById('register-form');
             const formButton = document.getElementById('register-button');
 
