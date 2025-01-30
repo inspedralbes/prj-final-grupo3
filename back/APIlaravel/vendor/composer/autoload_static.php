@@ -525,6 +525,7 @@ class ComposerStaticInitf60f8b6e279e6de64f92f6b9fb420141
         'App\\Http\\Controllers\\Auth\\AuthenticatorController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/AuthenticatorController.php',
         'App\\Http\\Controllers\\BudgetController' => __DIR__ . '/../..' . '/app/Http/Controllers/BudgetController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
+        'App\\Http\\Controllers\\CountriesApiController' => __DIR__ . '/../..' . '/app/Http/Controllers/CountriesApiController.php',
         'App\\Http\\Controllers\\CountriesController' => __DIR__ . '/../..' . '/app/Http/Controllers/CountriesController.php',
         'App\\Http\\Controllers\\PublicationsController' => __DIR__ . '/../..' . '/app/Http/Controllers/PublicationsController.php',
         'App\\Http\\Controllers\\TravelsController' => __DIR__ . '/../..' . '/app/Http/Controllers/TravelsController.php',
