@@ -1,8 +1,13 @@
-<div class="flex flex-col justify-center bg-white p-8 m-6 rounded-lg shadow-2xl relative max-w-lg mx-auto">
-    <p class="text-4xl font-semibold text-center text-gray-800 mb-6">Registre d'usuari</p>
-    <button id="close-form" class="absolute top-4 right-4 text-2xl text-gray-600 font-bold hover:text-red-600">
-        <img src="{{ asset('icons/close_icon.svg') }}" alt="" class="w-8 h-8 duration-300 hover:rotate-180">
-    </button>
+<div class="flex flex-col justify-center bg-white mt-0 m-6 rounded-lg shadow-2xl relative max-w-lg mx-auto">
+    <div class="flex flex-row relative bg-gray-800 text-white text-2xl tracking-wider font-bold rounded-t-lg p-4 w-full">
+        Registre d'usuari
+        <div class="absolute right-4 top-.5">
+            <button id="close-register" class="text-2xl text-gray-600 font-bold hover:text-red-600">
+                <img src="{{ asset('icons/close_icon.svg') }}" alt="Cerrar"
+                    class="w-8 h-8 duration-300 hover:rotate-180">
+            </button>
+        </div>
+    </div>
     @if ($errors->any())
         <div class="bg-red-500 text-white p-4 rounded mb-4">
             <ul>
@@ -12,7 +17,7 @@
             </ul>
         </div>
     @endif
-    <form id="user-form" action="{{ route('users.store') }}" method="POST" class="space-y-6">
+    <form id="user-form" action="{{ route('users.store') }}" method="POST" class="space-y-6 p-8">
         @csrf
         <div class="grid grid-cols-1 gap-4">
             <input type="text" name="name" id="name"
@@ -51,13 +56,6 @@
 </div>
 
 <script>
-    document.getElementById('close-form').addEventListener('click', function(e) {
-        e.preventDefault();
-        const form = document.getElementById('register-form');
-        const formButton = document.getElementById('register-button');
-        form.classList.add('hidden');
-        formButton.classList.remove('hidden');
-    });
 
     function checkForm() {
         const name = document.getElementById('name').value.trim();

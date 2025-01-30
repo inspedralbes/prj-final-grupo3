@@ -24,11 +24,11 @@
                         class="cursor-pointer text-basefont-medium hover:text-blue-600">Gestió de
                         usuaris</a>
                     <a href="{{ route('countries') }}"
-                        class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de paissos</a>
-                    <a href="{{ route('countries') }}"
+                        class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de països</a>
+                    {{-- <a href="{{ route('countries') }}"
                         class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de viatges</a>
                     <a href="{{ route('countries') }}"
-                        class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de publicacions</a>
+                        class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de publicacions</a> --}}
                 </div>
             @endif
             <div class="absolute top-4 right-4">
