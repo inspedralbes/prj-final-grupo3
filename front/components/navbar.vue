@@ -1,6 +1,6 @@
 <template>
     <nav class="bg-white shadow-md p-4">
-      <div v-if="authStore.token">
+      <div v-if="!authStore.token">
         <div class="container mx-auto flex justify-between items-center">
           <h1 class="text-2xl font-bold text-blue-600"><NuxtLink to="/">Triplan</NuxtLink></h1>
           <div class="space-x-4">
@@ -10,8 +10,7 @@
         </div>
       </div>
       <div v-else>
-        <button @click="navBar.handleLogout">cerrar session</button>
-        <img src="" alt="">
+        <button @click="navBar.handleLogout">Tanca sessió</button>
       </div>
       </nav>
 </template>
@@ -19,6 +18,7 @@
 <script setup>
 import { useAuthStore } from '~/store/authUser';
 import { useNavBar } from '~/composable/useNavBar';
+import auth from '~/middleware/auth';
 
 const authStore = useAuthStore();
 const navBar = useNavBar();

@@ -28,6 +28,9 @@ export function useLoginAuth() {
         try {
             const response = await com.login(loginData);
 
+            console.log(response);
+            
+
             if (response.status === 'error') {
                 error.value = response.message;
                 console.log(error.value);

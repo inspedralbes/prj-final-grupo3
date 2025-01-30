@@ -47,7 +47,9 @@
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 import 'swiper/swiper-bundle.css'; 
+import { useIndex } from '~/composable/useIndex';
 
+useIndex();
 
 const user = useState('user', () => null); // <- en caso de que haya iniciado sesion no aparece el div
 const handlePlanTrip = () => {

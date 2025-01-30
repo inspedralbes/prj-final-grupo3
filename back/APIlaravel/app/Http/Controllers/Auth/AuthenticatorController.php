@@ -22,13 +22,12 @@ class AuthenticatorController extends Controller
             ]);
 
             if (Auth::attempt($credentials)) {
-
-                $user = Auth::user();
+                $user = User::where('email', $credentials['email'])->first();
 
                 $token = $user->createToken('auth_token')->plainTextToken;
 
                 return response()->json(['status' => 'success', 'message' => 'Credencials validades', 'token' => $token, 'user' => $user]);
-            }
+            } 
 
             return response()->json(['status' => 'error', 'message' => 'Correu o contrasenya incorrectes'], 401);
 
@@ -36,6 +35,8 @@ class AuthenticatorController extends Controller
 
             return response()->json(['status' => 'error', 'message' => 'Error en la validació'], 500);
 
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'nullToken', 'message' => 'Correu o contrasenya incorrectes'], 405);
         }
 
     }
@@ -47,29 +48,29 @@ class AuthenticatorController extends Controller
             $data = $request->validate(
                 [
                     'name' => 'required|string|max:255',
-                    'surname' => 'required|string|max:255', // Campo apellido agregado
+                    'surname' => 'required|string|max:255',
                     'email' => 'required|string|email|max:255|unique:users',
                     'email_alternative' => 'required|string|email|max:255|unique:users',
                     'password' => 'required|string|min:8|confirmed',
-                    'birth_date' => 'required|date', // Campo fecha de nacimiento agregado
-                    'phone_number' => 'required|integer', // Campo número de teléfono agregado
-                    'gender' => 'required|string|in:male,female,other', // Campo género agregado con validación
-                    'id_travel' => 'nullable|exists:travels,id', // Asumiendo que id_travel es opcional y existe en la tabla travels
+                    'birth_date' => 'required|date',
+                    'phone_number' => 'required|integer',
+                    'gender' => 'required|string|in:male,female,other',
+                    'id_travel' => 'nullable|exists:travels,id',
                 ],
                 [
-                    'name.required' => 'El camp name es obligatori',
-                    'surname.required' => 'El camp cognom es obligatori',
-                    'email.required' => 'El camp email es obligatori',
-                    'email.email' => 'Direcció de correu electrònic inválida',
-                    'email_alternative.required' => 'El camp email alternatiu es obligatori',
-                    'email_alternative.email' => 'Direcció de correu electrònic inválida',
-                    'password.required' => 'El camp password es obligatori',
-                    'birth_date.required' => 'El camp data naixemnet es obligatori',
-                    'phone_number.required' => 'El campo telefón es obligatori',
-                    'gender.required' => 'El camp sexe es obligatori',
+                    'name.required' => 'El campo name es obligatorio',
+                    'surname.required' => 'El campo surname es obligatorio',
+                    'email.required' => 'El campo email es obligatorio',
+                    'email.email' => 'Dirección de correo electrónico inválida',
+                    'email_alternative.required' => 'El campo email alternativo es obligatorio',
+                    'email_alternative.email' => 'Dirección de correo electrónico inválida',
+                    'password.required' => 'El campo password es obligatorio',
+                    'birth_date.required' => 'El campo fecha de nacimiento es obligatorio',
+                    'phone_number.required' => 'El campo teléfono es obligatorio',
+                    'gender.required' => 'El campo gender es obligatorio',
                 ]
             );
-
+            
             $user = new User();
             $user->name = $data['name'];
             $user->surname = $data['surname'];
@@ -79,16 +80,17 @@ class AuthenticatorController extends Controller
             $user->birth_date = $data['birth_date'];
             $user->phone_number = $data['phone_number'];
             $user->gender = $data['gender'];
-            if($data['gender'] == 'male') {                
-                $user->avatar = './public/default_avatar_male.png';
+            
+            // Asignar avatar por defecto según el género
+            if ($data['gender'] == 'male') {
+                $user->avatar = asset('storage/default_avatar_male.png');
             } else {
-                $user->avatar = './public/default_avatar_female.png';
+                $user->avatar = asset('storage/default_avatar_female.png');
             }
+            
             $user->save();
 
-            // dd($data['gender']);
-
-            // Crear el token de acceso
+            // Create acces token
             $token = $user->createToken('auth_token')->plainTextToken;
             Auth::login($user);
 
@@ -146,7 +148,8 @@ class AuthenticatorController extends Controller
     }
 
     public function currentUser()
-    {
+{
+    try {
         $user = auth()->user();
 
         if ($user) {
@@ -158,7 +161,16 @@ class AuthenticatorController extends Controller
 
         return response()->json([
             'status' => 'error',
-            'message' => 'No authenticated user found',
+            'message' => 'La sessió a expirat',
+        ], 405);
+
+    } catch (\Exception $e) {
+        
+        return response()->json([
+            'status' => 'error',
+            'message' => 'No hi ha un usuari autenticat',
         ], 401);
     }
 }
+}
+
