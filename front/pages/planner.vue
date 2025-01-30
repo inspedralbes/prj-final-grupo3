@@ -80,6 +80,7 @@
               </div>
             </div>
           </div>
+          
 
           <!-- Interests -->
           <div>
@@ -145,6 +146,8 @@ watch(budgetMax, (newValue) => {
 
 
 const router = useRouter();
+
+
 
 // function to submit the form
 const handleSubmit = async () => {
