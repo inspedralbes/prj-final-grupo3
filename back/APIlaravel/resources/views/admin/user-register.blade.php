@@ -1,6 +1,8 @@
 <div class="flex flex-col justify-center bg-white p-8 m-6 rounded-lg shadow-2xl relative max-w-lg mx-auto">
     <p class="text-4xl font-semibold text-center text-gray-800 mb-6">Registre d'usuari</p>
-    <button id="close-form" class="absolute top-2 right-4 text-2xl text-gray-600 font-bold hover:text-red-600">X</button>
+    <button id="close-form" class="absolute top-4 right-4 text-2xl text-gray-600 font-bold hover:text-red-600">
+        <img src="{{ asset('icons/close_icon.svg') }}" alt="" class="w-8 h-8 duration-300 hover:rotate-180">
+    </button>
     @if ($errors->any())
         <div class="bg-red-500 text-white p-4 rounded mb-4">
             <ul>

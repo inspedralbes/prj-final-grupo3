@@ -12,10 +12,6 @@ Route::get('/', function () {
     return view('admin.login');
 })->name('login');
 
-Route::get('/home', function () {
-    return view('layout.index');
-})->name('home');
-
 Route::post('/', [AuthController::class, 'login'])->name('login');
 
 Route::middleware(['auth:admin'])->group(function () {

@@ -3,8 +3,8 @@
 @section('content')
 <div class="m-5 gap-5 relative bg-white shadow-2xl rounded-lg p-6 max-w-lg mx-auto">
     <!-- Botón de cierre -->
-    <button id="close-form" class="absolute top-2 right-4 text-2xl text-gray-600 font-bold hover:text-red-600">
-        X
+    <button id="close-form" class="absolute top-4 right-4 text-2xl text-gray-600 font-bold hover:text-red-600">
+        <img src="{{ asset('icons/close_icon.svg') }}" alt="" class="w-8 h-8 duration-300 hover:rotate-180">
     </button>
     
     <!-- Imagen basada en el género -->

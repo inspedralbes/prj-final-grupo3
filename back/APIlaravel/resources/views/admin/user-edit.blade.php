@@ -4,7 +4,9 @@
     <div class="flex flex-col justify-center items-center m-5 gap-5">
         <form action="{{ route('users.update', $user->id) }}" method="POST"
             class="relative space-y-6 w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
-            <button id="close-form" class="absolute top-2 right-4 text-2xl text-gray-600 font-bold hover:text-red-600">X</button>
+            <button id="close-form" class="absolute top-4 right-4 text-2xl text-gray-600 font-bold hover:text-red-600">
+                <img src="{{ asset('icons/close_icon.svg') }}" alt="" class="w-8 h-8 duration-300 hover:rotate-180">
+            </button>
             <h1 class="text-2xl font-bold text-gray-800 mb-6">Modificar dades usuari</h1>
             @csrf
             @method('PUT')

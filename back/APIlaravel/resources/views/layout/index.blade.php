@@ -13,33 +13,41 @@
 <body>
     <div class="min-h-screen flex flex-col">
         <!-- Header -->
-        <div class="bg-gray-800 text-white py-10 text-center">
-            <a href="{{ route('home') }}">
+        <div class="bg-gray-800 text-white py-10 text-center relative">
+            <a href="{{ route('users') }}">
                 <p class="text-3xl font-bold">PÀGINA D'ADMINISTRACIÓ</p>
                 <p class="text-xs">CRUD | TRIPLAN</p>
             </a>
-            <div class="flex flex-row justify-center gap-4 mt-4">
-                <a href="{{ route('users') }}" class="cursor-pointer text-basefont-medium hover:text-blue-600">Gestió de
-                    usuaris</a>
-                <a href="{{ route('countries') }}"
-                    class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de paissos</a>
-                <a href="{{ route('countries') }}"
-                    class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de viatges</a>
-                <a href="{{ route('countries') }}"
-                    class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de publicacions</a>
+            @if (Auth::check())
+                <div class="flex flex-row justify-center gap-4 mt-4">
+                    <a href="{{ route('users') }}"
+                        class="cursor-pointer text-basefont-medium hover:text-blue-600">Gestió de
+                        usuaris</a>
+                    <a href="{{ route('countries') }}"
+                        class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de paissos</a>
+                    <a href="{{ route('countries') }}"
+                        class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de viatges</a>
+                    <a href="{{ route('countries') }}"
+                        class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de publicacions</a>
+                </div>
+            @endif
+            <div class="absolute top-4 right-4">
+                @if (Auth::check())
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        {{-- <button type="submit"
+                            class="bg-red-800 text-white py-2 px-6 rounded-full hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">Cerrar
+                            sesión</button> --}}
+                        <button type="submit"
+                            class="bg-gray-500 text-white px-2 pr-3 rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors">
+                            <img src="{{ asset('icons/logout_icon.svg') }}" alt="" class="w-5 h-10"></button>
+                    </form>
+                @endif
             </div>
         </div>
 
         <!-- Content Section -->
         <div class="flex-grow bg-gray-100">
-            @if (Auth::check())
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit"
-                        class="bg-red-800 text-white py-2 px-6 rounded-full hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">Cerrar
-                        sesión</button>
-                </form>
-            @endif
             @yield('content')
         </div>
 

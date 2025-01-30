@@ -1,6 +1,8 @@
 <div class="flex flex-col justify-center bg-white p-8 m-6 rounded-lg shadow-2xl relative max-w-lg mx-auto">
     <p class="text-4xl font-semibold text-center text-gray-800 mb-6">Registre de països</p>
-    <button id="close-form" class="absolute top-2 right-4 text-2xl text-gray-600 font-bold hover:text-red-600">X</button>
+    <button id="close-form" class="absolute top-4 right-4 text-2xl text-gray-600 font-bold hover:text-red-600">
+        <img src="{{ asset('icons/close_icon.svg') }}" alt="" class="w-8 h-8 duration-300 hover:rotate-180">
+    </button>
     <form action="{{ route('countries.store') }}" method="POST" class="space-y-6">
         @csrf
         <div class="grid grid-cols-1 gap-4">
