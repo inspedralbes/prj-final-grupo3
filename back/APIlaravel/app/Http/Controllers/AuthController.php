@@ -28,7 +28,7 @@ class AuthController extends Controller
             return redirect()->route('users');
         } else {
             // Si las credenciales no son correctas, devolver un error
-            return back()->withErrors(['username' => 'Credenciales incorrectas.'])->withInput();
+            return back()->withErrors(['username' => 'Credencials incorrectes.'])->withInput();
         }
     }
 
