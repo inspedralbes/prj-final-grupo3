@@ -16,7 +16,7 @@
               <label class="block text-sm font-medium text-gray-700 mb-2">Destí</label>
               <input type="text" v-model="formData.destination"
                 class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                placeholder="On vols anar?">
+                placeholder="Ciutat on viatges">
             </div>
 
             <!--type of trip -->
@@ -41,7 +41,7 @@
 
             <!-- Select dates -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-5">Selecciona les dates</label>
+              <label class="block text-sm font-medium text-gray-700 mb-5 h-1">Selecciona les dates</label>
               <VueDatePicker v-model="dateRange" range multi-calendars :enable-time-picker="false" locale="ca"
                 class="w-full border p-2 rounded-md" :text-input="true" :text-input-options="{
                   selectText: 'Confirmar',
@@ -49,15 +49,27 @@
                 }" :min-date="new Date()" />
             </div>
 
-            <div>
-              <div class="w-1/2" >
-                <label for="" class="block text-sm font-medium text-gray-700 mb-2">Lloguer de vehicle</label>
-                <select name="lloguer" id="" class="border p-2 rounded">
+            <div class="flex items-center space x-4">
+              <!-- Lloguer de vehicle -->
+              <div class="w-1/2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Lloguer de vehicle</label>
+                <select v-model="formData.vehicle" class="border p-2 rounded">
                   <option value="" selected disabled>Selecciona</option>
                   <option value="yes">Si</option>
                   <option value="no">No</option>
                 </select>
               </div>
+
+              <!-- if vehicle is yes-->
+              <div v-if="formData.vehicle === 'yes'" class="w-1/2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Tipus de vehicle</label>
+                <select v-model="formData.vehicletype" class="border p-2 rounded w-full">
+                  <option value="car">Cotxe</option>
+                  <option value="bike">Bici</option>
+                  <option value="motorcycle">Moto</option>
+                </select>
+              </div>
+
             </div>
 
             <!-- Budget -->
@@ -123,7 +135,9 @@ const formData = ref({
   interests: '',
   type: '',
   budgetmin: '',
-  budgetmax: ''
+  budgetmax: '',
+  vehicle: '',
+  vehicletype: '',
 });
 
 const dateRange = ref([]);
@@ -132,6 +146,8 @@ const budgetMin = ref(250);
 
 
 const selectedType = computed(() => formData.value.type);
+
+const vehicle = computed(() => formData.value.vehicle);
 
 // Watchers
 
@@ -207,6 +223,8 @@ const handleSubmit = async () => {
       Dates: del ${formData.value.datesinit} al ${formData.value.datesfinal}.
       Pressupost: entre ${formData.value.budgetmin}€ i ${formData.value.budgetmax}€.
       Interessos: ${formData.value.interests}.
+      Vehicul: ${formData.value.vehicle}.
+      Tipus de vehicul: ${formData.value.vehicletype}.
     `;
 
     // navigate to loading
