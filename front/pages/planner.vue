@@ -3,11 +3,12 @@
     <title>Triplan</title>
   </header>
   <div class="min-h-screen bg-gray-50">
-    <!-- Main Content -->
+
     <main class="container mx-auto mt-10 p-4">
       <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6">
         <h2 class="text-3xl font-bold text-center mb-8">Planifica el viatge dels teus somnis</h2>
 
+        <!--form for planner-->
         <form @submit.prevent="handleSubmit" class="space-y-6">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Destination -->
@@ -15,7 +16,7 @@
               <label class="block text-sm font-medium text-gray-700 mb-2">Destí</label>
               <input type="text" v-model="formData.destination"
                 class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                placeholder="On vols anar?">
+                placeholder="Ciutat on viatges">
             </div>
 
             <!--type of trip -->
@@ -23,32 +24,53 @@
               <div class="w-1/2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Amb qui viatges?</label>
                 <select v-model="formData.type" name="type" id="" class="border p-2 rounded">
-                  <option value="alone">Sol</option>
-                  <option value="friends">Amics</option>
-                  <option value="family">Família</option>
-                  <option value="partner">Parella</option>
+                  <option disabled selected value="">Selecciona</option>
+                  <option value="sol">Sol</option>
+                  <option value="amics">Amics</option>
+                  <option value="familia">Família</option>
+                  <option value="parella">Parella</option>
                 </select>
               </div>
               <!-- if selectedtype is friends or family -->
-              <div v-if="selectedType === 'friends' || selectedType === 'family'" class="w-1/2">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Quantitat de persones:</label>
+              <div v-if="selectedType === 'amics' || selectedType === 'familia'" class="w-1/2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Quant. de persones:</label>
                 <input type="number" v-model="formData.travelers" min="1" class="border p-2 rounded w-full"
                   placeholder="2" />
               </div>
             </div>
 
-            <!-- Init date -->
+            <!-- Select dates -->
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Anada</label>
-              <input type="date" v-model="formData.datesinit"
-                class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+              <label class="block text-sm font-medium text-gray-700 mb-5 h-1">Selecciona les dates</label>
+              <VueDatePicker v-model="dateRange" range multi-calendars :enable-time-picker="false" locale="ca"
+                class="w-full border p-2 rounded-md" :text-input="true" :text-input-options="{
+                  selectText: 'Confirmar',
+                  cancelText: 'Cancel·lar'
+                }" :min-date="new Date()" />
             </div>
 
-            <!-- Final date -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Tornada</label>
-              <input type="date" v-model="formData.datesfinal"
-                class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+            <div class="flex items-center space x-4">
+              <!-- Lloguer de vehicle -->
+              <div class="w-1/2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Lloguer de vehicle</label>
+                <select v-model="formData.vehicle" class="border p-2 rounded">
+                  <option value="" selected disabled>Selecciona</option>
+                  <option value="yes">Si</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+
+              <!-- if vehicle is yes-->
+              <div v-if="formData.vehicle === 'yes'" class="w-1/2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Tipus de vehicle</label>
+                <select v-model="formData.vehicletype" class="border p-2 rounded w-full">
+                  <option value="" selected disabled>Selecciona</option>
+                  <option value="car">Cotxe</option>
+                  <option value="bike">Bici</option>
+                  <option value="motorcycle">Moto</option>
+                </select>
+              </div>
+
             </div>
 
             <!-- Budget -->
@@ -100,9 +122,12 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { ref, computed, watch } from 'vue';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
 
-// Dades del formulari
+const router = useRouter();
+
 const formData = ref({
   destination: '',
   datesinit: '',
@@ -111,90 +136,125 @@ const formData = ref({
   interests: '',
   type: '',
   budgetmin: '',
-  budgetmax: ''
-
+  budgetmax: '',
+  vehicle: '',
+  vehicletype: '',
 });
 
-// Definició dels pressupostos per defecte predefinits
+const dateRange = ref([]);
 const budgetMax = ref(7500);
 const budgetMin = ref(250);
 
-//asignar el tipus de viatge
-const selectedType = computed(() => formData.value.type);
-// Funció per sincronitzar mínim i màxim
 
+const selectedType = computed(() => formData.value.type);
+
+const vehicle = computed(() => formData.value.vehicle);
+
+// Watchers
+
+watch(dateRange, (newValue) => {
+  if (newValue.length === 2) {
+    formData.value.datesinit = newValue[0];
+    formData.value.datesfinal = newValue[1];
+  }
+});
+
+watch(budgetMin, (newValue) => {
+  formData.value.budgetmin = newValue;
+});
+
+watch(budgetMax, (newValue) => {
+  formData.value.budgetmax = newValue;
+});
+
+// methods
 const syncWithBudget = () => {
-  // Assegura que el mínim no sigui més gran que el màxim
   if (budgetMin.value > budgetMax.value) {
     budgetMin.value = budgetMax.value - 100;
   }
-
-  // Assegura que el màxim no sigui més petit que el mínim
   if (budgetMax.value < budgetMin.value) {
     budgetMax.value = budgetMin.value + 100;
   }
 };
 
+const validateForm = () => {
+  // validation of budget
+  if (budgetMin.value >= budgetMax.value) {
+    alert('El pressupost mínim ha de ser inferior al màxim.');
+    return false;
+  }
 
-//funció perque estigui atent de sincronitzar els pressupostos amb el formulari
-watch(budgetMin, (newValue) => {
-  formData.value.budgetmin = newValue;
-})
+  // validation of dates
+  if (!dateRange.value || dateRange.value.length !== 2) {
+    alert('Selecciona una data inicial i final per al viatge.');
+    return false;
+  }
 
-watch(budgetMax, (newValue) => {
-  formData.value.budgetmax = newValue;
-})
+  const startDate = new Date(formData.value.datesinit);
+  const endDate = new Date(formData.value.datesfinal);
+  const today = new Date();
 
+  // update dates at 00:00
+  today.setHours(0, 0, 0, 0);
+  startDate.setHours(0, 0, 0, 0);
+  endDate.setHours(0, 0, 0, 0);
 
-const router = useRouter();
-// Enviar el formulari
+  if (startDate < today) {
+    alert('La data d\'inici no pot ser anterior a la data actual.');
+    return false;
+  }
+
+  if (endDate <= startDate) {
+    alert('La data de tornada ha de ser posterior a la d\'anada.');
+    return false;
+  }
+
+  return true;
+};
+
+// Submit handle
 const handleSubmit = async () => {
+  if (!validateForm()) return;
+
   try {
-    if (budgetMin.value >= budgetMax.value) {
-      alert('El pressupost mínim ha de ser inferior al màxim.');
-      return;
-    }
-
-    formData.value.budgetmin = budgetMin.value;
-    formData.value.budgetmax = budgetMax.value;
-
-    // Crea el text per enviar a Gemini
+    // prepare request to API
     const requestText = `
       Planifica un viatge per a ${formData.value.travelers} persones ${formData.value.type === 'alone' ? 'sol' : `amb ${formData.value.type}`}.
       Destí: ${formData.value.destination}.
       Dates: del ${formData.value.datesinit} al ${formData.value.datesfinal}.
       Pressupost: entre ${formData.value.budgetmin}€ i ${formData.value.budgetmax}€.
       Interessos: ${formData.value.interests}.
+      Vehicul: ${formData.value.vehicle}.
+      Tipus de vehicul: ${formData.value.vehicletype}.
     `;
 
-    console.log('Text a enviar a Gemini:', requestText);  // Afegeix un log per veure què estàs enviant
+    // navigate to loading
+    router.push({ name: 'loading' });
 
-    // Crida la ruta API de Nuxt per obtenir la resposta de Gemini
     const response = await fetch('/api/gemini', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text: requestText }),
     });
 
-    if (!response.ok) {
-      throw new Error('Error al cridar la IA de Gemini');
-    }
+    if (!response.ok) throw new Error('Error al cridar la IA de Gemini');
 
     const result = await response.json();
 
-    // Redirigeix a la pàgina de result amb la resposta de Gemini
     router.push({
       name: 'result',
-      query: {
-        response: JSON.stringify(result),
-      },
+      query: { response: JSON.stringify(result) },
     });
 
   } catch (error) {
     console.error('Error al enviar el formulari:', error);
+    alert('S\'ha produït un error en processar la sol·licitud');
   }
 };
-
 </script>
+
+<style>
+.dp_main {
+  width: 100%;
+}
+</style>

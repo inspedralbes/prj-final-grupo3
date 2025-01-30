@@ -15,7 +15,7 @@
               class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="Carles">
           </div>
-
+          
           <div class="flex-1">
             <label class="block text-sm font-medium text-gray-700 mb-2">Cognoms</label>
             <input type="text" v-model="registerAuth.registerData.surname" required
@@ -119,7 +119,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+
+import { ssrInterpolate } from 'vue/server-renderer';
 import { useRegisterAuth } from '~/composable/useRegisterAuth';
 
 const registerAuth = useRegisterAuth();
@@ -135,4 +136,10 @@ const togglePasswordVisibility = (field) => {
   }
 };
 
+
+
+function handleRegister() {
+  user.value = { name: name.value, email: email.value };
+  navigateTo('/app');
+}
 </script>
