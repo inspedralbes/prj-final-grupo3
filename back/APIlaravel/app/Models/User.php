@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use DateTimeInterface;
+use Illuminate\Support\Str; // Importa Str
+use Laravel\Sanctum\NewAccessToken; // Importa NewAccessToken
 
 class User extends Authenticatable
 {
@@ -19,7 +22,15 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name', 'surname', 'email', 'email_alternative', 'password', 'birth_date', 'phone_number', 'gender'
+        'name',
+        'surname',
+        'email',
+        'email_alternative',
+        'password',
+        'birthdate',
+        'phone_number',
+        'gender',
+        'avatar'
     ];
 
     /**
@@ -43,5 +54,24 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function createToken(string $name, array $abilities = ['*'], DateTimeInterface $expiresAt = null)
+    {
+        // Generate a random token
+        do {
+            $plainTextToken = Str::random(60); // Generate random token 
+            $hashedToken = hash('sha256', $plainTextToken); // Hased token
+        } while ($this->tokens()->where('token', $hashedToken)->exists()); // Verifi if token exists    
+
+         // Create a token
+         $token = $this->tokens()->create([
+            'name' => $name,
+            'token' => $hashedToken,
+            'abilities' => $abilities,
+            'expires_at' => $expiresAt ?: now()->addHours(24),
+        ]);
+
+        return new NewAccessToken($token, $plainTextToken);
     }
 }

@@ -6,12 +6,12 @@ use App\Http\Controllers\CountriesController;
 use App\Http\Controllers\Auth\AuthenticatorController;
 
 Route::prefix('auth')->group(function () {
-    Route::post('/login', [AuthenticatorController::class, 'authenticate']);
+    Route::post('/login', [AuthenticatorController::class, 'authenticate'])->name('login');
     Route::post('/register', [AuthenticatorController::class, 'register']);
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/user', [AuthenticatorController::class, 'currentUser']);
+    Route::get('/currentUser', [AuthenticatorController::class, 'currentUser']);
     Route::post('/auth/logout', [AuthenticatorController::class, 'logout']);
 });
 

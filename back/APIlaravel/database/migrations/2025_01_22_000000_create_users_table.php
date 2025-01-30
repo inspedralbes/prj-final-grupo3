@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('email_alternative')->nullable();
             $table->string('password')->default('');
             $table->integer('phone_number')->default(0);
+            $table->string('avatar');
             $table->enum('gender', ['Male','Female']);
             $table->unsignedBigInteger('id_travel')->nullable();
             $table->foreign('id_travel')->references('id')->on('travels')->onDelete('cascade');

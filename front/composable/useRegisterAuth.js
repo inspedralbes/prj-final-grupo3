@@ -1,8 +1,12 @@
 import * as com from '../services/communicationManager';
 import { useAuthStore } from '~/store/authUser';
+import { useAlert } from './useAlert';
+import auth from '~/middleware/auth';
 
 export function useRegisterAuth() {
     const authStore = useAuthStore();
+    
+    const { customAlert } = useAlert();
 
     const loading = ref(false); // Loadin state
     const error = ref(null); // For server errors
@@ -22,18 +26,8 @@ export function useRegisterAuth() {
     // });
 
     // Form variables
-    const name = ref('');
-    const surname = ref('');
-    const email = ref('');
-    const email_alternative = ref('');
-    const password = ref('');
-    const password_confirmation = ref('');
-    const birth_date = ref('')
-    const phone_number = ref('');
-    const gender = ref('');
-
     const registerData = reactive({
-        name: '', // Inicializa como string vacío
+        name: '', 
         surname: '',
         email: '',
         email_alternative: '',
@@ -43,19 +37,6 @@ export function useRegisterAuth() {
         phone_number: '',
         gender: '',
       });
-
-    // const registerData = reactive({
-    //     name: name.value,
-    //     surname: surname.value,
-    //     email: email.value,
-    //     email_alternative: email_alternative.value,
-    //     password: password.value,
-    //     password_confirmation: password.value,
-    //     birth_date: birth_date.value,
-    //     phone_number: phone_number.value,
-    //     gender: gender.value,
-    // });
-
 
     const registerUser = async () => {
 
@@ -73,11 +54,20 @@ export function useRegisterAuth() {
         try {
             const response = await com.register(registerData);
             // Here pass the info to a store
-            authStore.login(response.user, response.token);
-            console.log(authStore.token, authStore.user);
+            if(response.status === 'error') {
+                error.value = response.message;
+                console.log(error.value);
+                
+                customAlert(error.value, 'negative', 'error', 'top', 5000);
+                return;
+            } else {
 
-            navigateTo('/');
-            success.value = true; // Indicate success register
+                authStore.login(response.user, response.token);
+                console.log(authStore.token, authStore.user);
+    
+                navigateTo('/');
+                success.value = true; // Indicate success register
+            }
             return response;
         } catch (err) {
             error.value = err.message || 'Error al registrar el usuario';
@@ -93,14 +83,5 @@ export function useRegisterAuth() {
         success,
         registerError,
         registerData,
-        name,
-        surname,
-        email,
-        email_alternative,
-        password,
-        password_confirmation,
-        birth_date,
-        phone_number,
-        gender
     };
 }

@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { login } from "~/services/communicationManager";
 
 export const useAuthStore = defineStore('auth', {
 
@@ -14,8 +15,8 @@ export const useAuthStore = defineStore('auth', {
     },
     actions: {
         login(userData, userToken) {
-            // console.log('User logged in:', userData);
-            // console.log('User token:', userToken);
+            console.log('User logged in:', userData);
+            console.log('User token:', userToken);
             
             this.isAuthenticated = true;
             this.user = userData;
@@ -23,7 +24,7 @@ export const useAuthStore = defineStore('auth', {
 
             sessionStorage.setItem('token', userToken);
             sessionStorage.setItem('user', JSON.stringify(userData));
-            // console.log('Token guardado en sessionStorage:', sessionStorage.getItem('token'));
+            sessionStorage.setItem('isAuthenticated', true);
         },
         logout() {
             this.isAuthenticated = false;
@@ -33,19 +34,17 @@ export const useAuthStore = defineStore('auth', {
             sessionStorage.removeItem('user');
         },
         initialize() {
-            const token = sessionStorage.getItem('token');
-            const user = JSON.parse(sessionStorage.getItem('user'));
-            if (token && user) {
-                this.login(user, token);
-            }
+            this.token = sessionStorage.getItem('token');
+            this.user = JSON.parse(sessionStorage.getItem('user'));
         }
     },
     persist: {
         enabled: true, // Activate persist
         strategies: [
             {
-                key: 'userStorage', // key storage
+                key: 'authStore', // key storage
                 storage: sessionStorage,
+                paths: ['isAuthenticated', 'token', 'user'] // Especifica qué guardar
             },
         ],
     },
