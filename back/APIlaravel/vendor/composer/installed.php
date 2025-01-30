@@ -378,8 +378,8 @@
         ),
         'laravel/framework' => array(
             'pretty_version' => 'v11.41.1',
-            'version' => '11.40.0.0',
-            'reference' => '599a28196d284fee158cc10086fd56ac625ad7a3',
+            'version' => '11.41.1.0',
+            'reference' => 'f435c954d19db60ecd13f04ed3d9e8bcbeb7bebd',
             'type' => 'library',
             'install_path' => __DIR__ . '/../laravel/framework',
             'aliases' => array(),

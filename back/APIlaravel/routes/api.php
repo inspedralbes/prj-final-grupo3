@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CountriesController;
+use App\Http\Controllers\CountriesApiController;
 use App\Http\Controllers\Auth\AuthenticatorController;
 
 Route::prefix('auth')->group(function () {
@@ -15,4 +15,4 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/auth/logout', [AuthenticatorController::class, 'logout']);
 });
 
-Route::get('/countries', action: [CountriesController::class, 'index']);
+Route::get('/countries', action: [CountriesApiController::class, 'index']);
