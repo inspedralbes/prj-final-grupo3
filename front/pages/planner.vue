@@ -40,7 +40,7 @@
             </div>
 
             <!-- Select dates -->
-            <div class="max-w-full">
+            <div>
               <label class="block text-sm font-medium text-gray-700 mb-5">Selecciona les dates</label>
               <VueDatePicker v-model="dateRange" range multi-calendars :enable-time-picker="false" locale="ca"
                 class="w-full border p-2 rounded-md" :text-input="true" :text-input-options="{
@@ -50,7 +50,14 @@
             </div>
 
             <div>
-              
+              <div class="w-1/2" >
+                <label for="" class="block text-sm font-medium text-gray-700 mb-2">Lloguer de vehicle</label>
+                <select name="lloguer" id="" class="border p-2 rounded">
+                  <option value="" selected disabled>Selecciona</option>
+                  <option value="yes">Si</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
             </div>
 
             <!-- Budget -->
