@@ -33,7 +33,7 @@
               </div>
               <!-- if selectedtype is friends or family -->
               <div v-if="selectedType === 'amics' || selectedType === 'familia'" class="w-1/2">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Quantitat de persones:</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Quant. de persones:</label>
                 <input type="number" v-model="formData.travelers" min="1" class="border p-2 rounded w-full"
                   placeholder="2" />
               </div>
@@ -64,6 +64,7 @@
               <div v-if="formData.vehicle === 'yes'" class="w-1/2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Tipus de vehicle</label>
                 <select v-model="formData.vehicletype" class="border p-2 rounded w-full">
+                  <option value="" selected disabled>Selecciona</option>
                   <option value="car">Cotxe</option>
                   <option value="bike">Bici</option>
                   <option value="motorcycle">Moto</option>
