@@ -5,7 +5,6 @@ export function useIndex() {
 
     const authStore = useAuthStore();
 
-
     const handlePlanTrip = () => {
         if (authStore.user) {
             navigateTo('/planner');
@@ -14,23 +13,23 @@ export function useIndex() {
         }
     };
 
-    onMounted(async () => {
-        if (process.client) {
-            authStore.initialize();
-            const response = await com.getCurrentUser(sessionStorage.getItem('token'));
+    // onMounted(async () => {
+    //     if (process.client) {
+    //         authStore.initialize();
+    //         const response = await com.getCurrentUser(sessionStorage.getItem('token'));
 
-            console.log(authStore.token);
+    //         console.log(authStore.token);
 
-            if (!authStore.token) {
-                if (response.status === 'error') {
-                    authStore.logout();
-                    navigateTo('/login');
-                }
-            } else {
-                navigateTo('/');
-            }
-        }
-    });
+    //         if (!authStore.token) {
+    //             if (response.status === 'error') {
+    //                 authStore.logout();
+    //                 navigateTo('/login');
+    //             }
+    //         } else {
+    //             navigateTo('/');
+    //         }
+    //     }
+    // });
 
     return {
         handlePlanTrip,

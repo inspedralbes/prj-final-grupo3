@@ -1,6 +1,6 @@
-const HOST = 'http://localhost:8000/api';
-// const HOST = 'http://triplan.daw.inspedralbes.cat/laravel/public/api';
+const config = useRuntimeConfig()
 
+const HOST = config.public.apiUrl
 
 export const register = async (userData) => {
 
