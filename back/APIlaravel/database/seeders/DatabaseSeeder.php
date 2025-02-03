@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Admin;
+use App\Models\Movility;
+use App\Models\Travel;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -26,6 +28,10 @@ class DatabaseSeeder extends Seeder
             ImportJson::class,
             UserSeeder::class,
             AdminSeeder::class,
+            TravelTypeSeeder::class,
+            BudgetSeeder::class,
+            MovilitySeeder::class,
+            TravelSeeder::class,
         ]);
 
     }

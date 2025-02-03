@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\Country;
+use App\Models\Movility;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class ImportJson extends Seeder
+class MovilitySeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,16 +15,13 @@ class ImportJson extends Seeder
     public function run(): void
     {
         try {
-
-            $file_json = "./public/country_data.json";
+            $file_json = "./public/user_data.json";
             $json = file_get_contents($file_json);
-            $countries = json_decode($json, true);
+            $movilities = json_decode($json, true);
 
-            // Insert data
-            foreach ($countries["countries"] as $country) {
-                Country::create([
-                    'name' => $country['name'],
-                    'code' => $country['code'],
+            foreach ($movilities["movilities"] as $movility) {
+                Movility::create([
+                    'type' => $movility['type'],
                 ]);
             }
         } catch (QueryException $e) {

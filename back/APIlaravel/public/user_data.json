@@ -180,5 +180,168 @@
             "remember_token": "randomtoken112",
             "avatar": "https://example.com/avatars/john_doe.jpg"
         }
+    ],
+    "travels": [
+        {
+            "id_country": 1,
+            "id_type": 2,
+            "id_budget": 3,
+            "id_movility": 4,
+            "qunt_date": 4,
+            "date_init": "2025-03-01",
+            "date_end": "2025-03-10",
+            "description": "Descripción del evento"
+        },
+        {
+            "id_country": 1,
+            "id_type": 2,
+            "id_budget": 3,
+            "id_movility": 4,
+            "qunt_date": 4,
+            "date_init": "2025-03-01",
+            "date_end": "2025-03-10",
+            "description": "Descripción del evento"
+        },
+        {
+            "id_country": 1,
+            "id_type": 2,
+            "id_budget": 3,
+            "id_movility": 4,
+            "qunt_date": 4,
+            "date_init": "2025-03-01",
+            "date_end": "2025-03-10",
+            "description": "Descripción del evento"
+        },
+        {
+            "id_country": 1,
+            "id_type": 2,
+            "id_budget": 3,
+            "id_movility": 4,
+            "qunt_date": 4,
+            "date_init": "2025-03-01",
+            "date_end": "2025-03-10",
+            "description": "Descripción del evento"
+        },
+        {
+            "id_country": 1,
+            "id_type": 2,
+            "id_budget": 3,
+            "id_movility": 4,
+            "qunt_date": 4,
+            "date_init": "2025-03-01",
+            "date_end": "2025-03-10",
+            "description": "Descripción del evento"
+        },
+        {
+            "id_country": 1,
+            "id_type": 2,
+            "id_budget": 3,
+            "id_movility": 4,
+            "qunt_date": 4,
+            "date_init": "2025-03-01",
+            "date_end": "2025-03-10",
+            "description": "Descripción del evento"
+        },
+        {
+            "id_country": 1,
+            "id_type": 2,
+            "id_budget": 3,
+            "id_movility": 4,
+            "qunt_date": 4,
+            "date_init": "2025-03-01",
+            "date_end": "2025-03-10",
+            "description": "Descripción del evento"
+        },
+        {
+            "id_country": 1,
+            "id_type": 2,
+            "id_budget": 3,
+            "id_movility": 4,
+            "qunt_date": 4,
+            "date_init": "2025-03-01",
+            "date_end": "2025-03-10",
+            "description": "Descripción del evento"
+        },
+        {
+            "id_country": 1,
+            "id_type": 2,
+            "id_budget": 3,
+            "id_movility": 4,
+            "qunt_date": 4,
+            "date_init": "2025-03-01",
+            "date_end": "2025-03-10",
+            "description": "Descripción del evento"
+        },
+        {
+            "id_country": 1,
+            "id_type": 2,
+            "id_budget": 3,
+            "id_movility": 4,
+            "qunt_date": 4,
+            "date_init": "2025-03-01",
+            "date_end": "2025-03-10",
+            "description": "Descripción del evento"
+        },
+        {
+            "id_country": 1,
+            "id_type": 2,
+            "id_budget": 3,
+            "id_movility": 4,
+            "qunt_date": 4,
+            "date_init": "2025-03-01",
+            "date_end": "2025-03-10",
+            "description": "Descripción del evento"
+        },
+        {
+            "id_country": 1,
+            "id_type": 2,
+            "id_budget": 3,
+            "id_movility": 4,
+            "qunt_date": 4,
+            "date_init": "2025-03-01",
+            "date_end": "2025-03-10",
+            "description": "Descripción del evento"
+        }
+    ],
+    "travel_types": [
+        { "type": "solo" },
+        { "type": "family" },
+        { "type": "friends" },
+        { "type": "partner" },
+        { "type": "solo" }
+    ],
+    "budgets": [
+        {
+            "min_budget": 100.0,
+            "max_budget": 500.0,
+            "final_price": 450.0
+        },
+        {
+            "min_budget": 200.0,
+            "max_budget": 600.0,
+            "final_price": 550.0
+        },
+        {
+            "min_budget": 300.0,
+            "max_budget": 700.0,
+            "final_price": 650.0
+        },
+        {
+            "min_budget": 400.0,
+            "max_budget": 800.0,
+            "final_price": 750.0
+        },
+        {
+            "min_budget": 500.0,
+            "max_budget": 900.0,
+            "final_price": 850.0
+        }
+    ],
+    "movilities": [
+        { "type": "bike" },
+        { "type": "car" },
+        { "type": "moto" },
+        { "type": "no_rent" },
+        { "type": "bike" }
     ]
 }

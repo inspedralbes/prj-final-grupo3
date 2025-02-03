@@ -9,6 +9,7 @@ class Budget extends Model
 {
     use HasFactory;
 
+    protected $table = 'budget';
     protected $fillable = [
         'min_price',
         'max_price',

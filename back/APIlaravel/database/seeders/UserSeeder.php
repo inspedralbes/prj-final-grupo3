@@ -34,7 +34,6 @@ class UserSeeder extends Seeder
                     'remember_token' => $user['remember_token'],
                 ]);
             }
-            echo "Datos insertados correctamente";
         } catch (QueryException $e) {
             echo "Error al conectarse a la base de datos: " . $e->getMessage();
         }
