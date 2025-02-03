@@ -11,13 +11,25 @@
         <!--form for planner-->
         <form @submit.prevent="handleSubmit" class="space-y-6">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Destination -->
+
+            <!-- country -->
             <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">País</label>
+              <select v-model="formData.country" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                <option disabled selected value="">Selecciona un país</option>
+                <option v-for="country in countries" :key="country.id" :value="country.name">
+                  {{ country.name }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Destination -->
+            <!-- <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Destí</label>
               <input type="text" v-model="formData.destination"
                 class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Ciutat on viatges">
-            </div>
+            </div> -->
 
             <!--type of trip -->
             <div class="flex items-center space x-4">
@@ -50,7 +62,7 @@
             </div>
 
             <div class="flex items-center space x-4">
-              <!-- Lloguer de vehicle -->
+              <!-- rent a car -->
               <div class="w-1/2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Lloguer de vehicle</label>
                 <select v-model="formData.vehicle" class="border p-2 rounded">
@@ -122,14 +134,17 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+import getCountries from '@/services/communicationManager';
+
 
 const router = useRouter();
 
 const formData = ref({
   destination: '',
+  country: '',
   datesinit: '',
   datesfinal: '',
   travelers: '',
@@ -142,8 +157,10 @@ const formData = ref({
 });
 
 const dateRange = ref([]);
+const countries = ref([]);
 const budgetMax = ref(7500);
 const budgetMin = ref(250);
+
 
 
 const selectedType = computed(() => formData.value.type);
@@ -165,6 +182,20 @@ watch(budgetMin, (newValue) => {
 
 watch(budgetMax, (newValue) => {
   formData.value.budgetmax = newValue;
+});
+
+watch(countries, (newVal) => {
+  console.log("Countries actualitzat:", newVal);
+});
+
+onMounted
+onMounted(async () => {
+  try {
+    countries.value = await getCountries();
+    console.log("Països carregats:", countries.value);
+  } catch (error) {
+    console.error("Error carregant els països:", error);
+  }
 });
 
 // methods
@@ -224,8 +255,8 @@ const handleSubmit = async () => {
       Dates: del ${formData.value.datesinit} al ${formData.value.datesfinal}.
       Pressupost: entre ${formData.value.budgetmin}€ i ${formData.value.budgetmax}€.
       Interessos: ${formData.value.interests}.
-      Vehicul: ${formData.value.vehicle}.
-      Tipus de vehicul: ${formData.value.vehicletype}.
+      Vehicle: ${formData.value.vehicle}.
+      Tipus de vehicle: ${formData.value.vehicletype}.
     `;
 
     // navigate to loading

@@ -2,6 +2,29 @@ const HOST = 'http://localhost:8000/api';
 // const HOST = 'http://triplan.daw.inspedralbes.cat/laravel/public/api';
 
 
+export async function  getCountries() {
+    const URL = HOST + '/countries';
+
+    try {
+        const response = await fetch(URL, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error al obtenir països: ${response.statusText}`);
+        }
+
+        const countries = await response.json();
+        return countries;
+    } catch (error) {
+        console.error('Error en la petició de països:', error);
+        return [];
+    }
+}
+
 export const register = async (userData) => {
 
     const URL = HOST + '/auth/register';
