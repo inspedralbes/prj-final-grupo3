@@ -4,15 +4,14 @@ import { useRoute, useRouter } from 'nuxt/app'
 
 export function useNavBar() {
 
-    const route = useRoute() // Obtiene la ruta actual
-    const router = useRouter() // Instancia el router
+    const route = useRoute() // Get the current route
 
     const config = useRuntimeConfig()
     const authStore = useAuthStore();
 
     const isOpen = ref(false)
-
     const avatar = config.public.appName
+    
     const handleLogout = () => {
         authStore.logout();
         navigateTo('/login');
@@ -38,17 +37,17 @@ export function useNavBar() {
         document.addEventListener('click', handleClickOutside)
         if (process.client) {
             authStore.initialize();
-            const response = await com.getCurrentUser(sessionStorage.getItem('token'));
+            const response = await com.getCurrentUser(authStore.token);
 
             console.log(authStore.token);
 
             if (!authStore.token) {
                 if (response.status === 'error') {
                     authStore.logout();
-                    navigateTo('/login');
+                    navigateTo('/');
                 }
             } else {
-                navigateTo('/');
+                // navigateTo('/');
             }
         }
     });

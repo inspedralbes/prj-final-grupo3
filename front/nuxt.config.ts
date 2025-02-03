@@ -11,7 +11,6 @@ export default defineNuxtConfig({
   ],
   ssr: false, 
   runtimeConfig: {
-
     // Public vars
     public: {
       apiUrl: process.env.NUXT_API_URL,
