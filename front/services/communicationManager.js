@@ -1,4 +1,5 @@
 const HOST = 'http://localhost:8000/api';
+// const HOST = 'http://triplan.daw.inspedralbes.cat/laravel/public/api';
 
 
 export const register = async (userData) => {
