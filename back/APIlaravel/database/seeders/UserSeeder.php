@@ -29,6 +29,7 @@ class UserSeeder extends Seeder
                     'email_alternative' => $user['email_alternative'],
                     'password' => bcrypt($user['password']),
                     'phone_number' => $user['phone_number'],
+                    'avatar' => $user['avatar'],
                     'gender' => $user['gender'],
                     'remember_token' => $user['remember_token'],
                 ]);

@@ -10,6 +10,7 @@ return array(
     'App\\Http\\Controllers\\Auth\\AuthenticatorController' => $baseDir . '/app/Http/Controllers/Auth/AuthenticatorController.php',
     'App\\Http\\Controllers\\BudgetController' => $baseDir . '/app/Http/Controllers/BudgetController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
+    'App\\Http\\Controllers\\CountriesApiController' => $baseDir . '/app/Http/Controllers/CountriesApiController.php',
     'App\\Http\\Controllers\\CountriesController' => $baseDir . '/app/Http/Controllers/CountriesController.php',
     'App\\Http\\Controllers\\PublicationsController' => $baseDir . '/app/Http/Controllers/PublicationsController.php',
     'App\\Http\\Controllers\\TravelsController' => $baseDir . '/app/Http/Controllers/TravelsController.php',

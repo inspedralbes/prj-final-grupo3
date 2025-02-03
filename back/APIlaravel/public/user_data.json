@@ -9,7 +9,8 @@
             "password": "hashed_password_1",
             "phone_number": 600123456,
             "gender": "Male",
-            "remember_token": "randomtoken123"
+            "remember_token": "randomtoken123",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Jane",
@@ -20,7 +21,8 @@
             "password": "hashed_password_2",
             "phone_number": 600654321,
             "gender": "Female",
-            "remember_token": "randomtoken456"
+            "remember_token": "randomtoken456",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Michael",
@@ -31,7 +33,8 @@
             "password": "hashed_password_3",
             "phone_number": 600789012,
             "gender": "Male",
-            "remember_token": "randomtoken789"
+            "remember_token": "randomtoken789",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Laura",
@@ -42,7 +45,8 @@
             "password": "hashed_password_4",
             "phone_number": 600112233,
             "gender": "Female",
-            "remember_token": "randomtoken101"
+            "remember_token": "randomtoken101",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Carlos",
@@ -53,7 +57,8 @@
             "password": "hashed_password_5",
             "phone_number": 600445566,
             "gender": "Male",
-            "remember_token": "randomtoken102"
+            "remember_token": "randomtoken102",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Ana",
@@ -64,7 +69,8 @@
             "password": "hashed_password_6",
             "phone_number": 600778899,
             "gender": "Female",
-            "remember_token": "randomtoken103"
+            "remember_token": "randomtoken103",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "David",
@@ -75,7 +81,8 @@
             "password": "hashed_password_7",
             "phone_number": 600889900,
             "gender": "Male",
-            "remember_token": "randomtoken104"
+            "remember_token": "randomtoken104",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Marta",
@@ -86,7 +93,8 @@
             "password": "hashed_password_8",
             "phone_number": 600556677,
             "gender": "Female",
-            "remember_token": "randomtoken105"
+            "remember_token": "randomtoken105",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Javier",
@@ -97,7 +105,8 @@
             "password": "hashed_password_9",
             "phone_number": 600998877,
             "gender": "Male",
-            "remember_token": "randomtoken106"
+            "remember_token": "randomtoken106",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Lucía",
@@ -108,7 +117,8 @@
             "password": "hashed_password_10",
             "phone_number": 600334455,
             "gender": "Female",
-            "remember_token": "randomtoken107"
+            "remember_token": "randomtoken107",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Sergio",
@@ -119,7 +129,8 @@
             "password": "hashed_password_11",
             "phone_number": 600223344,
             "gender": "Male",
-            "remember_token": "randomtoken108"
+            "remember_token": "randomtoken108",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "María",
@@ -130,7 +141,8 @@
             "password": "hashed_password_12",
             "phone_number": 600778899,
             "gender": "Female",
-            "remember_token": "randomtoken109"
+            "remember_token": "randomtoken109",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Pablo",
@@ -141,7 +153,8 @@
             "password": "hashed_password_13",
             "phone_number": 600445566,
             "gender": "Male",
-            "remember_token": "randomtoken110"
+            "remember_token": "randomtoken110",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Carmen",
@@ -152,7 +165,8 @@
             "password": "hashed_password_14",
             "phone_number": 600112233,
             "gender": "Female",
-            "remember_token": "randomtoken111"
+            "remember_token": "randomtoken111",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Alberto",
@@ -163,7 +177,8 @@
             "password": "hashed_password_15",
             "phone_number": 600778899,
             "gender": "Male",
-            "remember_token": "randomtoken112"
+            "remember_token": "randomtoken112",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         }
     ]
 }
