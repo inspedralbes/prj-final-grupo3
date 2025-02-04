@@ -16,14 +16,14 @@
             <div class="relative">
               <label class="block text-sm font-medium text-gray-700 mb-2">País</label>
 
-              <!-- donde el usuario escribe -->
+              <!-- user writes -->
               <input v-model="searchQuery" @input="filterCountries" @focus="showDropdown = true" @blur="hideDropdown"
                 type="text" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="On viatges?" />
 
-              <!-- Lista desplegable con los países filtrados -->
+              <!-- dropdown countries list -->
               <ul v-if="showDropdown && filteredCountries.length"
-                class="absolute w-full border border-gray-300 bg-white shadow-md rounded-md mt-1 max-h-40 overflow-y-auto">
+                class="absolute w-full border border-gray-300 bg-white shadow-md rounded-md mt-1 max-h-40 overflow-y-auto z-50">
                 <li v-for="country in filteredCountries" :key="country.id" @mousedown="selectCountry(country.name)"
                   class="p-2 hover:bg-gray-200 cursor-pointer">
                   {{ country.name }}
@@ -171,7 +171,7 @@ const showDropdown = ref(false);
 const budgetMax = ref(7500);
 const budgetMin = ref(250);
 
-// Cargar países al montar el componente
+// charge list of countries p
 onMounted(async () => {
   try {
     const countryList = await getCountries();
@@ -182,7 +182,7 @@ onMounted(async () => {
   }
 });
 
-// Filtrar países según lo que el usuario escriba
+// filter countries
 const filterCountries = () => {
   const query = searchQuery.value.toLowerCase();
   filteredCountries.value = countries.value.filter(country =>
@@ -190,25 +190,25 @@ const filterCountries = () => {
   );
 };
 
-// Seleccionar país
+// choose country from list
 const selectCountry = (name) => {
   searchQuery.value = name;
   formData.value.country = name; // Asignar al formulario
   showDropdown.value = false;
 };
 
-// Ocultar dropdown con un pequeño retraso
+// hides dropdown
 const hideDropdown = () => {
   setTimeout(() => {
     showDropdown.value = false;
   }, 200);
 };
 
-// Computed para controlar el tipo de viaje
+// control type of trip
 const selectedType = computed(() => formData.value.type);
 const vehicle = computed(() => formData.value.vehicle);
 
-// Watch para sincronizar fechas
+// Watch sincronize dates
 watch(dateRange, (newValue) => {
   if (newValue.length === 2) {
     formData.value.datesinit = newValue[0];
@@ -216,7 +216,7 @@ watch(dateRange, (newValue) => {
   }
 });
 
-// Watch para actualizar presupuestos
+// Watch update budget min and max
 watch(budgetMin, (newValue) => {
   formData.value.budgetmin = newValue;
 });
@@ -225,7 +225,7 @@ watch(budgetMax, (newValue) => {
   formData.value.budgetmax = newValue;
 });
 
-// Validación del formulario
+// validates form
 const validateForm = () => {
   if (budgetMin.value >= budgetMax.value) {
     alert('El pressupost mínim ha de ser inferior al màxim.');
@@ -258,7 +258,7 @@ const validateForm = () => {
   return true;
 };
 
-// Sincronización de presupuesto entre inputs
+// updates budgets
 const syncWithBudget = () => {
   if (budgetMin.value > budgetMax.value) {
     budgetMin.value = budgetMax.value - 100;
@@ -268,7 +268,7 @@ const syncWithBudget = () => {
   }
 };
 
-// Enviar formulario
+// sends form
 const handleSubmit = async () => {
   if (!validateForm()) return;
 
@@ -311,4 +311,5 @@ const handleSubmit = async () => {
 .dp_main {
   width: 100%;
 }
+
 </style>
