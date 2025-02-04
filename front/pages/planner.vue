@@ -13,14 +13,22 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
             <!-- country -->
-            <div>
+            <div class="relative">
               <label class="block text-sm font-medium text-gray-700 mb-2">País</label>
-              <select v-model="formData.country" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                <option disabled selected value="">Selecciona un país</option>
-                <option v-for="country in countries" :key="country.id" :value="country.name">
+
+              <!-- donde el usuario escribe -->
+              <input v-model="searchQuery" @input="filterCountries" @focus="showDropdown = true" @blur="hideDropdown"
+                type="text" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                placeholder="On viatges?" />
+
+              <!-- Lista desplegable con los países filtrados -->
+              <ul v-if="showDropdown && filteredCountries.length"
+                class="absolute w-full border border-gray-300 bg-white shadow-md rounded-md mt-1 max-h-40 overflow-y-auto">
+                <li v-for="country in filteredCountries" :key="country.id" @mousedown="selectCountry(country.name)"
+                  class="p-2 hover:bg-gray-200 cursor-pointer">
                   {{ country.name }}
-                </option>
-              </select>
+                </li>
+              </ul>
             </div>
 
             <!-- Destination -->
@@ -137,8 +145,7 @@ import { useRouter } from 'vue-router';
 import { ref, computed, watch, onMounted } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
-import {getCountries} from '@/services/communicationManager';
-
+import { getCountries } from '@/services/communicationManager';
 
 const router = useRouter();
 
@@ -158,17 +165,50 @@ const formData = ref({
 
 const dateRange = ref([]);
 const countries = ref([]);
+const filteredCountries = ref([]);
+const searchQuery = ref('');
+const showDropdown = ref(false);
 const budgetMax = ref(7500);
 const budgetMin = ref(250);
 
+// Cargar países al montar el componente
+onMounted(async () => {
+  try {
+    const countryList = await getCountries();
+    countries.value = countryList;
+    filteredCountries.value = countryList; // Inicialmente muestra todos
+  } catch (error) {
+    console.error('Error carregant els països:', error);
+  }
+});
 
+// Filtrar países según lo que el usuario escriba
+const filterCountries = () => {
+  const query = searchQuery.value.toLowerCase();
+  filteredCountries.value = countries.value.filter(country =>
+    country.name.toLowerCase().includes(query)
+  );
+};
 
+// Seleccionar país
+const selectCountry = (name) => {
+  searchQuery.value = name;
+  formData.value.country = name; // Asignar al formulario
+  showDropdown.value = false;
+};
+
+// Ocultar dropdown con un pequeño retraso
+const hideDropdown = () => {
+  setTimeout(() => {
+    showDropdown.value = false;
+  }, 200);
+};
+
+// Computed para controlar el tipo de viaje
 const selectedType = computed(() => formData.value.type);
-
 const vehicle = computed(() => formData.value.vehicle);
 
-// Watchers
-
+// Watch para sincronizar fechas
 watch(dateRange, (newValue) => {
   if (newValue.length === 2) {
     formData.value.datesinit = newValue[0];
@@ -176,6 +216,7 @@ watch(dateRange, (newValue) => {
   }
 });
 
+// Watch para actualizar presupuestos
 watch(budgetMin, (newValue) => {
   formData.value.budgetmin = newValue;
 });
@@ -184,38 +225,13 @@ watch(budgetMax, (newValue) => {
   formData.value.budgetmax = newValue;
 });
 
-watch(countries, (newVal) => {
-  console.log("Countries actualitzat:", newVal);
-});
-
-onMounted
-onMounted(async () => {
-  try {
-    countries.value = await getCountries();
-    console.log("Països carregats:", countries.value);
-  } catch (error) {
-    console.error("Error carregant els països:", error);
-  }
-});
-
-// methods
-const syncWithBudget = () => {
-  if (budgetMin.value > budgetMax.value) {
-    budgetMin.value = budgetMax.value - 100;
-  }
-  if (budgetMax.value < budgetMin.value) {
-    budgetMax.value = budgetMin.value + 100;
-  }
-};
-
+// Validación del formulario
 const validateForm = () => {
-  // validation of budget
   if (budgetMin.value >= budgetMax.value) {
     alert('El pressupost mínim ha de ser inferior al màxim.');
     return false;
   }
 
-  // validation of dates
   if (!dateRange.value || dateRange.value.length !== 2) {
     alert('Selecciona una data inicial i final per al viatge.');
     return false;
@@ -225,30 +241,38 @@ const validateForm = () => {
   const endDate = new Date(formData.value.datesfinal);
   const today = new Date();
 
-  // update dates at 00:00
   today.setHours(0, 0, 0, 0);
   startDate.setHours(0, 0, 0, 0);
   endDate.setHours(0, 0, 0, 0);
 
   if (startDate < today) {
-    alert('La data d\'inici no pot ser anterior a la data actual.');
+    alert("La data d'inici no pot ser anterior a la data actual.");
     return false;
   }
 
   if (endDate <= startDate) {
-    alert('La data de tornada ha de ser posterior a la d\'anada.');
+    alert("La data de tornada ha de ser posterior a la d'anada.");
     return false;
   }
 
   return true;
 };
 
-// Submit handle
+// Sincronización de presupuesto entre inputs
+const syncWithBudget = () => {
+  if (budgetMin.value > budgetMax.value) {
+    budgetMin.value = budgetMax.value - 100;
+  }
+  if (budgetMax.value < budgetMin.value) {
+    budgetMax.value = budgetMin.value + 100;
+  }
+};
+
+// Enviar formulario
 const handleSubmit = async () => {
   if (!validateForm()) return;
 
   try {
-    // prepare request to API
     const requestText = `
       Planifica un viatge per a ${formData.value.travelers} persones ${formData.value.type === 'alone' ? 'sol' : `amb ${formData.value.type}`}.
       Destí: ${formData.value.destination}.
@@ -259,7 +283,6 @@ const handleSubmit = async () => {
       Tipus de vehicle: ${formData.value.vehicletype}.
     `;
 
-    // navigate to loading
     router.push({ name: 'loading' });
 
     const response = await fetch('/api/gemini', {
@@ -279,7 +302,7 @@ const handleSubmit = async () => {
 
   } catch (error) {
     console.error('Error al enviar el formulari:', error);
-    alert('S\'ha produït un error en processar la sol·licitud');
+    alert("S'ha produït un error en processar la sol·licitud");
   }
 };
 </script>
