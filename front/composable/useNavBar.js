@@ -1,66 +1,66 @@
 import { useAuthStore } from '../store/authUser';
 import * as com from '~/services/communicationManager';
-import { useRoute, useRouter } from 'nuxt/app'
+import { useRoute, useRouter } from 'nuxt/app';
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue';
 
 export function useNavBar() {
-
-    const route = useRoute() // Get the current route
-
-    const config = useRuntimeConfig()
+    const route = useRoute();
+    const router = useRouter();
+    const config = useRuntimeConfig();
     const authStore = useAuthStore();
 
-    const isOpen = ref(false)
-    const avatar = config.public.appName
-    
-    const handleLogout = () => {
+    const isOpen = ref(false);
+    const avatar = ref('');
+
+    const handleLogout = async () => {
         authStore.logout();
-        navigateTo('/login');
+        await navigateTo('/login'); // Esperar la navegación
     };
 
-    const toggleDropdown = () => {
-        isOpen.value = !isOpen.value
-    }
+    const toggleDropdown = (event) => {
+        isOpen.value = !isOpen.value;
+    };
 
-    // Cerrar el dropdown si se hace clic fuera de él
     const handleClickOutside = (event) => {
-        if (!event.target.closest('.relative')) {
-            isOpen.value = false
+        if (!event.target.closest('.dropdown-container')) {
+            isOpen.value = false;
         }
-    }
+    };
 
-    // Cerrar el dropdown cuando se navega entre rutas
+    // Cerrar el dropdown al cambiar de ruta
     watch(route, () => {
-        isOpen.value = false
-    })
+        isOpen.value = false;
+    });
 
     onMounted(async () => {
-        document.addEventListener('click', handleClickOutside)
+
+        document.addEventListener('click', handleClickOutside);
+
         if (process.client) {
-            authStore.initialize();
+            await authStore.initialize(); // Asegúrate de inicializar el authStore
             const response = await com.getCurrentUser(authStore.token);
 
-            console.log(authStore.token);
-
-            if (!authStore.token) {
-                if (response.status === 'error') {
-                    authStore.logout();
-                    navigateTo('/');
-                }
+            if (authStore.user && authStore.user.avatar) {
+                avatar.value = `${config.public.appName}${authStore.user.avatar}`;
             } else {
-                // navigateTo('/');
+                avatar.value = '/default-avatar.png'; // Imagen por defecto si no hay avatar
+            }
+
+            if (!authStore.token && response.status === 'error') {
+                authStore.logout();
+                await navigateTo('/');
             }
         }
     });
 
     onBeforeUnmount(() => {
-        document.removeEventListener('click', handleClickOutside)
-    })
+        document.removeEventListener('click', handleClickOutside);
+    });
 
     return {
         handleLogout,
-        handleClickOutside,
         toggleDropdown,
+        isOpen,
         avatar,
-        isOpen
-    }
+    };
 }

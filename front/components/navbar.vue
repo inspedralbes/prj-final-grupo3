@@ -22,9 +22,9 @@
         </h1>
         <div class="space-x-4">
 
-          <div class="relative inline-block text-left">
+          <div class="relative inline-block text-left dropdown-container">
             <!-- Avatar open/close menu -->
-            <img @click="navBar.toggleDropdown" :src="navBar.avatar + authStore.user.avatar" :alt="authStore.user.name"
+            <img @click="navBar.toggleDropdown" :src="navBar.avatar.value" :alt="authStore.user.name"
               class="w-8 h-8 rounded-full cursor-pointer" />
 
             <!-- Dropdown Menu -->
@@ -32,10 +32,12 @@
               class="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-20">
               <ul class="py-1">
                 <li>
-                  <NuxtLink to="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Perfil</NuxtLink>
+                  <NuxtLink to="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Perfil
+                  </NuxtLink>
                 </li>
                 <li>
-                  <NuxtLink to="/settings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Configuració</NuxtLink>
+                  <NuxtLink to="/settings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Configuració
+                  </NuxtLink>
                 </li>
                 <li>
                   <button @click="navBar.handleLogout"

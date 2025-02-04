@@ -9,7 +9,7 @@ export function useSettings() {
     const customAlert = useAlert().customAlert;
 
     const currentUser = ref({});
-    const avatar = config.public.appName
+    const avatar = ref()
 
     const getCurrentUser = async () => {
 
@@ -22,12 +22,13 @@ export function useSettings() {
             // customAlert('Informació obtinguda correctament', 'success', 'success', 'top', 5000);
             currentUser.value = response.user
             console.log(currentUser.value);
-            
+
         }
     }
 
     onMounted(async () => {
         getCurrentUser();
+        avatar.value = config.public.appName + authStore.user.avatar
     })
 
     return {

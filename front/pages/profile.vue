@@ -1,4 +1,4 @@
 <template>
 
-    HOLA
+    Perfil de l'usuari
 </template>

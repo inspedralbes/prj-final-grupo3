@@ -5,43 +5,62 @@ import { useAuthStore } from '~/store/authUser';
 const authStore = useAuthStore();
 const settings = useSettings();
 
-settings
-
 </script>
 
 <template>
-    <div class="fixed inset-0 flex justify-center items-center">
-        <div class="bg-white w-auto max-w-full p-6 rounded-lg shadow-lg">
-            <div class="flex justify-between items-center">
-                <h3 class="text-xl font-semibold">Configuració</h3>
-            </div>
-            <div class="mt-4 flex items-center space-x-4">
-                <div class="flex items-center">
-                    <!-- Fix img -->
-                    <!-- <img :src="settings.avatar + authStore.user.avatar" :alt="authStore.user.name"
-                        class=" rounded-full" /> -->
-                </div>
-                <div class="flex items-center">
-                    <label for="name" class="mr-2">Nom: </label>
-                    <input id="name"
-                        class="w-auto max-w-[120px] inline-flex bg-blue-200 border-2 rounded-lg px-2 focus:outline-8 focus:ring-blue-500"
-                        type="text" :value="settings.currentUser.value.name" disabled>
+    <div
+        class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+            <div class="border border-blue-200 rounded-lg p-4 space-y-4">
+                <h3 class="text-xl font-semibold text-center">Configuració</h3>
+
+                <!-- Avatar -->
+                <div class="flex items-center justify-center mb-4">
+                    <img :src="settings.avatar.value" alt="authStore.user.name"
+                        class="w-24 h-24 rounded-full border border-blue-200" />
                 </div>
 
-                <div class="flex items-center">
-                    <label for="surname" class="mr-2">Cognom: </label>
-                    <input id="surname"
-                        class="w-auto max-w-[120px] inline-flex bg-blue-200 border-2 rounded-lg px-2 focus:outline-8 focus:ring-blue-500"
-                        type="text" :value="settings.currentUser.value.surname" disabled>
+                <!-- Name & Surname -->
+                <div class="flex items-center space-x-4">
+                    <div>
+                        <label for="name" class="block mb-1">Nom:</label>
+                        <input id="name" type="text" :value="settings.currentUser.value.name" disabled
+                            class="w-full bg-blue-50 border border-gray-300 rounded px-2 py-1" />
+                    </div>
+                    <div>
+                        <label for="surname" class="block mb-1">Cognom:</label>
+                        <input id="surname" type="text" :value="settings.currentUser.value.surname" disabled
+                            class="w-full bg-blue-50 border border-gray-300 rounded px-2 py-1" />
+                    </div>
+                </div>
+
+                <!-- Email & Alternative Email -->
+                <div class="flex items-center space-x-4">
+                    <div>
+                        <label for="email" class="block mb-1">Correu:</label>
+                        <input id="email" type="email" :value="settings.currentUser.value.email" disabled
+                            class="w-full bg-blue-50 border border-gray-300 rounded px-2 py-1" />
+                    </div>
+                    <div>
+                        <label for="email_alternative" class="block mb-1">Correu alternatiu:</label>
+                        <input id="email_alternative" type="email" :value="settings.currentUser.value.email_alternative"
+                            disabled class="w-full bg-blue-50 border border-gray-300 rounded px-2 py-1" />
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div>
+                        <label for="birth_date" class="block mb-1">Data de neixament:</label>
+                        <input id="birth_date" type="date" :value="settings.currentUser.value.birth_date" disabled
+                            class="w-full bg-blue-50 border border-gray-300 rounded px-2 py-1" />
+                    </div>
+                    <div>
+                        <label for="phone" class="block mb-1">Telèfon:</label>
+                        <input id="phone" type="number" :value="settings.currentUser.value.phone_number" disabled
+                            class="w-full bg-blue-50 border border-gray-300 rounded px-2 py-1" />
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
 </template>
-
-<style scoped>
-.wi-fit {
-    display: flex;
-}
-</style>

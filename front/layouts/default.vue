@@ -1,18 +1,11 @@
 <template>
   <div>
     <navbar />
-    <AppHeader />
+    <!-- <AppHeader /> -->
     <slot />
-    <AppFooter />
+    <!-- <AppFooter /> -->
   </div>
 </template>
 
-<script>
-import navbar from "~/components/navbar.vue";
-
-export default {
-  components: {
-    navbar,
-  },
-};
+<script setup>
 </script>
