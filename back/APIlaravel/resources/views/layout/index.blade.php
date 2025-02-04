@@ -25,9 +25,15 @@
                         usuaris</a>
                     <a href="{{ route('countries') }}"
                         class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de països</a>
-                    {{-- <a href="{{ route('countries') }}"
+                    <a href="{{ route('travel-types') }}"
+                        class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de tipus del viatge</a>
+                    <a href="{{ route('movilities') }}"
+                        class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de mobilitats</a>
+                    <a href="{{ route('budgets') }}"
+                        class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de pressupost</a>
+                    <a href="{{ route('travels') }}"
                         class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de viatges</a>
-                    <a href="{{ route('countries') }}"
+                    {{-- <a href="{{ route('publications') }}"
                         class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de publicacions</a> --}}
                 </div>
             @endif

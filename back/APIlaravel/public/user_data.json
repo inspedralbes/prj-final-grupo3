@@ -341,7 +341,6 @@
         { "type": "bike" },
         { "type": "car" },
         { "type": "moto" },
-        { "type": "no_rent" },
-        { "type": "bike" }
+        { "type": "no_rent" }
     ]
 }

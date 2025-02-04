@@ -8,15 +8,12 @@
             </button>
         </div>
     </div>
-    <form action="{{ route('countries.store') }}" method="POST" class="space-y-6 p-8">
+    <form action="{{ route('travel-types.store') }}" method="POST" class="space-y-6 p-8">
         @csrf
         <div class="grid grid-cols-1 gap-4">
-            <input type="text" name="name" id="name"
+            <input type="text" name="type" id="type"
                 class="p-4 border-2 border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Nom país" required>
-            <input type="text" name="code" id="code"
-                class="p-4 border-2 border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Codi país" required>
+                placeholder="Tipus de viatge" required>
         </div>
         <button type="submit" id="submit-button" disabled
             class="ml-auto w-full p-4 rounded-lg bg-blue-500 text-white text-lg font-semibold transition duration-200 hover:bg-blue-700 disabled:bg-gray-400">Afegir
@@ -26,19 +23,17 @@
 
 <script>
     function checkForm() {
-        const name = document.getElementById('name').value.trim();
-        const code = document.getElementById('code').value.trim();
+        const type = document.getElementById('type').value.trim();
         const submitButton = document.getElementById('submit-button');
 
-        if (name && code) {
+        if (type) {
             submitButton.disabled = false;
         } else {
             submitButton.disabled = true;
         }
     }
 
-    document.getElementById('name').addEventListener('input', checkForm);
-    document.getElementById('code').addEventListener('input', checkForm);
+    document.getElementById('type').addEventListener('input', checkForm);
 
     checkForm();
 </script>

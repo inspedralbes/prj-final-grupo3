@@ -11,8 +11,8 @@ class Budget extends Model
 
     protected $table = 'budget';
     protected $fillable = [
-        'min_price',
-        'max_price',
+        'min_budget',
+        'max_budget',
         'final_price',
     ];
 
