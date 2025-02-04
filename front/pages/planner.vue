@@ -137,7 +137,7 @@ import { useRouter } from 'vue-router';
 import { ref, computed, watch, onMounted } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
-import getCountries from '@/services/communicationManager';
+import {getCountries} from '@/services/communicationManager';
 
 
 const router = useRouter();

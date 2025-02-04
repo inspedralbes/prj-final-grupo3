@@ -33,7 +33,7 @@ services:
     working_dir: /var/www/
     depends_on:
       - db
-    command: bash -c 'composer install && composer update && php artisan migrate && php artisan migrate:fresh && php artisan db:seed && php artisan key:generate && php artisan serve --host=0.0.0.0'   
+    command: bash -c 'composer update && php artisan serve --host=0.0.0.0'   
 
   # NUXT
   nuxt:
@@ -47,4 +47,5 @@ services:
       - laravel
     environment:
       NUXT_APP_API_URL: http://laravel:8000
+      CHOKIDAR_USEPOLLING: true
     command: bash -c "npm install && npm run dev"
