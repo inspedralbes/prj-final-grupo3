@@ -55,7 +55,7 @@ export async function logout() {
 
 }
 
-export async function getCurrentUser(currentTokenUser) {
+export async function getCurrentUser(currentUserToken) {
     const URL = HOST + '/currentUser';
 
     try {
@@ -63,7 +63,7 @@ export async function getCurrentUser(currentTokenUser) {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${currentTokenUser}`,
+                'Authorization': `Bearer ${currentUserToken}`,
             },
         });
 
@@ -100,5 +100,32 @@ export async function getCurrentUser(currentTokenUser) {
             status: 'error',
             message: "Agut un problema a l'hora de fer la sol·licitud. Intentau de nou.",
         };
+    }
+}
+
+export async function changeInfoUser(currentUserToken, userData) {
+    const URL = `${HOST}/changeInfoProfile`;
+
+    try {
+        const response = await fetch(URL, {
+            method: 'PUT', // O 'PUT' dependiendo de lo que desees
+            headers: {
+                'Content-Type': 'application/json', // Especifica que el cuerpo es en formato JSON
+                'Authorization': `Bearer ${currentUserToken}`
+            },
+            body: JSON.stringify(userData) // Convierte los datos a formato JSON
+        });
+
+        if (!response.ok) {
+            throw new Error('Error en la solicitud');
+        }
+
+        const json = await response.json(); // Respuesta en formato JSON
+        console.log('Respuesta del servidor:', json);
+
+        return json; // Devuelve la respuesta para que se pueda manejar
+    } catch (error) {
+        console.error('Error al cambiar la información del usuario:', error);
+        throw error; // Lanza el error para manejarlo más arriba
     }
 }

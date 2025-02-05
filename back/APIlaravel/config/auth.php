@@ -44,6 +44,10 @@ return [
             'driver' => 'session',         // Usar sesión para el guard
             'provider' => 'admins',        // Usar el proveedor 'admins' para el modelo Admin
         ],
+        // 'api' => [
+        //     'driver' => 'sanctum', // O 'token' si usas el guard de tokens de Laravel por defecto
+        //     'provider' => 'users',
+        // ],
     ],
 
     /*

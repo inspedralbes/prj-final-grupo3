@@ -11,6 +11,7 @@ export function useSettings() {
     const currentUser = ref({});
     const avatar = ref()
     const isEditing = ref(false);
+    
 
     const getCurrentUser = async () => {
 
@@ -31,11 +32,17 @@ export function useSettings() {
         isEditing.value = !isEditing.value;
     };
 
-    const confirmEdit = async (userId) => {
-        console.log(userId);
+    const confirmEdit = async () => {
+        console.log(authStore.token);
+        const newDataUser = reactive({
+            ...currentUser.value
+        })
+        console.log(newDataUser);
         
         // Logic to confirm changes
-        // const response = await com.changeInfoUser(userId)
+        const response = await com.changeInfoUser(authStore.token ,newDataUser)
+        // console.log(response);
+        
         // console.log(response);
         
         toggleEdit();
@@ -55,6 +62,7 @@ export function useSettings() {
         currentUser,
         avatar,
         isEditing,
+        // newDataUser,
         toggleEdit,
         confirmEdit,
         cancelEdit

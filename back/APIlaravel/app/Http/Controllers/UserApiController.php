@@ -50,34 +50,42 @@ class UserApiController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        $user = User::findOrFail($id);
+        // Recuperar al usuario autenticado
+        $user = auth()->user();
+        $id = $user->id;
 
-        // Validación para los campos que pueden ser actualizados
+        // Verificar que el ID de la ruta sea el mismo que el ID del usuario autenticado
+        if ($user->id !== (int) $id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        // Validación de los campos que se pueden actualizar
         $validated = $request->validate([
             'name' => 'nullable|string|max:255',
             'surname' => 'nullable|string|max:255',
             'email' => 'nullable|email|max:255|unique:users,email,' . $id,
             'email_alternative' => 'nullable|string|email|max:255|unique:users,email_alternative,' . $id,
-            // 'password' => 'nullable|string|min:8|confirmed',
             'birth_date' => 'nullable|date',
             'phone_number' => 'nullable|string|max:15',
         ]);
 
-        // Actualizar solo los campos validados y presentes en la solicitud
-        $user->update(array_filter([
-            'name' => $validated['name'] ?? $user->name,
-            'surname' => $validated['surname'] ?? $user->surname,
-            'email' => $validated['email'] ?? $user->email,
-            'email_alternative' => $validated['email_alternative'] ?? $user->email_alternative,
-            // 'password' => isset($validated['password']) ? bcrypt($validated['password']) : $user->password,
-            'birth_date' => $validated['birth_date'] ?? $user->birth_date,
-            'phone_number' => $validated['phone_number'] ?? $user->phone_number,
+        // Buscar al usuario a actualizar (el que tiene el ID de la ruta)
+        $userToUpdate = User::findOrFail($id);
+
+        // Actualizar solo los campos validados y presentes
+        $userToUpdate->update(array_filter([
+            'name' => $validated['name'] ?? $userToUpdate->name,
+            'surname' => $validated['surname'] ?? $userToUpdate->surname,
+            'email' => $validated['email'] ?? $userToUpdate->email,
+            'email_alternative' => $validated['email_alternative'] ?? $userToUpdate->email_alternative,
+            'birth_date' => $validated['birth_date'] ?? $userToUpdate->birth_date,
+            'phone_number' => $validated['phone_number'] ?? $userToUpdate->phone_number,
         ]));
 
-        // Retorna el usuario actualizado
-        return response()->json($user, 200);
+        // Responder con el usuario actualizado
+        return response()->json($userToUpdate, 200);
     }
 
     /**

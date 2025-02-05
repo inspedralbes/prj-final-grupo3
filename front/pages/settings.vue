@@ -21,7 +21,7 @@ const settings = useSettings();
                     <PencilIcon class="w-6 h-6" />
                 </button>
                 <div v-else class="flex space-x-2">
-                    <button @click="settings.confirmEdit(authStore.user?.id)" class="text-green-500 hover:text-green-700 transition">
+                    <button @click="settings.confirmEdit" class="text-green-500 hover:text-green-700 transition">
                         <CheckIcon class="w-6 h-6" />
                     </button>
                     <button @click="settings.cancelEdit" class="text-red-500 hover:text-red-700 transition">
