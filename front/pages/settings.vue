@@ -1,8 +1,8 @@
 <script setup>
+import { ref } from 'vue';
 import { useSettings } from '~/composable/useSettings';
 import { useAuthStore } from '~/store/authUser';
-import { PencilIcon } from '@heroicons/vue/24/solid'
-
+import { PencilIcon, CheckIcon, XMarkIcon } from '@heroicons/vue/24/solid';
 
 const authStore = useAuthStore();
 const settings = useSettings();
@@ -12,12 +12,23 @@ const settings = useSettings();
 <template>
     <div
         class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 flex items-center justify-center">
-        <!-- Contenedor principal con hover controlado por Tailwind -->
+        <!-- Contenedor principal -->
         <div class="relative group bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
 
-            <!-- Pencil icon show when make hover -->
-            <PencilIcon
-                class="w-6 h-6 text-blue-400 absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer hover:text-blue-500" />
+            <div class="absolute top-2 right-2 flex space-x-2">
+                <button v-if="!settings.isEditing.value" @click="settings.toggleEdit"
+                    class="text-blue-500 hover:text-blue-700 transition">
+                    <PencilIcon class="w-6 h-6" />
+                </button>
+                <div v-else class="flex space-x-2">
+                    <button @click="settings.confirmEdit(authStore.user?.id)" class="text-green-500 hover:text-green-700 transition">
+                        <CheckIcon class="w-6 h-6" />
+                    </button>
+                    <button @click="settings.cancelEdit" class="text-red-500 hover:text-red-700 transition">
+                        <XMarkIcon class="w-6 h-6" />
+                    </button>
+                </div>
+            </div>
 
             <div class="border border-blue-200 rounded-lg p-4 space-y-4">
                 <h3 class="text-xl font-semibold text-center">Configuració</h3>
@@ -32,13 +43,15 @@ const settings = useSettings();
                 <div class="flex items-center space-x-4">
                     <div>
                         <label for="name" class="block mb-1">Nom:</label>
-                        <input id="name" type="text" :value="settings.currentUser.value.name" disabled
-                            class="w-full bg-blue-50 border border-gray-300 rounded px-2 py-1" />
+                        <input id="name" type="text" v-model="settings.currentUser.value.name"
+                            :disabled="!settings.isEditing.value"
+                            class="w-full bg-blue-50 border border-gray-300 rounded px-2 py-1 focus:bg-white focus:border-blue-500" />
                     </div>
                     <div>
                         <label for="surname" class="block mb-1">Cognom:</label>
-                        <input id="surname" type="text" :value="settings.currentUser.value.surname" disabled
-                            class="w-full bg-blue-50 border border-gray-300 rounded px-2 py-1" />
+                        <input id="surname" type="text" v-model="settings.currentUser.value.surname"
+                            :disabled="!settings.isEditing.value"
+                            class="w-full bg-blue-50 border border-gray-300 rounded px-2 py-1 focus:bg-white focus:border-blue-500" />
                     </div>
                 </div>
 
@@ -46,26 +59,30 @@ const settings = useSettings();
                 <div class="flex items-center space-x-4">
                     <div>
                         <label for="email" class="block mb-1">Correu:</label>
-                        <input id="email" type="email" :value="settings.currentUser.value.email" disabled
-                            class="w-full bg-blue-50 border border-gray-300 rounded px-2 py-1" />
+                        <input id="email" type="email" v-model="settings.currentUser.value.email"
+                            :disabled="!settings.isEditing.value"
+                            class="w-full bg-blue-50 border border-gray-300 rounded px-2 py-1 focus:bg-white focus:border-blue-500" />
                     </div>
                     <div>
                         <label for="email_alternative" class="block mb-1">Correu alternatiu:</label>
-                        <input id="email_alternative" type="email" :value="settings.currentUser.value.email_alternative"
-                            disabled class="w-full bg-blue-50 border border-gray-300 rounded px-2 py-1" />
+                        <input id="email_alternative" type="email"
+                            v-model="settings.currentUser.value.email_alternative" :disabled="!settings.isEditing.value"
+                            class="w-full bg-blue-50 border border-gray-300 rounded px-2 py-1 focus:bg-white focus:border-blue-500" />
                     </div>
                 </div>
 
                 <div class="flex items-center space-x-4">
                     <div>
                         <label for="birth_date" class="block mb-1">Data de naixement:</label>
-                        <input id="birth_date" type="date" :value="settings.currentUser.value.birth_date" disabled
-                            class="w-full bg-blue-50 border border-gray-300 rounded px-2 py-1" />
+                        <input id="birth_date" type="date" v-model="settings.currentUser.value.birth_date"
+                            :disabled="!settings.isEditing.value"
+                            class="w-full bg-blue-50 border border-gray-300 rounded px-2 py-1 focus:bg-white focus:border-blue-500" />
                     </div>
                     <div>
                         <label for="phone" class="block mb-1">Telèfon:</label>
-                        <input id="phone" type="number" :value="settings.currentUser.value.phone_number" disabled
-                            class="w-full bg-blue-50 border border-gray-300 rounded px-2 py-1" />
+                        <input id="phone" type="number" v-model="settings.currentUser.value.phone_number"
+                            :disabled="!settings.isEditing.value"
+                            class="w-full bg-blue-50 border border-gray-300 rounded px-2 py-1 focus:bg-white focus:border-blue-500" />
                     </div>
                 </div>
             </div>
@@ -74,7 +91,9 @@ const settings = useSettings();
 </template>
 
 <style scoped>
-.shadow-around {
-    filter: drop-shadow(0 0 5px rgb(255, 255, 0));
+/* Opcional: resaltar los campos cuando están activos */
+input:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.8);
 }
 </style>

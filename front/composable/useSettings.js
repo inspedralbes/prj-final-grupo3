@@ -10,7 +10,7 @@ export function useSettings() {
 
     const currentUser = ref({});
     const avatar = ref()
-    const pencil = ref(false)
+    const isEditing = ref(false);
 
     const getCurrentUser = async () => {
 
@@ -27,11 +27,24 @@ export function useSettings() {
         }
     }
 
-    const showPencil = () => {
-        console.log('entra en la funcion del lapiz');
+    const toggleEdit = () => {
+        isEditing.value = !isEditing.value;
+    };
+
+    const confirmEdit = async (userId) => {
+        console.log(userId);
         
-        pencil.value = !pencil.value
-    }
+        // Logic to confirm changes
+        // const response = await com.changeInfoUser(userId)
+        // console.log(response);
+        
+        toggleEdit();
+      };
+
+    const cancelEdit = () => {
+        isEditing.value = false;
+        // Logic to cancel changes
+      };
 
     onMounted(async () => {
         getCurrentUser();
@@ -41,7 +54,9 @@ export function useSettings() {
     return {
         currentUser,
         avatar,
-        pencil,
-        showPencil
+        isEditing,
+        toggleEdit,
+        confirmEdit,
+        cancelEdit
     }
 }
