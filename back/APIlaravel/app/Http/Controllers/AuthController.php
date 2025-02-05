@@ -32,6 +32,29 @@ class AuthController extends Controller
         }
     }
 
+    public function register(Request $request)
+{
+    // Validar los datos del usuario
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'surname' => 'required|string|max:255',
+        'email' => 'required|email|unique:admins,email',
+        'email_alternative' => 'nullable|email',
+        'password' => 'required|string|min:8|confirmed',
+    ]);
+
+    // Crear el usuario admin
+    $admin = Admin::create([
+        'name' => $request->name,
+        'surname' => $request->surname,
+        'email' => $request->email,
+        'email_alternative' => $request->email_alternative,
+        'password' => bcrypt($request->password), // Encriptar la contraseña
+    ]);
+
+    return response()->json(['message' => 'Administrador registrado correctamente'], 201);
+}
+
     // En el controlador AuthController:
     public function logout()
     {

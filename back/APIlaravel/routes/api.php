@@ -4,6 +4,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CountriesApiController;
 use App\Http\Controllers\Auth\AuthenticatorController;
+use App\Http\Controllers\SendMail;
+use App\Http\Controllers\AuthController;
+
+Route::post('/auth/register', [AuthController::class, 'register']);
+ 
+ 
+Route::post('/sendEmail',[SendMail::class, 'sendEmail']);
+ 
+Route::get('/view', function () {
+    return view('SendMail.email.blade.php', ['message' => 'Este es un mensaje dinámico']);
+});
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthenticatorController::class, 'authenticate'])->name('login');
