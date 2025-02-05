@@ -1,71 +1,102 @@
 @extends('layout.index')
 
 @section('content')
+    <div class="budget-info">
+        <p class="text-xl font-bold">BUDGET</p>
+        <div class="flex gap-10">
+            <p>Pressupost min: {{ $travel->budget->min_budget }}€</p>
+            <p>Pressupost max: {{ $travel->budget->max_budget }}€</p>
+            <p>Precio final: {{ $travel->budget->final_price }}€</p>
+        </div>
+    </div>
     <div class="box">
         <div class="ticket">
-            <span class="airline">TriPlan</span>
-            <span class="airline airlineslip">TriPlan</span>
-            <span class="boarding">Boarding pass</span>
+            <span class="absolute text-2xl font-bold font-['Arial'] text-blue-950 top-1.5 left-3">TRIPLAN</span>
+            <span class="absolute text-sm font-bold font-['Arial'] text-blue-950 top-1.5 right-3">VIATGE
+                #{{ $travel->id }}</span>
+            <span class="absolute text-xl font-['Arial'] text-gray-100 left-50 top-1.5">Informació del viatge</span>
             <div class="content">
-                <span class="jfk">{{ $travel->id}}</span> 
-                {{-- Nom usuari pero nomes les primeres 3 letras --}}
-                <span class="plane">
-                    <svg clip-rule="evenodd" fill-rule="evenodd" height="60" width="60"
-                        image-rendering="optimizeQuality" shape-rendering="geometricPrecision"
-                        text-rendering="geometricPrecision" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
-                        <g stroke="#222">
-                            <line fill="none" stroke-linecap="round" stroke-width="30" x1="300" x2="55"
-                                y1="390" y2="390" />
-                            <path
-                                d="M98 325c-9 10 10 16 25 6l311-156c24-17 35-25 42-50 2-15-46-11-78-7-15 1-34 10-42 16l-56 35 1-1-169-31c-14-3-24-5-37-1-10 5-18 10-27 18l122 72c4 3 5 7 1 9l-44 27-75-15c-10-2-18-4-28 0-8 4-14 9-20 15l74 63z"
-                                fill="#222" stroke-linejoin="round" stroke-width="10" />
-                        </g>
-                    </svg>
+                <span class="jfk">{{ strtoupper(substr($travel->user->name, 0, 3)) }}</span>
+                <span class="absolute left-27 top-1">
+                    <img src="{{ asset('icons/plane.svg') }}" alt="" class="w-15 h-15">
                 </span>
-                <span class="sfo">BCN</span>
+                <span class="sfo">{{ $travel->country->code }}</span>
                 {{-- Desti --}}
 
-                <span class="jfk jfkslip">AIV</span>
-                <span class="plane planeslip">
-                    <svg clip-rule="evenodd" fill-rule="evenodd" height="50" width="50"
-                        image-rendering="optimizeQuality" shape-rendering="geometricPrecision"
-                        text-rendering="geometricPrecision" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
-                        <g stroke="#222">
-                            <line fill="none" stroke-linecap="round" stroke-width="30" x1="300" x2="55"
-                                y1="390" y2="390" />
-                            <path
-                                d="M98 325c-9 10 10 16 25 6l311-156c24-17 35-25 42-50 2-15-46-11-78-7-15 1-34 10-42 16l-56 35 1-1-169-31c-14-3-24-5-37-1-10 5-18 10-27 18l122 72c4 3 5 7 1 9l-44 27-75-15c-10-2-18-4-28 0-8 4-14 9-20 15l74 63z"
-                                fill="#222" stroke-linejoin="round" stroke-width="10" />
-                        </g>
-                    </svg>
+                <span class="jfk jfkslip">{{ strtoupper(substr($travel->user->name, 0, 3)) }}</span>
+                <span class="absolute right-20 top-5">
+                    <img src="{{ asset('icons/plane.svg') }}" alt="" class="w-10 h-10">
                 </span>
-                <span class="sfo sfoslip">BCN</span>
+                <span class="sfo sfoslip">{{ $travel->country->code }}</span>
                 <div class="sub-content">
                     <span class="watermark">TriPlan</span>
-                    <span class="name">NOM USUARI<br><span>Antonio, Aivan</span></span>
-                    <span class="flight">ID MOVILITAT<br><span>X3-65C3</span></span>
-                    <span class="gate">ID VIATGE<br><span>11B</span></span>
-                    <span class="seat">ID PAIS<br><span>45A</span></span>
-                    <span class="boardingtime">DIA DE CREACIÓ<br><span>8:25PM ON AUGUST 2013</span></span>
+                    <span class="absolute font-mono text-sm top-2 left-3 text-gray-500 font-bold" style="width: 12vh; word-wrap: break-word;">NOM USUARI<br><span
+                            class="font-[Arial] text-base text-black">{{ $travel->user->surname }},
+                            {{ $travel->user->name }}</span></span>
+                    <span class="absolute font-mono text-sm top-2 left-35 text-gray-500 font-bold">MOVILITAT<br><span
+                            class="font-[Arial] text-black">{{ strtoupper($travel->movility->type) }}</span></span>
+                    <span class="absolute font-mono text-sm top-2 left-60 text-gray-500 font-bold">DESTÍ<br><span
+                            class="font-[Arial] text-black">{{ $travel->country->name }}</span></span>
+                    <span class="absolute font-mono text-sm top-2 left-80 text-gray-500 font-bold"># DIES<br><span
+                            class="font-[Arial] text-black">{{ $travel->qunt_date }}</span></span>
+                    <span class="absolute font-mono text-sm top-18 left-3 text-gray-500 font-bold">DATA:
+                        <span class="font-[Arial] text-black">{{ $travel->date_init }} fins a
+                            {{ $travel->date_end }}</span>
+                    </span>
 
-                    <span class="flight flightslip">ID VIATGE<br><span>X3-65C3</span></span>
-                    <span class="seat seatslip">ID PAIS<br><span>45A</span></span>
-                    <span class="name nameslip">NOM USUARI<br><span>Antonio, Aivan</span></span>
+                    {{-- <span class="absolute font-mono text-sm top-14 left-3 text-gray-500">
+                        BUDGET
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span> --}}
+                    {{-- <span class="font-mono text-sm">BUDGET<span></span></span> --}}
+                    <span class="absolute font-mono text-sm top-2 right-33 text-gray-500 font-bold">PAIS<br><span
+                            class="font-[Arial] text-black">{{ $travel->country->name }}</span></span>
+                    <span class="absolute font-mono text-sm top-2 right-5 text-gray-500 font-bold">ID PAIS<br><span
+                            class="font-[Arial] text-black">{{ $travel->country->id }}</span></span>
+                    <span class="absolute font-mono text-sm top-13 right-25 text-gray-500 font-bold">NOM USUARI</span>
+                    <span
+                        class="absolute text-sm top-18 left-104 font-bold font-[Arial] text-black">{{ $travel->user->surname }},
+                        {{ $travel->user->name }}</span></span>
                 </div>
             </div>
+            <span class="absolute font-mono text-sm bottom-2 left-30 text-gray-100 font-bold">Data de creació: <span
+                    class="font-[Arial]">{{ $travel->created_at->format('H:i d/m/Y') }}</span></span>
             <div class="barcode"></div>
             <div class="barcode slip"></div>
         </div>
     </div>
+    <div class="description">
+        <p class="text-xl font-bold">Descipció</p>
+        <div class="flex gap-10">
+            <p>{{ $travel->description }}</p>
+        </div>
+    </div>
+    <button id="close-form" class="absolute bottom-30 left-0 right-0 flex items-center justify-center">
+        <img src="{{ asset('icons/close_icon.svg') }}" alt="Cerrar" class="w-15 h-15 duration-300 hover:rotate-180 hover:scale-120">
+    </button>
 
     <script>
         document.getElementById('close-form').addEventListener('click', function(e) {
             e.preventDefault();
-            window.location.href = '/usuaris';
+            window.location.href = '/travels';
         });
     </script>
 
     <style>
+        .budget-info {
+            position: absolute;
+            top: calc(45% - 180px);
+            /* Ajusta la posición según sea necesario */
+            left: calc(50% - 300px);
+            width: 600px;
+            background: #FFB300;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+
         .box {
             position: absolute;
             top: calc(50% - 125px);
@@ -74,173 +105,26 @@
             left: -webkit-calc(50% - 300px);
         }
 
+        .description {
+            position: absolute;
+            bottom: calc(45% - 180px);
+            /* Ajusta la posición según sea necesario */
+            left: calc(50% - 300px);
+            width: 600px;
+            background: #FFB300;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+
         .ticket {
             width: 600px;
             height: 250px;
             background: #FFB300;
             border-radius: 3px;
-            box-shadow: 0 0 100px #aaa;
+            box-shadow: 0 0 50px #aaa;
             border-top: 1px solid #E89F3D;
             border-bottom: 1px solid #E89F3D;
-        }
-
-        .left {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-            position: absolute;
-            top: 0px;
-            left: -5px;
-        }
-
-        .left li {
-            width: 0px;
-            height: 0px;
-        }
-
-        .left li:nth-child(-n+2) {
-            margin-top: 8px;
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-            border-right: 5px solid #FFB300;
-        }
-
-        .left li:nth-child(3),
-        .left li:nth-child(6) {
-            margin-top: 8px;
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-            border-right: 5px solid #EEEEEE;
-        }
-
-        .left li:nth-child(4) {
-            margin-top: 8px;
-            margin-left: 2px;
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-            border-right: 5px solid #EEEEEE;
-        }
-
-        .left li:nth-child(5) {
-            margin-top: 8px;
-            margin-left: -1px;
-            border-top: 6px solid transparent;
-            border-bottom: 6px solid transparent;
-            border-right: 6px solid #EEEEEE;
-        }
-
-        .left li:nth-child(7),
-        .left li:nth-child(9),
-        .left li:nth-child(11),
-        .left li:nth-child(12) {
-            margin-top: 7px;
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-            border-right: 5px solid #E5E5E5;
-        }
-
-        .left li:nth-child(8) {
-            margin-top: 7px;
-            margin-left: 2px;
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-            border-right: 5px solid #E5E5E5;
-        }
-
-        .left li:nth-child(10) {
-            margin-top: 7px;
-            margin-left: 1px;
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-            border-right: 5px solid #E5E5E5;
-        }
-
-        .left li:nth-child(13) {
-            margin-top: 7px;
-            margin-left: 2px;
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-            border-right: 5px solid #FFB300;
-        }
-
-        .left li:nth-child(14) {
-            margin-top: 7px;
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-            border-right: 5px solid #FFB300;
-        }
-
-        .right {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-            position: absolute;
-            top: 0px;
-            right: -5px;
-        }
-
-        .right li:nth-child(-n+2) {
-            margin-top: 8px;
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-            border-left: 5px solid #FFB300;
-        }
-
-        .right li:nth-child(3),
-        .right li:nth-child(4),
-        .right li:nth-child(6) {
-            margin-top: 8px;
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-            border-left: 5px solid #EEEEEE;
-        }
-
-        .right li:nth-child(5) {
-            margin-top: 8px;
-            margin-left: -2px;
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-            border-left: 5px solid #EEEEEE;
-        }
-
-        .right li:nth-child(8),
-        .right li:nth-child(9),
-        .right li:nth-child(11) {
-            margin-top: 7px;
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-            border-left: 5px solid #E5E5E5;
-        }
-
-        .right li:nth-child(7) {
-            margin-top: 7px;
-            margin-left: -3px;
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-            border-left: 5px solid #E5E5E5;
-        }
-
-        .right li:nth-child(10) {
-            margin-top: 7px;
-            margin-left: -2px;
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-            border-left: 5px solid #E5E5E5;
-        }
-
-        .right li:nth-child(12) {
-            margin-top: 7px;
-            border-top: 6px solid transparent;
-            border-bottom: 6px solid transparent;
-            border-left: 6px solid #E5E5E5;
-        }
-
-        .right li:nth-child(13),
-        .right li:nth-child(14) {
-            margin-top: 7px;
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-            border-left: 5px solid #FFB300;
         }
 
         .ticket:after {
@@ -276,42 +160,6 @@
                 inset 0 -230px 0 #B56E0A,
                 inset 0 -240px 0 #FFB300,
                 inset 0 -250px 0 #B56E0A;
-        }
-
-        .ticket:before {
-            content: '';
-            position: absolute;
-            z-index: 5;
-            right: 199px;
-            top: 0px;
-            width: 1px;
-            height: 250px;
-            box-shadow: inset 0 0 0 #FFB300,
-                inset 0 -10px 0 #F4D483,
-                inset 0 -20px 0 #FFB300,
-                inset 0 -30px 0 #F4D483,
-                inset 0 -40px 0 #FFB300,
-                inset 0 -50px 0 #FFFFFF,
-                inset 0 -60px 0 #E5E5E5,
-                inset 0 -70px 0 #FFFFFF,
-                inset 0 -80px 0 #E5E5E5,
-                inset 0 -90px 0 #FFFFFF,
-                inset 0 -100px 0 #E5E5E5,
-                inset 0 -110px 0 #FFFFFF,
-                inset 0 -120px 0 #E5E5E5,
-                inset 0 -130px 0 #FFFFFF,
-                inset 0 -140px 0 #E5E5E5,
-                inset 0 -150px 0 #FFFFFF,
-                inset 0 -160px 0 #EEEEEE,
-                inset 0 -170px 0 #FFFFFF,
-                inset 0 -180px 0 #EEEEEE,
-                inset 0 -190px 0 #FFFFFF,
-                inset 0 -200px 0 #EEEEEE,
-                inset 0 -210px 0 #FFFFFF,
-                inset 0 -220px 0 #FFB300,
-                inset 0 -230px 0 #F4D483,
-                inset 0 -240px 0 #FFB300,
-                inset 0 -250px 0 #F4D483;
         }
 
         .content {

@@ -21,6 +21,7 @@ class TravelSeeder extends Seeder
 
             foreach ($travels["travels"] as $travel) {
                 Travel::create([
+                    'id_user' => $travel['id_user'],
                     'id_country' => $travel['id_country'],
                     'id_type' => $travel['id_type'],
                     'id_budget' => $travel['id_budget'],

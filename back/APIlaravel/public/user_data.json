@@ -183,6 +183,7 @@
     ],
     "travels": [
         {
+            "id_user": 1,
             "id_country": 1,
             "id_type": 2,
             "id_budget": 3,
@@ -193,6 +194,7 @@
             "description": "Descripción del evento"
         },
         {
+            "id_user": 2,
             "id_country": 1,
             "id_type": 2,
             "id_budget": 3,
@@ -203,6 +205,7 @@
             "description": "Descripción del evento"
         },
         {
+            "id_user": 3,
             "id_country": 1,
             "id_type": 2,
             "id_budget": 3,
@@ -213,6 +216,7 @@
             "description": "Descripción del evento"
         },
         {
+            "id_user": 4,
             "id_country": 1,
             "id_type": 2,
             "id_budget": 3,
@@ -223,6 +227,7 @@
             "description": "Descripción del evento"
         },
         {
+            "id_user": 5,
             "id_country": 1,
             "id_type": 2,
             "id_budget": 3,
@@ -233,6 +238,7 @@
             "description": "Descripción del evento"
         },
         {
+            "id_user": 6,
             "id_country": 1,
             "id_type": 2,
             "id_budget": 3,
@@ -243,6 +249,7 @@
             "description": "Descripción del evento"
         },
         {
+            "id_user": 7,
             "id_country": 1,
             "id_type": 2,
             "id_budget": 3,
@@ -253,6 +260,7 @@
             "description": "Descripción del evento"
         },
         {
+            "id_user": 8,
             "id_country": 1,
             "id_type": 2,
             "id_budget": 3,
@@ -263,6 +271,7 @@
             "description": "Descripción del evento"
         },
         {
+            "id_user": 9,
             "id_country": 1,
             "id_type": 2,
             "id_budget": 3,
@@ -273,6 +282,7 @@
             "description": "Descripción del evento"
         },
         {
+            "id_user": 9,
             "id_country": 1,
             "id_type": 2,
             "id_budget": 3,
@@ -283,6 +293,7 @@
             "description": "Descripción del evento"
         },
         {
+            "id_user": 5,
             "id_country": 1,
             "id_type": 2,
             "id_budget": 3,
@@ -293,6 +304,7 @@
             "description": "Descripción del evento"
         },
         {
+            "id_user": 2,
             "id_country": 1,
             "id_type": 2,
             "id_budget": 3,

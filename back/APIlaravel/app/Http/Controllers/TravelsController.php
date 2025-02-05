@@ -12,7 +12,7 @@ class TravelsController extends Controller
      */
     public function index()
     {
-        $travels = Travel::with(['country', 'type', 'budget', 'movility'])->get();
+        $travels = Travel::with(['country', 'type', 'budget', 'movility', 'user'])->get();
         return view('admin.travels', compact('travels'));
     }
 
@@ -29,7 +29,16 @@ class TravelsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Travel::create([
+        //     'id_country' => $countryId,
+        //     'id_user' => $userId,
+        //     'id_type' => $typeId,
+        //     'id_budget' => $budgetId,
+        //     'id_movility' => $movilityId,
+        //     'date_init' => '2025-02-01',
+        //     'date_end' => '2025-02-05',
+        //     'description' => 'Viaje a ejemplo',
+        // ]);
     }
 
     /**

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_country');
             $table->foreign('id_country')->references('id')->on('countries')->onDelete('cascade');
+            $table->unsignedBigInteger('id_user');
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('id_type');
             $table->foreign('id_type')->references('id')->on('type')->onDelete('cascade');
@@ -22,9 +23,9 @@ return new class extends Migration
             $table->foreign('id_budget')->references('id')->on('budget')->onDelete('cascade');
             $table->unsignedBigInteger('id_movility');
             $table->foreign('id_movility')->references('id')->on('movilities')->onDelete('cascade');
-            $table->string('qunt_date');
-            $table->string('date_init');
-            $table->string('date_end');
+            $table->date('date_init');
+            $table->date('date_end');
+            $table->integer('qunt_date');
             $table->string('description');
             $table->timestamps();
         });
