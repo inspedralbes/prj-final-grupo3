@@ -150,7 +150,6 @@ import { getCountries } from '@/services/communicationManager';
 const router = useRouter();
 
 const formData = ref({
-  destination: '',
   country: '',
   datesinit: '',
   datesfinal: '',
@@ -188,15 +187,15 @@ const filterCountries = () => {
   filteredCountries.value = countries.value.filter(country =>
     country.name.toLowerCase().includes(query)
   );
+  formData.value.country = searchQuery.value;
 };
 
 // choose country from list
 const selectCountry = (name) => {
-  searchQuery.value = name;
-  formData.value.country = name; // Asignar al formulario
-  showDropdown.value = false;
+  searchQuery.value = name;  // Para que aparezca en el input
+  formData.value.country = name;  // Para que se guarde correctamente en el formulario
+  showDropdown.value = false;  // Ocultar la lista desplegable
 };
-
 // hides dropdown
 const hideDropdown = () => {
   setTimeout(() => {
@@ -275,7 +274,7 @@ const handleSubmit = async () => {
   try {
     const requestText = `
       Planifica un viatge per a ${formData.value.travelers} persones ${formData.value.type === 'alone' ? 'sol' : `amb ${formData.value.type}`}.
-      Destí: ${formData.value.destination}.
+      Destí: ${formData.value.country}.
       Dates: del ${formData.value.datesinit} al ${formData.value.datesfinal}.
       Pressupost: entre ${formData.value.budgetmin}€ i ${formData.value.budgetmax}€.
       Interessos: ${formData.value.interests}.
