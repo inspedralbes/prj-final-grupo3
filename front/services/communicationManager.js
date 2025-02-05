@@ -1,6 +1,6 @@
-const HOST = 'http://localhost:8000/api';
-// const HOST = 'http://triplan.daw.inspedralbes.cat/laravel/public/api';
+const config = useRuntimeConfig()
 
+const HOST = config.public.apiUrl
 
 export async function  getCountries() {
     const URL = HOST + '/countries';
@@ -90,13 +90,11 @@ export async function getCurrentUser(currentTokenUser) {
             },
         });
 
-        // Si la respuesta es exitosa (status 200), obtenemos el JSON
         if (response.ok) {
             const json = await response.json();
             return json;
         }
 
-        // Si no es exitosa (código diferente a 200)
         if (response.status === 401) {
             console.error('Error 401: No autorizado');
             return {
@@ -113,7 +111,6 @@ export async function getCurrentUser(currentTokenUser) {
             };
         }
 
-        // Para cualquier otro tipo de error, podemos capturarlo aquí
         console.error('Error al hacer la solicitud:', response.status);
         return {
             status: 'error',
@@ -121,11 +118,10 @@ export async function getCurrentUser(currentTokenUser) {
         };
 
     } catch (error) {
-        // Si hubo un problema en la red o en la solicitud, lo capturamos aquí
         console.error('Error de red o con la solicitud:', error);
         return {
             status: 'error',
-            message: 'Hubo un problema al realizar la solicitud. Intenta nuevamente.',
+            message: "Agut un problema a l'hora de fer la sol·licitud. Intentau de nou.",
         };
     }
 }
