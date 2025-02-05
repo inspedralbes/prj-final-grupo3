@@ -10,6 +10,7 @@ export function useSettings() {
 
     const currentUser = ref({});
     const avatar = ref()
+    const pencil = ref(false)
 
     const getCurrentUser = async () => {
 
@@ -26,6 +27,12 @@ export function useSettings() {
         }
     }
 
+    const showPencil = () => {
+        console.log('entra en la funcion del lapiz');
+        
+        pencil.value = !pencil.value
+    }
+
     onMounted(async () => {
         getCurrentUser();
         avatar.value = config.public.appName + authStore.user.avatar
@@ -33,6 +40,8 @@ export function useSettings() {
 
     return {
         currentUser,
-        avatar
+        avatar,
+        pencil,
+        showPencil
     }
 }
