@@ -10,6 +10,13 @@ export default defineNuxtConfig({
     '~/assets/css/tailwind.css',
   ],
   ssr: false, 
+  runtimeConfig: {
+    // Public vars
+    public: {
+      apiUrl: process.env.NUXT_API_URL,
+      appName: process.env.NUXT_APP_NAME
+    }
+  }
 })
 
 

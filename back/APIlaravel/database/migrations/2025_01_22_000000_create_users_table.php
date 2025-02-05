@@ -23,7 +23,6 @@ return new class extends Migration
             $table->string('avatar');
             $table->enum('gender', ['Male','Female']);
             $table->unsignedBigInteger('id_travel')->nullable();
-            $table->foreign('id_travel')->references('id')->on('travels')->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
         });

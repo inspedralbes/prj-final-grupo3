@@ -52,6 +52,5 @@ import { useAuthStore } from '~/store/authUser';
 
 const authStore = useAuthStore();
 const index = useIndex();
-index
 
 </script> 

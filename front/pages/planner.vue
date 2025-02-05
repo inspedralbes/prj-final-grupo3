@@ -11,13 +11,33 @@
         <!--form for planner-->
         <form @submit.prevent="handleSubmit" class="space-y-6">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- country -->
+            <div class="relative">
+              <label class="block text-sm font-medium text-gray-700 mb-2">País</label>
+
+              <!-- user writes -->
+              <input v-model="searchQuery" @input="filterCountries" @focus="showDropdown = true" @blur="hideDropdown"
+                type="text" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                placeholder="On viatges?" />
+
+              <!-- dropdown countries list -->
+              <ul v-if="showDropdown && filteredCountries.length"
+                class="absolute w-full border border-gray-300 bg-white shadow-md rounded-md mt-1 max-h-40 overflow-y-auto z-50">
+                <li v-for="country in filteredCountries" :key="country.id" @mousedown="selectCountry(country.name)"
+                  class="p-2 hover:bg-gray-200 cursor-pointer">
+                  {{ country.name }}
+                </li>
+              </ul>
+            </div>
+
             <!-- Destination -->
-            <div>
+            <!-- <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Destí</label>
               <input type="text" v-model="formData.destination"
                 class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Ciutat on viatges">
-            </div>
+            </div> -->
 
             <!--type of trip -->
             <div class="flex items-center space x-4">
@@ -50,7 +70,7 @@
             </div>
 
             <div class="flex items-center space x-4">
-              <!-- Lloguer de vehicle -->
+              <!-- rent a car -->
               <div class="w-1/2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Lloguer de vehicle</label>
                 <select v-model="formData.vehicle" class="border p-2 rounded">
@@ -122,14 +142,15 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+import { getCountries } from '@/services/communicationManager';
 
 const router = useRouter();
 
 const formData = ref({
-  destination: '',
+  country: '',
   datesinit: '',
   datesfinal: '',
   travelers: '',
@@ -142,16 +163,51 @@ const formData = ref({
 });
 
 const dateRange = ref([]);
+const countries = ref([]);
+const filteredCountries = ref([]);
+const searchQuery = ref('');
+const showDropdown = ref(false);
 const budgetMax = ref(7500);
 const budgetMin = ref(250);
 
+// charge list of countries p
+onMounted(async () => {
+  try {
+    const countryList = await getCountries();
+    countries.value = countryList;
+    filteredCountries.value = countryList; // Inicialmente muestra todos
+  } catch (error) {
+    console.error('Error carregant els països:', error);
+  }
+});
 
+// filter countries
+const filterCountries = () => {
+  const query = searchQuery.value.toLowerCase();
+  filteredCountries.value = countries.value.filter(country =>
+    country.name.toLowerCase().includes(query)
+  );
+  formData.value.country = searchQuery.value;
+};
+
+// choose country from list
+const selectCountry = (name) => {
+  searchQuery.value = name;  // Para que aparezca en el input
+  formData.value.country = name;  // Para que se guarde correctamente en el formulario
+  showDropdown.value = false;  // Ocultar la lista desplegable
+};
+// hides dropdown
+const hideDropdown = () => {
+  setTimeout(() => {
+    showDropdown.value = false;
+  }, 200);
+};
+
+// control type of trip
 const selectedType = computed(() => formData.value.type);
-
 const vehicle = computed(() => formData.value.vehicle);
 
-// Watchers
-
+// Watch sincronize dates
 watch(dateRange, (newValue) => {
   if (newValue.length === 2) {
     formData.value.datesinit = newValue[0];
@@ -159,6 +215,7 @@ watch(dateRange, (newValue) => {
   }
 });
 
+// Watch update budget min and max
 watch(budgetMin, (newValue) => {
   formData.value.budgetmin = newValue;
 });
@@ -167,24 +224,13 @@ watch(budgetMax, (newValue) => {
   formData.value.budgetmax = newValue;
 });
 
-// methods
-const syncWithBudget = () => {
-  if (budgetMin.value > budgetMax.value) {
-    budgetMin.value = budgetMax.value - 100;
-  }
-  if (budgetMax.value < budgetMin.value) {
-    budgetMax.value = budgetMin.value + 100;
-  }
-};
-
+// validates form
 const validateForm = () => {
-  // validation of budget
   if (budgetMin.value >= budgetMax.value) {
     alert('El pressupost mínim ha de ser inferior al màxim.');
     return false;
   }
 
-  // validation of dates
   if (!dateRange.value || dateRange.value.length !== 2) {
     alert('Selecciona una data inicial i final per al viatge.');
     return false;
@@ -194,41 +240,48 @@ const validateForm = () => {
   const endDate = new Date(formData.value.datesfinal);
   const today = new Date();
 
-  // update dates at 00:00
   today.setHours(0, 0, 0, 0);
   startDate.setHours(0, 0, 0, 0);
   endDate.setHours(0, 0, 0, 0);
 
   if (startDate < today) {
-    alert('La data d\'inici no pot ser anterior a la data actual.');
+    alert("La data d'inici no pot ser anterior a la data actual.");
     return false;
   }
 
   if (endDate <= startDate) {
-    alert('La data de tornada ha de ser posterior a la d\'anada.');
+    alert("La data de tornada ha de ser posterior a la d'anada.");
     return false;
   }
 
   return true;
 };
 
-// Submit handle
+// updates budgets
+const syncWithBudget = () => {
+  if (budgetMin.value > budgetMax.value) {
+    budgetMin.value = budgetMax.value - 100;
+  }
+  if (budgetMax.value < budgetMin.value) {
+    budgetMax.value = budgetMin.value + 100;
+  }
+};
+
+// sends form
 const handleSubmit = async () => {
   if (!validateForm()) return;
 
   try {
-    // prepare request to API
     const requestText = `
       Planifica un viatge per a ${formData.value.travelers} persones ${formData.value.type === 'alone' ? 'sol' : `amb ${formData.value.type}`}.
-      Destí: ${formData.value.destination}.
+      Destí: ${formData.value.country}.
       Dates: del ${formData.value.datesinit} al ${formData.value.datesfinal}.
       Pressupost: entre ${formData.value.budgetmin}€ i ${formData.value.budgetmax}€.
       Interessos: ${formData.value.interests}.
-      Vehicul: ${formData.value.vehicle}.
-      Tipus de vehicul: ${formData.value.vehicletype}.
+      Vehicle: ${formData.value.vehicle}.
+      Tipus de vehicle: ${formData.value.vehicletype}.
     `;
 
-    // navigate to loading
     router.push({ name: 'loading' });
 
     const response = await fetch('/api/gemini', {
@@ -248,7 +301,7 @@ const handleSubmit = async () => {
 
   } catch (error) {
     console.error('Error al enviar el formulari:', error);
-    alert('S\'ha produït un error en processar la sol·licitud');
+    alert("S'ha produït un error en processar la sol·licitud");
   }
 };
 </script>
@@ -257,4 +310,5 @@ const handleSubmit = async () => {
 .dp_main {
   width: 100%;
 }
+
 </style>
