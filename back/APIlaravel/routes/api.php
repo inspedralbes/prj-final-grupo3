@@ -13,7 +13,7 @@ Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/sendEmail',[SendMail::class, 'sendEmail']);
  
 Route::get('/view', function () {
-    return view('SendMail.email.blade.php', ['message' => 'Este es un mensaje dinámico']);
+    return view('email.blade.php', ['message' => 'Este es un mensaje dinámico']);
 });
 
 Route::prefix('auth')->group(function () {

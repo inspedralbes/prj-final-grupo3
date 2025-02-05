@@ -55,7 +55,7 @@ class SendMail extends Controller
             // En cas de tindre una vista (blade) la renderitzarem perquè l'usuari el vegi la informació
             // en el correu
  
-            $htmlContent = View::make('email.notification', [
+            $htmlContent = View::make('email', [
                 'subject' => $validatedData['subject'],
                 'message' => $validatedData['message'],
             ])->render();
