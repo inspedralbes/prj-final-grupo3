@@ -12,7 +12,7 @@ class TravelsController extends Controller
      */
     public function index()
     {
-        $travels = Travel::all();
+        $travels = Travel::with(['country', 'type', 'budget', 'movility'])->get();
         return view('admin.travels', compact('travels'));
     }
 
@@ -37,7 +37,9 @@ class TravelsController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $travel = Travel::findOrFail($id);
+        // dd($user);
+        return view('admin.travel-details', compact('travel'));
     }
 
     /**

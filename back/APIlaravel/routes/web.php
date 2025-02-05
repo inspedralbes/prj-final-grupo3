@@ -52,6 +52,7 @@ Route::middleware(['auth:admin'])->group(function () {
 
     // Rutas para el panel de administración de viatges
     Route::get('/travels', [TravelsController::class, 'index'])->name('travels');
+    Route::get('/travels/{id}', [TravelsController::class, 'show'])->name('travels.show');
 
     // Rutas para el panel de administración de publicaciones
     Route::get('/publications', [PublicationsController::class, 'index'])->name('publications');

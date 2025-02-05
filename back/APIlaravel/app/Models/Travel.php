@@ -19,11 +19,23 @@ class Travel extends Model
         'description',
     ];
 
-    public function country(){
-        return $this->hasOne(Country::class);
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'id_country');
     }
 
-    public function budget(){
-        return $this->hasOne(Budget::class);
+    public function type()
+    {
+        return $this->belongsTo(TravelType::class, 'id_type');
+    }
+
+    public function budget()
+    {
+        return $this->belongsTo(Budget::class, 'id_budget');
+    }
+
+    public function movility()
+    {
+        return $this->belongsTo(Movility::class, 'id_movility');
     }
 }
