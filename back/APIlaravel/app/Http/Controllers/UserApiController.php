@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
 
 class UserApiController extends Controller
 {
@@ -65,10 +64,19 @@ class UserApiController extends Controller
                 'phone_number' => 'nullable|digits:9',
             ]);
 
-            // $user = $request->user();
-            $user->update($validated);
+            // dd($validated);
 
-            return response()->json(['message' => 'Usuari correctament actualitzat', 'user' => $user], 200);
+            // Verifica si 'birth_date' está en los datos validados y actualiza el usuario
+            $user->update(array_filter([
+                'name' => $validated['name'] ?? $user->name,
+                'surname' => $validated['surname'] ?? $user->surname,
+                'email' => $validated['email'] ?? $user->email,
+                'email_alternative' => $validated['email_alternative'] ?? $user->email_alternative,
+                'birth_date' => isset($validated['birth_date']) ? $validated['birth_date'] : $user->birth_date,
+                'phone_number' => $validated['phone_number'] ?? $user->phone_number,
+            ]));
+
+            return response()->json(['message' => 'Usuari correctament actualitzat', 'user' => $user, 'code' => 200], 200);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 422);
         } catch (\Exception $e) {

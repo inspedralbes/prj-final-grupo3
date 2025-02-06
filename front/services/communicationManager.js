@@ -108,7 +108,7 @@ export async function changeInfoUser(currentUserToken, userData) {
 
     try {
         const response = await fetch(URL, {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${currentUserToken}`,

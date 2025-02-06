@@ -21,9 +21,8 @@ export function useSettings() {
             customAlert(response.message, 'negative', 'error', 'top', 5000);
             authStore.logout();
         } else {
-            // customAlert('Informació obtinguda correctament', 'success', 'success', 'top', 5000);
+            customAlert('Informació carregada', 'success', 'success', 'top', 5000);
             currentUser.value = response.user
-            console.log(currentUser.value);
 
         }
     }
@@ -33,15 +32,32 @@ export function useSettings() {
     };
 
     const confirmEdit = async () => {
-        console.log(authStore.token);
         const newDataUser = reactive({
             ...currentUser.value
         })
+
+        // console.log(newDataUser.birth_date);
+        const formatData = (data) => {
+            console.log(data);
+            const [day, month, year] = data.split('-');  // Asumiendo formato DD/MM/YYYY
+            console.log(`${day}-${month}-${year}`);
+            
+            return `${day}-${month}-${year}`;
+
+        }
+
+        newDataUser.birth_date = formatData(newDataUser.birth_date);
+
         console.log(newDataUser);
+        
+
+        // console.log(newDataUser);
 
         // Logic to confirm changes
         const response = await com.changeInfoUser(authStore.token, newDataUser)
         console.log(response);
+
+        // Poner alerta para notificar al usuario de que ha realizado los cambios de manera crorrecta
 
         toggleEdit();
     };

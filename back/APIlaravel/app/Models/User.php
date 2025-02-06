@@ -34,6 +34,12 @@ class User extends Authenticatable
     ];
 
     /**
+     * Summary of dates
+     * @var array
+     */
+    protected $dates = ['birth_date'];
+
+    /**
      * The attributes that should be hidden for serialization.
      *
      * @var list<string>

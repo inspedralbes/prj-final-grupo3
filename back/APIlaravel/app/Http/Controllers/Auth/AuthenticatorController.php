@@ -26,7 +26,7 @@ class AuthenticatorController extends Controller
                 $token = $user->createToken('auth_token')->plainTextToken;
 
                 return response()->json(['status' => 'success', 'message' => 'Credencials validades', 'token' => $token, 'user' => $user]);
-            } 
+            }
 
             return response()->json(['status' => 'error', 'message' => 'Correu o contrasenya incorrectes'], 401);
 
@@ -68,7 +68,7 @@ class AuthenticatorController extends Controller
                     'gender.required' => 'El campo gender es obligatorio',
                 ]
             );
-            
+
             $user = new User();
             $user->name = $data['name'];
             $user->surname = $data['surname'];
@@ -78,14 +78,14 @@ class AuthenticatorController extends Controller
             $user->birth_date = $data['birth_date'];
             $user->phone_number = $data['phone_number'];
             $user->gender = $data['gender'];
-            
+
             // Asignar avatar por defecto según el género
             if ($data['gender'] == 'male') {
                 $user->avatar = '/default_avatar_male.png';
             } else {
                 $user->avatar = '/default_avatar_female.png';
             }
-            
+
             $user->save();
 
             // Create acces token
@@ -146,29 +146,29 @@ class AuthenticatorController extends Controller
     }
 
     public function currentUser()
-{
-    try {
-        $user = auth()->user();
+    {
+        try {
+            $user = auth()->user();
 
-        if ($user) {
+            if ($user) {
+                return response()->json([
+                    'status' => 'success',
+                    'user' => $user,
+                ], 200);
+            }
+
             return response()->json([
-                'status' => 'success',
-                'user' => $user,
-            ], 200);
+                'status' => 'error',
+                'message' => 'La sessió a expirat',
+            ], 405);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No hi ha un usuari autenticat',
+            ], 401);
         }
-
-        return response()->json([
-            'status' => 'error',
-            'message' => 'La sessió a expirat',
-        ], 405);
-
-    } catch (\Exception $e) {
-        
-        return response()->json([
-            'status' => 'error',
-            'message' => 'No hi ha un usuari autenticat',
-        ], 401);
     }
-}
 }
 
