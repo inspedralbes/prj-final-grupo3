@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_country');
             $table->foreign('id_country')->references('id')->on('countries')->onDelete('cascade');
+            $table->unsignedBigInteger('id_user');
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('id_type');
             $table->foreign('id_type')->references('id')->on('type')->onDelete('cascade');
