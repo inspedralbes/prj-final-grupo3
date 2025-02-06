@@ -13,6 +13,9 @@ Route::get('/view', function () {
     return view('email.blade.php', ['message' => 'Este es un mensaje dinámico']);
 });
 
+Route::get('/travelHistory/{id}', [UserApiController::class, 'travelHistory']);
+
+
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthenticatorController::class, 'authenticate'])->name('login');
     Route::post('/register', [AuthenticatorController::class, 'register']);

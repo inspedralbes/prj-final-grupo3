@@ -83,4 +83,13 @@ class UserApiController extends Controller
     {
         //
     }
+
+    /**
+     * Show user travel history
+     */
+    public function travelHistory(string $id) {
+        $user = User::findOrFail($id);
+        
+        return response()->json($user->travels);
+    }
 }

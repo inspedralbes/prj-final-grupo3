@@ -74,4 +74,12 @@ class User extends Authenticatable
 
         return new NewAccessToken($token, $plainTextToken);
     }
+
+    /**
+     * Definir la relacion de los viajes con el usuario
+     */
+    public function travels()
+    {
+        return $this->hasMany(Travel::class, 'id_user');
+    }
 }

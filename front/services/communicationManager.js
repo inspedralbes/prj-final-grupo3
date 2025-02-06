@@ -150,3 +150,28 @@ export async function changeInfoUser(currentUserToken, userData) {
         throw error;
     }
 }
+
+
+export async function getUserTravelHistory(userId) {
+    const URL = HOST + `/travelHistory/${userId}`;
+
+    try {
+        const response = await fetch(URL, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener el historial de viajes para el usuario ${userId}: ${response.statusText}`);
+        }    
+
+        const travelHistory = await response.json();
+        console.log('Respuesta del servidor:', travelHistory);
+        return travelHistory;
+    } catch (error) {
+        console.error(`Error al obtener el historial de viajes del usuario ${userId}:`, error);
+        throw error;
+    }
+}
