@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\SendMail;
 
 
 class AuthenticatorController extends Controller
@@ -69,7 +70,8 @@ class AuthenticatorController extends Controller
                     'gender.required' => 'El campo gender es obligatorio',
                 ]
             );
-            
+    
+            // Crear el usuario
             $user = new User();
             $user->name = $data['name'];
             $user->surname = $data['surname'];
@@ -79,28 +81,54 @@ class AuthenticatorController extends Controller
             $user->birth_date = $data['birth_date'];
             $user->phone_number = $data['phone_number'];
             $user->gender = $data['gender'];
-            
+    
             // Asignar avatar por defecto según el género
             if ($data['gender'] == 'male') {
                 $user->avatar = '/default_avatar_male.png';
             } else {
                 $user->avatar = '/default_avatar_female.png';
             }
-            
+    
             $user->save();
-
-            // Create acces token
+    
+            // Preparar los datos para el correo electrónico
+            $subject = "Bienvenido a nuestra plataforma";
+            $message = "Hola {$user->name}, gracias por registrarte.";
+            $to = [$user->email]; // Usamos el correo del usuario registrado
+    
+            // Instanciar el controlador SendMail y enviar el correo
+            $sendMailController = new SendMail();
+            $response = $sendMailController->sendEmail(new Request([
+                'subject' => $subject,
+                'message' => $message,
+                'to' => $to,
+            ]));
+    
+            // Verificar si el correo fue enviado correctamente
+            if ($response->getStatusCode() !== 200) {
+                // Si falla el envío del correo, seguimos con el registro pero avisamos
+                return response()->json([
+                    'status' => 'warning',
+                    'message' => 'User created, but email sending failed.',
+                    'token' => $user->createToken('auth_token')->plainTextToken,
+                    'user' => $user,
+                ], 201);
+            }
+    
+            // Crear token de acceso
             $token = $user->createToken('auth_token')->plainTextToken;
+    
+            // Iniciar sesión
             Auth::login($user);
-
+    
             return response()->json([
                 'status' => 'success',
-                'message' => 'User created',
+                'message' => 'User created and email sent successfully.',
                 'token' => $token,
-                'user' => $user
+                'user' => $user,
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // Verify if the email is already in use
+            // Verificar si el correo ya está en uso
             $errors = $e->errors();
             if (isset($errors['email'])) {
                 return response()->json([
@@ -109,15 +137,14 @@ class AuthenticatorController extends Controller
                     'errors' => $errors['email'],
                 ], 422);
             }
-            // Many errors
+            // Muchos errores
             return response()->json([
                 'status' => 'error',
                 'message' => 'Error en la validació',
                 'errors' => $errors,
             ], 422);
-
         } catch (\Exception $e) {
-            // Inesrate errors
+            // Errores inesperados
             return response()->json([
                 'status' => 'error',
                 'message' => 'Ocurrió un error inesperado',
@@ -125,7 +152,6 @@ class AuthenticatorController extends Controller
             ], 500);
         }
     }
-
     public function logout(Request $request)
     {
 

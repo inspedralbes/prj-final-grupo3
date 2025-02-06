@@ -61,16 +61,16 @@
 </head>
 <body>
 <div class="container">
-    <h4>¡Bienvenido a Triplan!</h4>
-    <p>Hola <strong>{{ $name ?? 'Usuario' }} {{ $lastname ?? '' }}</strong>,</p>
-    <p>Gracias por registrarte en <strong>Triplan</strong>. Estamos encantados de tenerte a bordo.</p>
-    <p>Pulsa en el botón de abajo para acceder a tu cuestionario y empezar a planear tus aventuras:</p>
+    <h4>Triplan</h4>
+    <p>Bienvenido: <strong>{{ $name ?? 'User' }} {{$lastname ?? 'User' }}</strong></p>
+
+    <!-- Recuperar variable de la URL del front del .env API_URL -->
     <p>
-        <a href="{{ $quizUrl ?? '#' }}" class="btn">Acceder al cuestionario</a>
+        
     </p>
 
     <footer>
-        <p>&copy; {{ date('Y') }} Triplan. Todos los derechos reservados.</p>
+        <p>&copy; {{ date('Y') }} Triplan App. Todos los derechos reservados.</p>
     </footer>
 </div>
 </body>
