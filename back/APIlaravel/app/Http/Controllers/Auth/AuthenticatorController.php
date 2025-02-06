@@ -101,6 +101,10 @@ class AuthenticatorController extends Controller
                 'subject' => $subject,
                 'message' => $message,
                 'to' => $to,
+                'user' => [ // Pasar los datos del usuario
+                    'name' => $user->name,
+                    'surname' => $user->surname,
+                ]
             ]));
     
             // Verificar si el correo fue enviado correctamente

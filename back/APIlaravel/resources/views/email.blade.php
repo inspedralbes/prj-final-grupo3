@@ -62,8 +62,7 @@
 <body>
 <div class="container">
     <h4>Triplan</h4>
-    <p>Bienvenido: <strong>{{ $name ?? 'User' }} {{$lastname ?? 'User' }}</strong></p>
-
+    <p>Bienvenido: <strong>{{ $user['name'] ?? 'Usuario' }} {{ $user['surname']  }}</strong></p>
     <!-- Recuperar variable de la URL del front del .env API_URL -->
     <p>
         
