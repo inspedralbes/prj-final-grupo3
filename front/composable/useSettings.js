@@ -11,7 +11,7 @@ export function useSettings() {
     const currentUser = ref({});
     const avatar = ref()
     const isEditing = ref(false);
-    
+
 
     const getCurrentUser = async () => {
 
@@ -38,20 +38,18 @@ export function useSettings() {
             ...currentUser.value
         })
         console.log(newDataUser);
-        
+
         // Logic to confirm changes
-        const response = await com.changeInfoUser(authStore.token ,newDataUser)
-        // console.log(response);
-        
-        // console.log(response);
-        
+        const response = await com.changeInfoUser(authStore.token, newDataUser)
+        console.log(response);
+
         toggleEdit();
-      };
+    };
 
     const cancelEdit = () => {
         isEditing.value = false;
         // Logic to cancel changes
-      };
+    };
 
     onMounted(async () => {
         getCurrentUser();

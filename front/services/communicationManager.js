@@ -36,7 +36,7 @@ export const login = async (userData) => {
     console.log(response);
 
     const json = await response.json();
-    console.log(json);
+    // console.log(json);
     return json;
 
 }
@@ -108,24 +108,22 @@ export async function changeInfoUser(currentUserToken, userData) {
 
     try {
         const response = await fetch(URL, {
-            method: 'PUT', // O 'PUT' dependiendo de lo que desees
+            method: 'POST',
             headers: {
-                'Content-Type': 'application/json', // Especifica que el cuerpo es en formato JSON
-                'Authorization': `Bearer ${currentUserToken}`
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentUserToken}`,
             },
-            body: JSON.stringify(userData) // Convierte los datos a formato JSON
+            body: JSON.stringify({ ...userData }),
         });
-
         if (!response.ok) {
-            throw new Error('Error en la solicitud');
+            throw new Error(`Error en la solicitud: ${response.statusText}`);
         }
 
-        const json = await response.json(); // Respuesta en formato JSON
+        const json = await response.json();
         console.log('Respuesta del servidor:', json);
-
-        return json; // Devuelve la respuesta para que se pueda manejar
+        return json
     } catch (error) {
         console.error('Error al cambiar la información del usuario:', error);
-        throw error; // Lanza el error para manejarlo más arriba
+        throw error;
     }
 }

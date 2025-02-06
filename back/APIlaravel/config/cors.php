@@ -5,7 +5,7 @@ return [
     'allowed_methods' => ['*'], // Métodos permitidos
     'allowed_origins' => ['http://localhost:3010'], // Orígenes permitidos (puedes restringirlo si es necesario)
     'allowed_origins_patterns' => [],
-    'allowed_headers' => ['Content-Type', 'X-XSRF-TOKEN', 'Authorization'], // Encabezados permitidos
+    'allowed_headers' => ['Content-Type', 'X-Requested-With', 'Authorization'], // Encabezados permitidos
     'exposed_headers' => [],
     'max_age' => 0,
     'supports_credentials' => true,

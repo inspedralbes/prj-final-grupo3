@@ -54,7 +54,6 @@ class AuthenticatorController extends Controller
                     'birth_date' => 'required|date',
                     'phone_number' => 'required|integer',
                     'gender' => 'required|string|in:male,female,other',
-                    'id_travel' => 'nullable|exists:travels,id',
                 ],
                 [
                     'name.required' => 'El campo name es obligatorio',

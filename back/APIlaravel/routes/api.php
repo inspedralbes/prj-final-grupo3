@@ -15,9 +15,10 @@ Route::prefix('auth')->group(function () {
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/currentUser', [AuthenticatorController::class, 'currentUser']);
     Route::post('/auth/logout', [AuthenticatorController::class, 'logout']);
-    Route::middleware(['auth:sanctum'])->put('/changeInfoProfile', [UserApiController::class, 'update']);
+    // Route::put('/auth/changeInfoProfile', [UserApiController::class, 'update'])->name('update');
+    Route::post('/changeInfoProfile', [UserApiController::class, 'update']);
 });
 
-// Route::apiResource('/changeInfoProfile', UserApiController::class);
+
 
 Route::get('/countries', action: [CountriesApiController::class, 'index']);
