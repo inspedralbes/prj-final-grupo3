@@ -22,7 +22,6 @@ return new class extends Migration
             $table->integer('phone_number')->default(0);
             $table->string('avatar');
             $table->enum('gender', ['Male','Female']);
-            $table->unsignedBigInteger('id_travel')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

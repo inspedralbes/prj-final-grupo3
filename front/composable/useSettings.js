@@ -10,6 +10,8 @@ export function useSettings() {
 
     const currentUser = ref({});
     const avatar = ref()
+    const isEditing = ref(false);
+
 
     const getCurrentUser = async () => {
 
@@ -26,6 +28,29 @@ export function useSettings() {
         }
     }
 
+    const toggleEdit = () => {
+        isEditing.value = !isEditing.value;
+    };
+
+    const confirmEdit = async () => {
+        console.log(authStore.token);
+        const newDataUser = reactive({
+            ...currentUser.value
+        })
+        console.log(newDataUser);
+
+        // Logic to confirm changes
+        const response = await com.changeInfoUser(authStore.token, newDataUser)
+        console.log(response);
+
+        toggleEdit();
+    };
+
+    const cancelEdit = () => {
+        isEditing.value = false;
+        // Logic to cancel changes
+    };
+
     onMounted(async () => {
         getCurrentUser();
         avatar.value = config.public.appName + authStore.user.avatar
@@ -33,6 +58,11 @@ export function useSettings() {
 
     return {
         currentUser,
-        avatar
+        avatar,
+        isEditing,
+        // newDataUser,
+        toggleEdit,
+        confirmEdit,
+        cancelEdit
     }
 }
