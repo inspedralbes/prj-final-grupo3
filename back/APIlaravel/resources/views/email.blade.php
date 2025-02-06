@@ -47,19 +47,16 @@
 </head>
 <body>
 <div class="container">
-    <h4>{{ $subject ?? 'Example App' }}</h4>
+    <h4>Triplan</h4>
     <p>Bienvenido: <strong>{{ $name ?? 'User' }} {{$lastname ?? 'User' }}</strong></p>
-    <p>Pulsa en el siguiente enlace para acceder al cuestionario:</p>
+
+    <!-- Recuperar variable de la URL del front del .env API_URL -->
     <p>
-        <a href="{{ $quizUrl ?? '#' }}" style="text-decoration: none; color: #58C4DC; font-weight: bold;"
-           onmouseover="this.style.textDecoration='underline'"
-           onmouseout="this.style.textDecoration='none'">
-            Acceder al cuestionario
-        </a>
+        
     </p>
  
     <footer>
-        <p>&copy; {{ date('Y') }} Example App. Todos los derechos reservados.</p>
+        <p>&copy; {{ date('Y') }} Triplan App. Todos los derechos reservados.</p>
     </footer>
 </div>
 </body>
