@@ -21,11 +21,13 @@
                 <thead class="bg-gray-800 text-white text-sm md:text-base">
                     <tr class="text-center">
                         <th class="py-2 px-4 w-[5%]">ID</th>
-                        <th class="py-2 px-4 text-left w-[5%]">DESTÍ</th>
+                        <th class="py-2 px-4 text-left w-[5%]">VIATGER</th>
                         <th class="py-2 px-4 text-left w-[5%]">TYPE</th>
-                        {{-- <th class="py-2 px-4 text-left">ID BUDGET</th> --}}
+                        <th class="py-2 px-4 text-left w-[5%]">DESTÍ</th>
+                        <th class="py-2 px-4 text-center w-[5%]"># DIES</th>
+                        <th class="py-2 px-4 text-left w-[8%]">PREU FINAL</th>
                         {{-- <th class="py-2 px-4 text-left">ID MOVILITY</th> --}}
-                        <th class="py-2 px-4 text-left">Q. DIES</th>
+                        <th class="py-2 px-4 text-left w-[30%]"></th>
                         {{-- <th class="py-2 px-4 text-left">DATA INICIAL</th> --}}
                         {{-- <th class="py-2 px-4 text-left">DATA FINAL</th> --}}
                         {{-- <th class="py-2 px-4 text-left">DESCRIPCIÓ</th> --}}
@@ -36,11 +38,13 @@
                     @foreach ($travels as $travel)
                         <tr class="border-b border-gray-300 text-center">
                             <td class="py-2 px-4">{{ $travel->id }}</td>
-                            <th class="py-2 px-4 text-left">{{ $travel->country->name }}</th>
+                            <th class="py-2 px-4 text-left">{{ $travel->user->name }}</th>
                             <th class="py-2 px-4 text-left">{{ $travel->type->type }}</th>
-                            {{-- <th class="py-2 px-4 text-left">{{ $travel->budget->final_price }}€</th> --}}
+                            <th class="py-2 px-4 text-left">{{ $travel->country->name }}</th>
+                            <th class="py-2 px-4 text-center">{{ $travel->qunt_date }}</th>
+                            <th class="py-2 px-4 text-left">{{ $travel->budget->final_price }}€</th>
                             {{-- <th class="py-2 px-4 text-left">{{ $travel->movility->type }}</th> --}}
-                            <th class="py-2 px-4 text-left">{{ $travel->qunt_date }}</th>
+                            <th class="py-2 px-4 "></th>
                             {{-- <th class="py-2 px-4 text-left">{{ $travel->date_init }}</th> --}}
                             {{-- <th class="py-2 px-4 text-left">{{ $travel->date_end }}</th> --}}
                             {{-- <th class="py-2 px-4 text-left">{{ $travel->description }}</th> --}}

@@ -1,6 +1,6 @@
 <div class="flex flex-col justify-center bg-white mt-0 m-6 rounded-lg shadow-2xl relative max-w-lg mx-auto">
     <div class="flex flex-row relative bg-gray-800 text-white text-2xl tracking-wider font-bold rounded-t-lg p-4 w-full">
-        TriPlan | Registre
+        TriPlan | Viatge
         <div class="absolute right-4 top-.5">
             <button id="close-form" class="text-2xl text-gray-600 font-bold hover:text-red-600">
                 <img src="{{ asset('icons/close_icon.svg') }}" alt="Cerrar"
