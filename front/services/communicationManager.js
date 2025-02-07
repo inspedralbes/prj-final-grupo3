@@ -3,7 +3,9 @@ const config = useRuntimeConfig()
 const HOST = config.public.apiUrl
 
 export async function  getCountries() {
-    const URL = HOST + '/countries';
+    //const URL = HOST + '/countries';
+
+    const URL ='http://localhost:8000/countries';
 
     try {
         const response = await fetch(URL, {
@@ -27,7 +29,9 @@ export async function  getCountries() {
 
 export const register = async (userData) => {
 
-    const URL = HOST + '/auth/register';
+    //const URL = HOST + '/auth/register';
+    const URL ='http://localhost:8000/auth/register';
+
 
     console.log(userData);
 
@@ -46,7 +50,9 @@ export const register = async (userData) => {
 }
 export const login = async (userData) => {
 
-    const URL = HOST + '/auth/login';
+    //const URL = HOST + '/auth/login';
+    const URL ='http://localhost:8000/auth/login';
+
 
     const response = await fetch(URL, {
         method: 'POST',
@@ -66,7 +72,9 @@ export const login = async (userData) => {
 
 export async function logout() {
 
-    const URL = HOST + '/auth/logout';
+    //const URL = HOST + '/auth/logout';
+    const URL ='http://localhost:8000/auth/logout';
+
 
     const response = await fetch(URL);
 
@@ -79,7 +87,9 @@ export async function logout() {
 }
 
 export async function getCurrentUser(currentUserToken) {
-    const URL = HOST + '/currentUser';
+    //const URL = HOST + '/currentUser';
+    const URL ='http://localhost:8000/currentUser';
+
 
     try {
         const response = await fetch(URL, {
@@ -127,7 +137,9 @@ export async function getCurrentUser(currentUserToken) {
 }
 
 export async function changeInfoUser(currentUserToken, userData) {
-    const URL = `${HOST}/changeInfoProfile`;
+    //const URL = `${HOST}/changeInfoProfile`;
+    const URL ='http://localhost:8000/changeInfoProfile';
+
 
     try {
         const response = await fetch(URL, {
