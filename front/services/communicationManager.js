@@ -2,8 +2,9 @@ const config = useRuntimeConfig()
 
 const HOST = config.public.apiUrl
 
-export async function  getCountries() {
-    const URL = HOST + '/countries';
+export async function getCountries() {
+    // const URL = HOST + '/countries';
+    const URL = 'http://localhost:8000/api/countries';
 
     try {
         const response = await fetch(URL, {
@@ -26,10 +27,10 @@ export async function  getCountries() {
 }
 
 export const register = async (userData) => {
+    // const URL = HOST + '/auth/register';
+    const URL = 'http://localhost:8000/api/auth/register';
 
-    const URL = HOST + '/auth/register';
-
-    console.log(userData);
+    console.log(URL);
 
     const response = await fetch(URL, {
         method: 'POST',
@@ -45,8 +46,10 @@ export const register = async (userData) => {
 
 }
 export const login = async (userData) => {
+    // const URL = HOST + '/auth/login';
+    const URL = 'http://localhost:8000/api/auth/login';
 
-    const URL = HOST + '/auth/login';
+    console.log(URL);
 
     const response = await fetch(URL, {
         method: 'POST',
@@ -65,8 +68,8 @@ export const login = async (userData) => {
 }
 
 export async function logout() {
-
-    const URL = HOST + '/auth/logout';
+    // const URL = HOST + '/auth/logout';
+    const URL = 'http://localhost:8000/api/auth/logout';
 
     const response = await fetch(URL);
 
@@ -79,7 +82,8 @@ export async function logout() {
 }
 
 export async function getCurrentUser(currentUserToken) {
-    const URL = HOST + '/currentUser';
+    // const URL = HOST + '/currentUser';
+    const URL = 'http://localhost:8000/api/currentUser';
 
     try {
         const response = await fetch(URL, {
@@ -127,7 +131,8 @@ export async function getCurrentUser(currentUserToken) {
 }
 
 export async function changeInfoUser(currentUserToken, userData) {
-    const URL = `${HOST}/changeInfoProfile`;
+    // const URL = `${HOST}/changeInfoProfile`;
+    const URL = 'http://localhost:8000/api/changeInfoProfile';
 
     try {
         const response = await fetch(URL, {
@@ -153,7 +158,8 @@ export async function changeInfoUser(currentUserToken, userData) {
 
 
 export async function getUserTravelHistory(userId) {
-    const URL = HOST + `/travelHistory/${userId}`;
+    // const URL = HOST + `/trp-details/${userId}`;
+    const URL = `http://localhost:8000/api/trip-details/${userId}`;
 
     try {
         const response = await fetch(URL, {

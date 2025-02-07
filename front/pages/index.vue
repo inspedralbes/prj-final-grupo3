@@ -27,7 +27,6 @@
       <h1 class="text-5xl font-bold text-blue-600 mb-6">Benvingut a Triplan!</h1>
       <p class="text-xl text-gray-600 mb-8">El teu viatge comença aquí. Planifica el teu viatge perfecte amb nosaltres!
       </p>
-      <NuxtLink to="/trip-details">Trip</NuxtLink>
 
       <div class="space-y-4">
         <button @click="index.handlePlanTrip"

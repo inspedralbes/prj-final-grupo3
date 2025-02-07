@@ -14,61 +14,120 @@
     </div>
     <div class="min-h-[80vh] max-h-[80vh] w-[80%] rounded-lg shadow-2xl bg-white p-6 flex flex-col overflow-y-auto">
       <div class="flex flex-col gap-6 items-center">
-        <div class="box">
+
+        <div class="box" v-for="travel in travelData.data">
           <div class="ticket">
             <div class="ticket-header">
               <p class="flex text-2xl font-bold font-['Arial'] text-blue-950">TRIPLAN</p>
               <p class="flex text-xl font-['Arial'] text-gray-100">Informació del viatge</p>
-              <p class="flex text-sm font-bold font-['Arial'] text-blue-950">VIATGE</p>
+              <p class="flex text-sm font-bold font-['Arial'] text-blue-950">VIATGE #00{{ travel.id }}</p>
             </div>
             <div class="content">
               <!-- Contingut -->
               <div class="flight-info font-['Arial'] text-5xl font-bold">
-                <p>MRD</p>
+                <p>{{ travel.user.name.slice(0, 3).toUpperCase() }}</p>
                 <img src="../assets/images/plane.svg" alt="" class="w-12 h-15">
-                <p>BCN</p>
+                <p>{{ travel.country.code }}</p>
               </div>
-              <div class="sub-content">
+              <div class="flight-info-right font-['Arial'] text-4xl font-bold">
+                <p>{{ travel.user.name.slice(0, 3).toUpperCase() }}</p>
+                <img src="../assets/images/plane.svg" alt="" class="w-12 h-15">
+                <p>{{ travel.country.code }}</p>
+              </div>
+              <div class="sub-content flex">
                 <!-- Sub contingut -->
                 <p class="watermark">TriPlan</p>
-                <div class="grid grid-cols-3 gap-4 w-[80%] sm:w-[30vw] p-4">
+                <div class="grid grid-cols-5 gap-4 w-[70%] p-4">
                   <div class="flex flex-col gap-2">
                     <p class="font-semibold">Nom</p>
-                    <p>Antonio, Aivan</p>
+                    <p class="break-words">{{ travel.user.surname }}, {{ travel.user.name }}</p>
+                  </div>
+                  <div class="flex flex-col gap-2">
+                    <p class="font-semibold">Correu</p>
+                    <p class="break-words">{{ travel.user.email }}</p>
                   </div>
                   <div class="flex flex-col gap-2">
                     <p class="font-semibold">Destí</p>
-                    <p>Barcelona</p>
+                    <p class="break-words">{{ travel.country.name }}</p>
                   </div>
                   <div class="flex flex-col gap-2">
                     <p class="font-semibold">Data</p>
-                    <p>11/02/2025 - 13/02/2025</p>
+                    <p class="break-words">{{ travel.date_init }} fins a {{ travel.date_end }}</p>
                   </div>
                   <div class="flex flex-col gap-2">
                     <p class="font-semibold">Quantitat dies</p>
-                    <p>7</p>
+                    <p class="break-words">{{ travel.qunt_date }}</p>
                   </div>
                   <div class="flex flex-col gap-2">
                     <p class="font-semibold">Mobilitat</p>
-                    <p>Aèria</p>
+                    <p class="break-words">{{ travel.movility.type }}</p>
+                  </div>
+                  <div class="flex flex-col gap-2">
+                    <p class="font-semibold">Pressupost min</p>
+                    <p class="break-words">{{ travel.budget.min_budget }}€</p>
+                  </div>
+                  <div class="flex flex-col gap-2">
+                    <p class="font-semibold">Pressupost max</p>
+                    <p class="break-words">{{ travel.budget.max_budget }}€</p>
+                  </div>
+                  <div class="flex flex-col gap-2">
+                    <p class="font-semibold">Preu final</p>
+                    <p class="break-words">{{ travel.budget.final_price }}€</p>
+                  </div>
+                </div>
+                <div class="description-trip relative p-4 w-[30%]">
+                  <div class="flex flex-col gap-2">
+                    <p class="font-semibold">Descripció</p>
+                    <p class="break-words">{{ travel.description }} Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea quaerat minus assumenda et deserunt, incidunt saepe exercitationem esse expedita.</p>
                   </div>
                 </div>
               </div>
             </div>
             <div class="barcode-container flex justify-around">
-              <p class="absolute font-mono text-sm bottom-2 left-30 text-gray-100 font-bold">Data de creació: </p>
               <div class="barcode"></div>
+              <p class="data-created flex relative font-mono text-sm text-gray-100 font-bold top-2">DATA DE CREACIÓ: {{
+                travel.created_at }}</p>
               <div class="barcode"></div>
               <div class="barcode"></div>
             </div>
           </div>
         </div>
+
+
       </div>
     </div>
   </div>
 </template>
 
-<script></script>
+<script setup>
+import { useAuthStore } from '~/store/authUser';
+import { getUserTravelHistory } from '@/services/communicationManager';
+import { data } from 'autoprefixer';
+
+</script>
+<script>
+export default {
+  data() {
+    const travelData = reactive({ data: [] });
+    onMounted(async () => {
+      console.log(this.authStore.user.id);
+      try {
+        const data = await getUserTravelHistory(this.authStore.user.id);
+        travelData.data = data.travels;
+        console.log(travelData.data);
+
+      } catch (error) {
+        console.error('Error carregant el historial de viatges:', error);
+      }
+    })
+    return {
+      authStore: useAuthStore(),
+      travelData
+    };
+  },
+}
+</script>
+
 
 <style>
 .box {
@@ -83,6 +142,61 @@
   box-shadow: 0 0 10px #aaa;
   border-top: 1px solid #e89f3d;
   border-bottom: 1px solid #e89f3d;
+}
+
+.ticket:after {
+  content: '';
+  position: absolute;
+  right: 22vw;
+  top: 0px;
+  width: 3px;
+  height: 100%;
+  box-shadow: inset 0 0 0 #FFB300,
+    inset 0 -10px 0 #999999,
+    inset 0 -20px 0 #E5E5E5,
+    inset 0 -30px 0 #999999,
+    inset 0 -40px 0 #E5E5E5,
+    inset 0 -50px 0 #999999,
+    inset 0 -60px 0 #E5E5E5,
+    inset 0 -70px 0 #999999,
+    inset 0 -80px 0 #E5E5E5,
+    inset 0 -90px 0 #999999,
+    inset 0 -100px 0 #E5E5E5,
+    inset 0 -110px 0 #999999,
+    inset 0 -120px 0 #E5E5E5,
+    inset 0 -130px 0 #999999,
+    inset 0 -140px 0 #E5E5E5,
+    inset 0 -150px 0 #B0B0B0,
+    inset 0 -160px 0 #EEEEEE,
+    inset 0 -170px 0 #B0B0B0,
+    inset 0 -180px 0 #EEEEEE,
+    inset 0 -190px 0 #B0B0B0,
+    inset 0 -200px 0 #EEEEEE,
+    inset 0 -210px 0 #B0B0B0,
+    inset 0 -220px 0 #EEEEEE,
+    inset 0 -230px 0 #B0B0B0,
+    inset 0 -240px 0 #EEEEEE,
+    inset 0 -250px 0 #B0B0B0,
+    inset 0 -260px 0 #EEEEEE,
+    inset 0 -270px 0 #B0B0B0,
+    inset 0 -280px 0 #EEEEEE,
+    inset 0 -290px 0 #B0B0B0,
+    inset 0 -300px 0 #EEEEEE,
+    inset 0 -310px 0 #B0B0B0,
+    inset 0 -320px 0 #EEEEEE,
+    inset 0 -330px 0 #B0B0B0,
+    inset 0 -340px 0 #EEEEEE,
+    inset 0 -350px 0 #B0B0B0,
+    inset 0 -360px 0 #EEEEEE,
+    inset 0 -370px 0 #B0B0B0,
+    inset 0 -380px 0 #EEEEEE,
+    inset 0 -390px 0 #B0B0B0,
+    inset 0 -400px 0 #EEEEEE,
+    inset 0 -410px 0 #B0B0B0,
+    inset 0 -420px 0 #EEEEEE,
+    inset 0 -430px 0 #B0B0B0,
+    inset 0 -440px 0 #EEEEEE,
+    inset 0 -450px 0 #B0B0B0;
 }
 
 .content {
@@ -198,11 +312,21 @@
 
 .flight-info {
   position: absolute;
-  width: 20vw;
   top: 3vh;
   left: 1vw;
   display: flex;
   justify-content: space-between;
   padding: 0 1vw;
+  gap: 1vw;
+}
+
+.flight-info-right {
+  position: absolute;
+  top: 4vh;
+  right: 6vw;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1vw;
+  gap: 1vw;
 }
 </style>
