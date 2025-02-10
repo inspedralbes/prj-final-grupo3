@@ -3,9 +3,7 @@ const config = useRuntimeConfig()
 const HOST = config.public.apiUrl
 
 export async function  getCountries() {
-    //const URL = HOST + '/countries';
-
-    const URL ='http://localhost:8000/api/countries';
+    const URL = HOST + '/countries';
 
     try {
         const response = await fetch(URL, {
