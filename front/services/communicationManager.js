@@ -102,7 +102,7 @@ export async function getCurrentUser(currentUserToken) {
 
         if (response.ok) {
             const json = await response.json();
-            return json;
+            return json.user;
         }
 
         if (response.status === 401) {
@@ -143,7 +143,7 @@ export async function changeInfoUser(currentUserToken, userData) {
 
     try {
         const response = await fetch(URL, {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${currentUserToken}`,
@@ -156,7 +156,7 @@ export async function changeInfoUser(currentUserToken, userData) {
 
         const json = await response.json();
         console.log('Respuesta del servidor:', json);
-        return json
+        return json.user
     } catch (error) {
         console.error('Error al cambiar la información del usuario:', error);
         throw error;
