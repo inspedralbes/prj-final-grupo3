@@ -30,7 +30,9 @@ export const register = async (userData) => {
     // const URL = HOST + '/auth/register';
     const URL = 'http://localhost:8000/api/auth/register';
 
-    console.log(URL);
+    const URL = HOST + '/auth/register';
+
+    console.log(userData);
 
     const response = await fetch(URL, {
         method: 'POST',
@@ -49,7 +51,9 @@ export const login = async (userData) => {
     // const URL = HOST + '/auth/login';
     const URL = 'http://localhost:8000/api/auth/login';
 
-    console.log(URL);
+    //const URL = HOST + '/auth/login';
+    const URL ='http://localhost:8000/api/auth/login';
+
 
     const response = await fetch(URL, {
         method: 'POST',
@@ -68,8 +72,10 @@ export const login = async (userData) => {
 }
 
 export async function logout() {
-    // const URL = HOST + '/auth/logout';
-    const URL = 'http://localhost:8000/api/auth/logout';
+
+    //const URL = HOST + '/auth/logout';
+    const URL ='http://localhost:8000/api/auth/logout';
+
 
     const response = await fetch(URL);
 
@@ -82,8 +88,9 @@ export async function logout() {
 }
 
 export async function getCurrentUser(currentUserToken) {
-    // const URL = HOST + '/currentUser';
-    const URL = 'http://localhost:8000/api/currentUser';
+    //const URL = HOST + '/currentUser';
+    const URL ='http://localhost:8000/api/currentUser';
+
 
     try {
         const response = await fetch(URL, {
@@ -96,7 +103,7 @@ export async function getCurrentUser(currentUserToken) {
 
         if (response.ok) {
             const json = await response.json();
-            return json;
+            return json.user;
         }
 
         if (response.status === 401) {
@@ -131,12 +138,13 @@ export async function getCurrentUser(currentUserToken) {
 }
 
 export async function changeInfoUser(currentUserToken, userData) {
-    // const URL = `${HOST}/changeInfoProfile`;
-    const URL = 'http://localhost:8000/api/changeInfoProfile';
+    //const URL = `${HOST}/changeInfoProfile`;
+    const URL ='http://localhost:8000/api/changeInfoProfile';
+
 
     try {
         const response = await fetch(URL, {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${currentUserToken}`,
@@ -149,7 +157,7 @@ export async function changeInfoUser(currentUserToken, userData) {
 
         const json = await response.json();
         console.log('Respuesta del servidor:', json);
-        return json
+        return json.user
     } catch (error) {
         console.error('Error al cambiar la información del usuario:', error);
         throw error;
