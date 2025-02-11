@@ -53,6 +53,10 @@ Route::middleware(['auth:admin'])->group(function () {
     // Rutas para el panel de administración de viatges
     Route::get('/travels', [TravelsController::class, 'index'])->name('travels');
     Route::get('/travels/{id}', [TravelsController::class, 'show'])->name('travels.show');
+    Route::post('/travels', [TravelsController::class, 'store'])->name('travels.store');
+    Route::delete('/travels/{id}', [TravelsController::class, 'destroy'])->name('travels.destroy');
+    Route::get('/travels/{id}/edit', [TravelsController::class, 'edit'])->name('travels.edit');
+    Route::put('/travels/{id}', [TravelsController::class, 'update'])->name('travels.update');
 
     // Rutas para el panel de administración de publicaciones
     Route::get('/publications', [PublicationsController::class, 'index'])->name('publications');
