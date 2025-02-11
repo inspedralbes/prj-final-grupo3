@@ -30,8 +30,6 @@ export const register = async (userData) => {
     // const URL = HOST + '/auth/register';
     const URL = 'http://localhost:8000/api/auth/register';
 
-    const URL = HOST + '/auth/register';
-
     console.log(userData);
 
     const response = await fetch(URL, {
@@ -51,8 +49,6 @@ export const login = async (userData) => {
     // const URL = HOST + '/auth/login';
     const URL = 'http://localhost:8000/api/auth/login';
 
-    //const URL = HOST + '/auth/login';
-    const URL ='http://localhost:8000/api/auth/login';
 
 
     const response = await fetch(URL, {
@@ -72,7 +68,6 @@ export const login = async (userData) => {
 }
 
 export async function logout() {
-
     //const URL = HOST + '/auth/logout';
     const URL ='http://localhost:8000/api/auth/logout';
 
