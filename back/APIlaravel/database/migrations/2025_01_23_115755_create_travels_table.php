@@ -25,8 +25,8 @@ return new class extends Migration
             $table->foreign('id_movility')->references('id')->on('movilities')->onDelete('cascade');
             $table->date('date_init');
             $table->date('date_end');
-            $table->integer('qunt_date');
-            $table->string('description');
+            $table->integer('qunt_date')->nullable();
+            $table->text('description');
             $table->timestamps();
         });
     }
