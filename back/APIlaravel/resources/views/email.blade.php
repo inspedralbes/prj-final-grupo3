@@ -50,6 +50,7 @@
             font-weight: bold;
             border-radius: 5px;
             margin-top: 15px;
+            text-align: center;
         }
 
         .btn:hover {
