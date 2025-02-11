@@ -136,7 +136,6 @@ export async function changeInfoUser(currentUserToken, userData) {
     //const URL = `${HOST}/changeInfoProfile`;
     const URL ='http://localhost:8000/api/changeInfoProfile';
 
-
     try {
         const response = await fetch(URL, {
             method: 'PUT',
@@ -160,15 +159,17 @@ export async function changeInfoUser(currentUserToken, userData) {
 }
 
 
-export async function getUserTravelHistory(userId) {
+export async function getUserTravelHistory(userId, currentUserToken) {
     // const URL = HOST + `/trp-details/${userId}`;
     const URL = `http://localhost:8000/api/trip-details/${userId}`;
 
     try {
         const response = await fetch(URL, {
             method: 'GET',
+            credentials: 'include',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentUserToken}`,
             }
         });
 

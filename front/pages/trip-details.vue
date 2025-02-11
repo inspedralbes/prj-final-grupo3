@@ -78,7 +78,7 @@
                 <div class="description-trip relative p-4 w-[30%]">
                   <div class="flex flex-col gap-2">
                     <p class="font-semibold">Descripció</p>
-                    <p class="break-words">{{ travel.description }} Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea quaerat minus assumenda et deserunt, incidunt saepe exercitationem esse expedita.</p>
+                    <p class="break-words">{{ travel.description }} </p>
                   </div>
                 </div>
               </div>
@@ -112,7 +112,7 @@ export default {
     onMounted(async () => {
       console.log(this.authStore.user.id);
       try {
-        const data = await getUserTravelHistory(this.authStore.user.id);
+        const data = await getUserTravelHistory(this.authStore.user.id, this.authStore.token);
         travelData.data = data.travels;
         console.log(travelData.data);
 
