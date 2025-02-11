@@ -50,10 +50,14 @@
             font-weight: bold;
             border-radius: 5px;
             margin-top: 15px;
+            text-align: center;
+
         }
 
         .btn:hover {
             background-color: #0056b3;
+            color: #ffffff;
+            
         }
 
         .footer {

@@ -91,8 +91,8 @@ class AuthenticatorController extends Controller
             $user->save();
     
             // Preparar los datos para el correo electrónico
-            $subject = "Bienvenido a nuestra plataforma";
-            $message = "Hola {$user->name}, gracias por registrarte.";
+            $subject = "Benvingut a la nostra plataforma!";
+            $message = "Hola {$user->name}, gracies per registrarte.";
             $to = [$user->email]; // Usamos el correo del usuario registrado
     
             // Instanciar el controlador SendMail y enviar el correo
