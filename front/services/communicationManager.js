@@ -226,3 +226,31 @@ export async function getUserTravelHistory(userId) {
     throw error;
   }
 }
+
+
+export async function getUserTravelHistory(userId, currentUserToken) {
+    // const URL = HOST + `/trp-details/${userId}`;
+    const URL = `http://localhost:8000/api/trip-details/${userId}`;
+
+    try {
+        const response = await fetch(URL, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentUserToken}`,
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener el historial de viajes para el usuario ${userId}: ${response.statusText}`);
+        }    
+
+        const travelHistory = await response.json();
+        console.log('Respuesta del servidor:', travelHistory);
+        return travelHistory;
+    } catch (error) {
+        console.error(`Error al obtener el historial de viajes del usuario ${userId}:`, error);
+        throw error;
+    }
+}

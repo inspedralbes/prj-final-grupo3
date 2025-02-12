@@ -16,15 +16,15 @@ export function useSettings() {
     const getCurrentUser = async () => {
 
         const response = await com.getCurrentUser(authStore.token);
-        console.log(response);
+        // console.log(response);
         if (response.status === 'error') {
             customAlert(response.message, 'negative', 'error', 'top', 5000);
             authStore.logout();
         } else {
-            // customAlert('Informació obtinguda correctament', 'success', 'success', 'top', 5000);
-            currentUser.value = response.user
-            console.log(currentUser.value);
-
+            customAlert('Informació carregada', 'success', 'success', 'top', 5000);
+            const birth = response.birth_date.split(' ');
+            response.birth_date = birth[0];
+            currentUser.value = response
         }
     }
 
@@ -33,15 +33,38 @@ export function useSettings() {
     };
 
     const confirmEdit = async () => {
-        console.log(authStore.token);
         const newDataUser = reactive({
             ...currentUser.value
         })
-        console.log(newDataUser);
+
+        // console.log(newDataUser.birth_date);
+        const formatData = (data) => {
+            console.log("pre form data",data);
+            const birth = data.split(' ');  // Asumiendo formato DD/MM/YYYY
+            console.log(birth[0] + ' 00:00:00');
+            
+            return birth[0];
+        }
+        
+        console.log("new Data User =>",newDataUser.birth_date);
+        // newDataUser.birth_date = formatData(newDataUser.birth_date)
 
         // Logic to confirm changes
-        const response = await com.changeInfoUser(authStore.token, newDataUser)
-        console.log(response);
+        const response = await com.changeInfoUser(authStore.token, newDataUser);
+        // console.log(response);
+
+        const data = await com.getCurrentUser(authStore.token);
+        console.log(data);
+        
+        const birth = data.birth_date.split(' ');
+        console.log(birth[0]);
+        data.birth_date = birth[0];
+        currentUser.value = data
+        console.log(currentUser.value);
+
+        currentUser.value = data;
+
+        // Poner alerta para notificar al usuario de que ha realizado los cambios de manera crorrecta
 
         toggleEdit();
     };

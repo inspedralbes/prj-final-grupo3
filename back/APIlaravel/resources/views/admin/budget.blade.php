@@ -16,9 +16,9 @@
                 <thead class="bg-gray-800 text-white text-sm md:text-base">
                     <tr class="text-center">
                         <th class="py-2 px-4 w-[5%]">ID</th>
-                        <th class="py-2 px-4 w-[30%]">MINIM BUDGET</th>
-                        <th class="py-2 px-4 w-[30%]">MAXIM BUDGET</th>
-                        <th class="py-2 px-4 w-[30%]">FINAL PRICE</th>
+                        <th class="py-2 px-4 w-[30%]">PRESSUPOST MINIM</th>
+                        <th class="py-2 px-4 w-[30%]">PRESSUPOST MAXIM</th>
+                        {{-- <th class="py-2 px-4 w-[30%]">PREU FINAL</th> --}}
                         {{-- <th class="py-2 px-4 w-[10%]">ACCIÓ</th> --}}
                     </tr>
                 </thead>
@@ -28,7 +28,7 @@
                             <td class="py-2 px-4 break-words">{{ $budget->id }}</td>
                             <td class="py-2 px-4 break-words">{{ $budget->min_budget }}</td>
                             <td class="py-2 px-4 break-words">{{ $budget->max_budget }}</td>
-                            <td class="py-2 px-4 break-words">{{ $budget->final_price }}</td>
+                            {{-- <td class="py-2 px-4 break-words">{{ $budget->final_price }}</td> --}}
                             {{-- <td class="py-2 px-4">
                         <div class="flex flex-nowrap justify-center gap-2">
                             <button

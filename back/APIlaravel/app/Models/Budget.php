@@ -13,7 +13,7 @@ class Budget extends Model
     protected $fillable = [
         'min_budget',
         'max_budget',
-        'final_price',
+        // 'final_price',
     ];
 
     public function travel(){

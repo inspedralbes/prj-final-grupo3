@@ -6,7 +6,7 @@
         <div class="flex gap-10">
             <p>Pressupost min: {{ $travel->budget->min_budget }}€</p>
             <p>Pressupost max: {{ $travel->budget->max_budget }}€</p>
-            <p>Precio final: {{ $travel->budget->final_price }}€</p>
+            {{-- <p>Precio final: {{ $travel->budget->final_price }}€</p> --}}
         </div>
     </div>
     <div class="box">
@@ -30,7 +30,8 @@
                 <span class="sfo sfoslip">{{ $travel->country->code }}</span>
                 <div class="sub-content">
                     <span class="watermark">TriPlan</span>
-                    <span class="absolute font-mono text-sm top-2 left-3 text-gray-500 font-bold" style="width: 12vh; word-wrap: break-word;">NOM USUARI<br><span
+                    <span class="absolute font-mono text-sm top-2 left-3 text-gray-500 font-bold"
+                        style="width: 12vh; word-wrap: break-word;">NOM USUARI<br><span
                             class="font-[Arial] text-base text-black">{{ $travel->user->surname }},
                             {{ $travel->user->name }}</span></span>
                     <span class="absolute font-mono text-sm top-2 left-35 text-gray-500 font-bold">MOVILITAT<br><span
@@ -74,7 +75,8 @@
         </div>
     </div>
     <button id="close-form" class="absolute bottom-30 left-0 right-0 flex items-center justify-center">
-        <img src="{{ asset('icons/close_icon.svg') }}" alt="Cerrar" class="w-15 h-15 duration-300 hover:rotate-180 hover:scale-120">
+        <img src="{{ asset('icons/close_icon.svg') }}" alt="Cerrar"
+            class="w-15 h-15 duration-300 hover:rotate-180 hover:scale-120">
     </button>
 
     <script>

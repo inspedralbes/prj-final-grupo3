@@ -2,7 +2,7 @@
   <title>Carregant...</title>
   <div class="min-h-screen bg-white flex flex-col justify-center items-center space-y-4">
     <!-- gif-->
-    <img src="~/assets/gifs/plane.gif" alt="Cargando..." class="w-40 h-40" />
+    <img src="~/assets/gifs/plane2.gif" alt="Cargando..." class="w-80 h-80" />
 
     <!-- loader -->
     <div class="loaderBar"></div>

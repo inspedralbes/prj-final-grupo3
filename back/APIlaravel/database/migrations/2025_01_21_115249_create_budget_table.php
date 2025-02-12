@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('min_budget');
             $table->integer('max_budget');
-            $table->integer('final_price')->nullable();
+            // $table->integer('final_price');
             $table->timestamps();
         });
     }

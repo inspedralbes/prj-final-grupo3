@@ -22,10 +22,10 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/trip-details/{id}', [UserApiController::class, 'travelHistory']);
     Route::get('/currentUser', [AuthenticatorController::class, 'currentUser']);
     Route::post('/auth/logout', [AuthenticatorController::class, 'logout']);
-    // Route::put('/auth/changeInfoProfile', [UserApiController::class, 'update'])->name('update');
-    Route::post('/changeInfoProfile', [UserApiController::class, 'update']);
+    Route::put('/changeInfoProfile', [UserApiController::class, 'update']);
 });
 
 

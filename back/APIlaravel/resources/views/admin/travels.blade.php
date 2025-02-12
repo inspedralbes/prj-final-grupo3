@@ -25,7 +25,7 @@
                         <th class="py-2 px-4 text-left w-[5%]">TYPE</th>
                         <th class="py-2 px-4 text-left w-[5%]">DESTÍ</th>
                         <th class="py-2 px-4 text-center w-[5%]"># DIES</th>
-                        <th class="py-2 px-4 text-left w-[8%]">PREU FINAL</th>
+                        {{-- <th class="py-2 px-4 text-left w-[8%]">PREU FINAL</th> --}}
                         {{-- <th class="py-2 px-4 text-left">ID MOVILITY</th> --}}
                         <th class="py-2 px-4 text-left w-[30%]"></th>
                         {{-- <th class="py-2 px-4 text-left">DATA INICIAL</th> --}}
@@ -42,7 +42,7 @@
                             <th class="py-2 px-4 text-left">{{ $travel->type->type }}</th>
                             <th class="py-2 px-4 text-left">{{ $travel->country->name }}</th>
                             <th class="py-2 px-4 text-center">{{ $travel->qunt_date }}</th>
-                            <th class="py-2 px-4 text-left">{{ $travel->budget->final_price }}€</th>
+                            {{-- <th class="py-2 px-4 text-left">{{ $travel->budget->final_price }}€</th> --}}
                             {{-- <th class="py-2 px-4 text-left">{{ $travel->movility->type }}</th> --}}
                             <th class="py-2 px-4 "></th>
                             {{-- <th class="py-2 px-4 text-left">{{ $travel->date_init }}</th> --}}
@@ -65,7 +65,7 @@
                                     <!-- Botón "Modificar" - Texto (Solo en escritorio) -->
                                     <button
                                         class="rounded-full bg-orange-500 px-3 py-1 text-white text-xs md:text-sm hidden md:inline-block"
-                                        {{-- onclick="editUser('{{ $user->id }}')" --}}>
+                                        onclick="editTravel('{{ $travel->id }}')">
                                         Modificar
                                     </button>
                                     <!-- Botón "Modificar" - Icono (Solo en móvil) -->
@@ -77,11 +77,12 @@
                                     <!-- Botón "Eliminar" - Texto (Solo en escritorio) -->
                                     <button
                                         class="rounded-full bg-red-500 px-3 py-1 text-white text-xs md:text-sm hidden md:inline-block"
-                                        {{-- onclick="deleteUser('{{ $user->id }}')" --}}>
+                                        onclick="deleteTravel('{{ $travel->id }}')">
                                         Eliminar
                                     </button>
                                     <!-- Botón "Eliminar" - Icono (Solo en móvil) -->
-                                    <button class="rounded-full bg-red-500 px-1 text-white md:hidden" {{-- onclick="deleteUser('{{ $user->id }}')" --}}>
+                                    <button class="rounded-full bg-red-500 px-1 text-white md:hidden"
+                                        onclick="deleteUser('{{ $travel->id }}')">
                                         <img src="{{ asset('icons/delete.svg') }}" alt="Eliminar" class="w-10 h-10">
                                     </button>
                                 </div>
@@ -121,6 +122,41 @@
         function showTravelDetails(travelId) {
             console.log('ID del viaje que vols veure:', travelId);
             window.location.href = `/travels/${travelId}`;
+        }
+
+        // Función para eliminar
+        function deleteTravel(travelId) {
+            console.log('ID del viatge que vols eliminar:', travelId);
+            if (confirm('Estàs segur que vols eliminar aquest viatge?')) {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                fetch(`/travels/${travelId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.success);
+                            location.reload();
+                        } else {
+                            alert(data.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Hi ha hagut un error en eliminar aquest viatge.');
+                    });
+            }
+        };
+
+        // Función para modificar 
+        function editTravel(travelId) {
+            console.log('ID del viatge que vols editar:', travelId);
+            window.location.href = `/travels/${travelId}/edit`;
         }
     </script>
 @endsection
