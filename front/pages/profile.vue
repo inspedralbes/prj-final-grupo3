@@ -10,12 +10,12 @@
             </div>
             <div class="p-5">
                 <div class="flex items-center gap-3">
-                    <p class="text-2xl font-serif">{{ authStore.user.surname }}, {{ authStore.user.name }}</p>
+                    <p class="text-2xl font-serif">{{ authStore.user?.surname }}, {{ authStore.user?.name }}</p>
                     <NuxtLink to="/settings">
                         <img src="../assets/images/settings.svg" alt="Settings" class="w-6 h-6 cursor-pointer">
                     </NuxtLink>
                 </div>
-                <p class="text-sm">{{ authStore.user.email }}</p>
+                <p class="text-sm">{{ authStore.user?.email }}</p>
 
                 <div class="flex flex-col mt-10">
                     <div class="border-b p-2">
