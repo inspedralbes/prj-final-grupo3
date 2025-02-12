@@ -21,12 +21,12 @@ return new class extends Migration
             $table->foreign('id_type')->references('id')->on('type')->onDelete('cascade');
             $table->unsignedBigInteger('id_budget');
             $table->foreign('id_budget')->references('id')->on('budget')->onDelete('cascade');
-            $table->unsignedBigInteger('id_movility');
+            $table->unsignedBigInteger('id_movility')->nullable();
             $table->foreign('id_movility')->references('id')->on('movilities')->onDelete('cascade');
             $table->date('date_init');
             $table->date('date_end');
             $table->integer('qunt_date')->nullable();
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

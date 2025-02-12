@@ -15,6 +15,11 @@ class MovilityController extends Controller
         return view('admin.movility', compact('movilities'));
     }
 
+
+    public function indexApi(){
+        $movilities = Movility::all();
+        return response()->json($movilities);
+    }
     /**
      * Show the form for creating a new resource.
      */

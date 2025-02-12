@@ -17,6 +17,12 @@ class TravelTypeController extends Controller
         return view ('admin.travel-type', compact('travelTypes'));
     }
 
+
+    public function typesApi(){
+        $travelTypes = TravelType::all();
+        return response()->json($travelTypes);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
