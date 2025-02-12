@@ -25,7 +25,7 @@
                         <th class="py-2 px-4 text-left w-[5%]">TYPE</th>
                         <th class="py-2 px-4 text-left w-[5%]">DESTÍ</th>
                         <th class="py-2 px-4 text-center w-[5%]"># DIES</th>
-                        <th class="py-2 px-4 text-left w-[8%]">PREU FINAL</th>
+                        {{-- <th class="py-2 px-4 text-left w-[8%]">PREU FINAL</th> --}}
                         {{-- <th class="py-2 px-4 text-left">ID MOVILITY</th> --}}
                         <th class="py-2 px-4 text-left w-[30%]"></th>
                         {{-- <th class="py-2 px-4 text-left">DATA INICIAL</th> --}}
@@ -42,7 +42,7 @@
                             <th class="py-2 px-4 text-left">{{ $travel->type->type }}</th>
                             <th class="py-2 px-4 text-left">{{ $travel->country->name }}</th>
                             <th class="py-2 px-4 text-center">{{ $travel->qunt_date }}</th>
-                            <th class="py-2 px-4 text-left">{{ $travel->budget->final_price }}€</th>
+                            {{-- <th class="py-2 px-4 text-left">{{ $travel->budget->final_price }}€</th> --}}
                             {{-- <th class="py-2 px-4 text-left">{{ $travel->movility->type }}</th> --}}
                             <th class="py-2 px-4 "></th>
                             {{-- <th class="py-2 px-4 text-left">{{ $travel->date_init }}</th> --}}

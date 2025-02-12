@@ -24,7 +24,7 @@ class BudgetSeeder extends Seeder
                 Budget::create([
                     'min_budget' => $budget['min_budget'],
                     'max_budget' => $budget['max_budget'],
-                    'final_price' => $budget['final_price'],
+                    // 'final_price' => $budget['final_price'],
                 ]);
             }
         } catch (QueryException $e) {

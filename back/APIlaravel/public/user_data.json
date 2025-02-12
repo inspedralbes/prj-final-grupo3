@@ -302,28 +302,23 @@
     "budgets": [
         {
             "min_budget": 100.0,
-            "max_budget": 500.0,
-            "final_price": 450.0
+            "max_budget": 500.0
         },
         {
             "min_budget": 200.0,
-            "max_budget": 600.0,
-            "final_price": 550.0
+            "max_budget": 600.0
         },
         {
             "min_budget": 300.0,
-            "max_budget": 700.0,
-            "final_price": 650.0
+            "max_budget": 700.0
         },
         {
             "min_budget": 400.0,
-            "max_budget": 800.0,
-            "final_price": 750.0
+            "max_budget": 800.0
         },
         {
             "min_budget": 500.0,
-            "max_budget": 900.0,
-            "final_price": 850.0
+            "max_budget": 900.0
         }
     ],
     "movilities": [

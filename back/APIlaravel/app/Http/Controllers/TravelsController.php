@@ -6,9 +6,9 @@ use App\Models\User;
 use App\Models\Budget;
 use App\Models\Travel;
 use App\Models\Country;
+use App\Models\Movility;
 use App\Models\TravelType;
 use Illuminate\Http\Request;
-use App\Models\Movility;
 
 class TravelsController extends Controller
 {
@@ -51,7 +51,7 @@ class TravelsController extends Controller
             // 'id_budget' => 'required|exists:budget,id',
             'id_budget_min' => 'required|numeric',
             'id_budget_max' => 'required|numeric',
-            'id_budget_final' => 'required|numeric',
+            // 'id_budget_final' => 'required|numeric',
             'id_movility' => 'required|exists:movilities,id',
             'date_init' => 'required|date',
             'date_end' => 'required|date|after_or_equal:date_init',
@@ -62,7 +62,7 @@ class TravelsController extends Controller
         $budget = Budget::create([
             'min_budget' => $request->input('id_budget_min'),
             'max_budget' => $request->input('id_budget_max'),
-            'final_price' => $request->input('id_budget_final'),
+            // 'final_price' => $request->input('id_budget_final'),
         ]);
 
         // Guardar en la base de datos

@@ -6,7 +6,7 @@
         <div class="flex gap-10">
             <p>Pressupost min: {{ $travel->budget->min_budget }}€</p>
             <p>Pressupost max: {{ $travel->budget->max_budget }}€</p>
-            <p>Precio final: {{ $travel->budget->final_price }}€</p>
+            {{-- <p>Precio final: {{ $travel->budget->final_price }}€</p> --}}
         </div>
     </div>
     <div class="box">

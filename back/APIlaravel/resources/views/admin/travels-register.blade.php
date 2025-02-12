@@ -85,8 +85,8 @@
                         class="p-3 mt-2 border-2 border-gray-300 rounded-lg w-full" placeholder="Pressupost mínim">
                     <input type="text" name="id_budget_max" id="id_budget_max"
                         class="p-3 mt-2 border-2 border-gray-300 rounded-lg w-full" placeholder="Pressupost màxim">
-                    <input type="text" name="id_budget_final" id="id_budget_final"
-                        class="p-3 mt-2 border-2 border-gray-300 rounded-lg w-full" placeholder="Preu final">
+                    {{-- <input type="text" name="id_budget_final" id="id_budget_final"
+                        class="p-3 mt-2 border-2 border-gray-300 rounded-lg w-full" placeholder="Preu final"> --}}
                 </div>
             </div>
 
@@ -136,7 +136,7 @@
         const id_type = document.getElementById('id_type').value;
         const id_budget_min = document.getElementById('id_budget_min').value;
         const id_budget_max = document.getElementById('id_budget_max').value;
-        const id_budget_final = document.getElementById('id_budget_final').value;
+        // const id_budget_final = document.getElementById('id_budget_final').value;
         const id_movility = document.getElementById('id_movility').value;
         const date_init = document.getElementById('date_init').value;
         const date_end = document.getElementById('date_end').value;
@@ -144,7 +144,7 @@
 
         const submitButton = document.getElementById('submit-button');
 
-        if (id_user && id_country && id_type && id_budget_min && id_budget_max && id_budget_final && id_movility &&
+        if (id_user && id_country && id_type && id_budget_min && id_budget_max && id_movility &&
             date_init && date_end && description) {
             submitButton.disabled = false;
         } else {
@@ -157,7 +157,7 @@
     document.getElementById('id_type').addEventListener('input', checkForm);
     document.getElementById('id_budget_min').addEventListener('input', checkForm);
     document.getElementById('id_budget_max').addEventListener('input', checkForm);
-    document.getElementById('id_budget_final').addEventListener('input', checkForm);
+    // document.getElementById('id_budget_final').addEventListener('input', checkForm);
     document.getElementById('id_movility').addEventListener('input', checkForm);
     document.getElementById('date_init').addEventListener('input', checkForm);
     document.getElementById('date_end').addEventListener('input', checkForm);
