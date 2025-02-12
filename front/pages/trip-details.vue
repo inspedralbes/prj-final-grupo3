@@ -55,7 +55,11 @@
                   </div>
                   <div class="flex flex-col gap-2">
                     <p class="font-semibold">Data</p>
-                    <p class="break-words">{{ travel.date_init }} fins a {{ travel.date_end }}</p>
+                    <p class="break-words">
+                      <!-- {{ travel.date_init }} fins a {{ travel.date_end }} -->
+                      {{ new Date(travel.date_init).toLocaleDateString('es-ES') }} fins a
+                      {{ new Date(travel.date_end).toLocaleDateString('es-ES') }}
+                    </p>
                   </div>
                   <div class="flex flex-col gap-2">
                     <p class="font-semibold">Quantitat dies</p>
