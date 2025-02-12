@@ -29,7 +29,7 @@
           <div class="flex-1">
             <label class="block text-sm font-medium text-gray-700 mb-2">Gènere*</label>
             <select name="gender" v-model="registerAuth.registerData.gender" id="" class="border p-2 rounded ">
-              <option selected disabled>Seleccióna</option>
+              <option selected disabled value="">Selecciona</option>
               <option value="male">Masculí</option>
               <option value="female">Femení</option>
             </select>

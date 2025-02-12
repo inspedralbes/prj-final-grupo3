@@ -167,7 +167,7 @@ const budgetMax = ref(7500);
 const budgetMin = ref(250);
 const types = ref([]);
 const movilities = ref([]);
-const authStore= useAuthStore();
+const authStore = useAuthStore();
 
 
 
@@ -293,19 +293,6 @@ const handleSubmit = async () => {
   console.log('Enviant dades a la bd...')
 
   try {
-    // save in the database
-    // const travelData = {
-    //   country: formData.value.country,
-    //   datesinit: formData.value.datesinit,
-    //   datesfinal: formData.value.datesfinal,
-    //   travelers: formData.value.travelers || 1,
-    //   type: formData.value.type,
-    //   budgetmax: formData.value.budgetmax,
-    //   budgetmin: formData.value.budgetmin,
-    //   vehicle: formData.value.vehicle,
-    //   vehicletype: formData.value.vehicletype,
-    //   interests: formData.value.interests,
-    // };
     const travelData = {
       id_user: authStore.user.id, // Asegúrate de obtener el ID del usuario autenticado
       id_country: formData.value.country, // Aquí debe ser el ID y no el nombre
@@ -328,14 +315,9 @@ const handleSubmit = async () => {
       body: JSON.stringify(travelData),
     });
 
-    console.log('el viatge s\'ha enviat');
-
     if (!dbResponse.ok) {
       throw new Error("Error al guardar el viatge en la base de dades");
     };
-    alert("viaje guardado cabron");
-
-    alert("enviando información a gemini");
 
     const requestText = `
       Planifica un viatge per a ${formData.value.travelers} persones ${formData.value.type === "alone" ? "sol" : `amb ${formData.value.type}`}.

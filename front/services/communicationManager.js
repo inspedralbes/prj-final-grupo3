@@ -89,6 +89,7 @@ export const register = async (userData) => {
   // console.log(json);
   return json;
 };
+
 export const login = async (userData) => {
   // const URL = HOST + '/auth/login';
   const URL = "http://localhost:8000/api/auth/login";
@@ -197,35 +198,35 @@ export async function changeInfoUser(currentUserToken, userData) {
   }
 }
 
-export async function getUserTravelHistory(userId) {
-  // const URL = HOST + `/trp-details/${userId}`;
-  const URL = `http://localhost:8000/api/trip-details/${userId}`;
+// export async function getUserTravelHistory(userId) {
+//   // const URL = HOST + `/trp-details/${userId}`;
+//   const URL = `http://localhost:8000/api/trip-details/${userId}`;
 
-  try {
-    const response = await fetch(URL, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+//   try {
+//     const response = await fetch(URL, {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     });
 
-    if (!response.ok) {
-      throw new Error(
-        `Error al obtener el historial de viajes para el usuario ${userId}: ${response.statusText}`
-      );
-    }
+//     if (!response.ok) {
+//       throw new Error(
+//         `Error al obtener el historial de viajes para el usuario ${userId}: ${response.statusText}`
+//       );
+//     }
 
-    const travelHistory = await response.json();
-    console.log("Respuesta del servidor:", travelHistory);
-    return travelHistory;
-  } catch (error) {
-    console.error(
-      `Error al obtener el historial de viajes del usuario ${userId}:`,
-      error
-    );
-    throw error;
-  }
-}
+//     const travelHistory = await response.json();
+//     console.log("Respuesta del servidor:", travelHistory);
+//     return travelHistory;
+//   } catch (error) {
+//     console.error(
+//       `Error al obtener el historial de viajes del usuario ${userId}:`,
+//       error
+//     );
+//     throw error;
+//   }
+// }
 
 
 export async function getUserTravelHistory(userId, currentUserToken) {
