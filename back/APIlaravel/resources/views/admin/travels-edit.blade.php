@@ -71,9 +71,9 @@
                         <input type="text" name="id_budget_max" id="id_budget_max"
                             class="p-3 mt-2 border-2 border-gray-300 rounded-lg w-full"
                             value="{{ $travel->budget->max_budget }} ">
-                        <input type="text" name="id_budget_final" id="id_budget_final"
+                        {{-- <input type="text" name="id_budget_final" id="id_budget_final"
                             class="p-3 mt-2 border-2 border-gray-300 rounded-lg w-full"
-                            value="{{ $travel->budget->final_price }} ">
+                            value="{{ $travel->budget->final_price }} "> --}}
                     </div>
                     {{-- <select name="id_budget" id="id_budget" class="p-3 mt-2 border-2 border-gray-300 rounded-lg w-full"
                         required>

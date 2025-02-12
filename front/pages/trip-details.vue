@@ -12,10 +12,15 @@
         </div>
       </div>
     </div>
-    <div class="min-h-[80vh] max-h-[80vh] w-[80%] rounded-lg shadow-2xl bg-white p-6 flex flex-col overflow-y-auto">
+    <div class="min-h-[50vh] max-h-[80vh] w-[80%] rounded-lg shadow-2xl bg-white p-6 flex flex-col overflow-y-auto">
       <div class="flex flex-col gap-6 items-center">
 
-        <div class="box" v-for="travel in travelData.data">
+        <p v-if="travelData.data.length == 0"
+          class="text-center text-lg font-semibold text-gray-300 flex items-center justify-center min-h-[50vh]">
+          No hi ha cap historial de viatges. Has de viatjar més!
+        </p>
+
+        <div class="box" v-for="travel in travelData.data" :key="travel.id">
           <div class="ticket">
             <div class="ticket-header">
               <p class="flex text-2xl font-bold font-['Arial'] text-blue-950">TRIPLAN</p>
@@ -23,7 +28,6 @@
               <p class="flex text-sm font-bold font-['Arial'] text-blue-950">VIATGE #00{{ travel.id }}</p>
             </div>
             <div class="content">
-              <!-- Contingut -->
               <div class="flight-info font-['Arial'] text-5xl font-bold">
                 <p>{{ travel.user.name.slice(0, 3).toUpperCase() }}</p>
                 <img src="../assets/images/plane.svg" alt="" class="w-12 h-15">
@@ -35,7 +39,6 @@
                 <p>{{ travel.country.code }}</p>
               </div>
               <div class="sub-content flex">
-                <!-- Sub contingut -->
                 <p class="watermark">TriPlan</p>
                 <div class="grid grid-cols-5 gap-4 w-[70%] p-4">
                   <div class="flex flex-col gap-2">
@@ -78,21 +81,21 @@
                 <div class="description-trip relative p-4 w-[30%]">
                   <div class="flex flex-col gap-2">
                     <p class="font-semibold">Descripció</p>
-                    <p class="break-words">{{ travel.description }} </p>
+                    <p class="break-words">{{ travel.description }}</p>
                   </div>
                 </div>
               </div>
             </div>
             <div class="barcode-container flex justify-around">
               <div class="barcode"></div>
-              <p class="data-created flex relative font-mono text-sm text-gray-100 font-bold top-2">DATA DE CREACIÓ: {{
-                travel.created_at }}</p>
+              <p class="data-created flex relative font-mono text-sm text-gray-100 font-bold top-2">
+                DATA DE CREACIÓ: {{ travel.created_at }}
+              </p>
               <div class="barcode"></div>
               <div class="barcode"></div>
             </div>
           </div>
         </div>
-
 
       </div>
     </div>

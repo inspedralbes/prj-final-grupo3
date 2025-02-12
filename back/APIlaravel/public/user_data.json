@@ -296,8 +296,7 @@
         { "type": "solo" },
         { "type": "family" },
         { "type": "friends" },
-        { "type": "partner" },
-        { "type": "solo" }
+        { "type": "partner" }
     ],
     "budgets": [
         {
