@@ -46,7 +46,7 @@
                 </select>
               </div>
             </div>
-            <div v-if="formData.type === 2 || formData.type === 3"class="w-1/2">
+            <div v-if="formData.type === 2 || formData.type === 3" class="w-1/2">
               <label class="block text-sm font-medium text-gray-700 mb-2">Quantitat de persones</label>
               <input type="number" v-model="formData.travelers" min="1" class="border p-2 rounded v-full"
                 placeholder="3">
@@ -139,6 +139,7 @@ import { ref, computed, watch, onMounted } from "vue";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { getCountries, getTypes, getMovilities } from "@/services/communicationManager";
+import { useAuthStore } from "~/store/authUser";
 
 
 const router = useRouter();
@@ -166,6 +167,7 @@ const budgetMax = ref(7500);
 const budgetMin = ref(250);
 const types = ref([]);
 const movilities = ref([]);
+const authStore= useAuthStore();
 
 
 
@@ -284,7 +286,12 @@ const syncWithBudget = () => {
 
 // sends form
 const handleSubmit = async () => {
+
+
   if (!validateForm()) return;
+
+  console.log('Enviant dades a la bd...')
+
   try {
     // save in the database
     // const travelData = {
@@ -300,18 +307,17 @@ const handleSubmit = async () => {
     //   interests: formData.value.interests,
     // };
     const travelData = {
+      id_user: authStore.user.id, // Asegúrate de obtener el ID del usuario autenticado
       id_country: formData.value.country, // Aquí debe ser el ID y no el nombre
       date_init: formData.value.datesinit,
       date_end: formData.value.datesfinal,
       id_type: formData.value.type,/* asignar el ID correspondiente al tipo de viaje */
       id_budget_min: formData.value.budgetmin,
       id_budget_max: formData.value.budgetmax,
-      // id_budget_final: /* aquí deberías calcular o asignar el precio final */,
       id_movility: formData.value.vehicletype, /* asignar el ID correspondiente a la movilidad, según vehicle/vehicletype */
       description: formData.value.interests,
-      // id_user: se puede omitir si se obtiene del usuario autenticado en el backend
     };
-
+    console.log('Viatge que s\'envia:', travelData);
 
     const dbResponse = await fetch("http://localhost:8000/api/travels", {
       method: 'POST',
@@ -321,6 +327,8 @@ const handleSubmit = async () => {
       },
       body: JSON.stringify(travelData),
     });
+
+    console.log('el viatge s\'ha enviat');
 
     if (!dbResponse.ok) {
       throw new Error("Error al guardar el viatge en la base de dades");
