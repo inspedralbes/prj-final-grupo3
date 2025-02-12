@@ -9,7 +9,6 @@ use App\Models\Country;
 use App\Models\Movility;
 use App\Models\TravelType;
 use Illuminate\Http\Request;
-use App\Models\Budget;
 
 class TravelsController extends Controller
 {
