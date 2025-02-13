@@ -27,8 +27,6 @@ class ImportJson extends Seeder
                     'code' => $country['code'],
                 ]);
             }
-
-            echo "Datos insertados correctamente";
         } catch (QueryException $e) {
             echo "Error al conectarse a la base de datos: " . $e->getMessage();
         }

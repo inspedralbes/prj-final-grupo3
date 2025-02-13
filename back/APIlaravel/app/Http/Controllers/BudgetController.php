@@ -12,7 +12,8 @@ class BudgetController extends Controller
      */
     public function index()
     {
-        //
+        $budgets = Budget::all();
+        return view('admin.budget', compact('budgets'));
     }
 
     /**
@@ -29,14 +30,14 @@ class BudgetController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'min_price' => 'required|numeric',
-            'max_price' => 'required|numeric',
+            'min_budget' => 'required|numeric',
+            'max_budget' => 'required|numeric',
             'final_price' => 'required|numeric',
         ]);
         
         Budget::create([
-            'min_price' => $validatedData['min_price'],
-            'max_price' => $validatedData['max_price'],
+            'min_budget' => $validatedData['min_budget'],
+            'max_budget' => $validatedData['max_budget'],
             'final_price' => $validatedData['final_price'],
         ]);
     }

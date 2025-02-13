@@ -51,6 +51,8 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
+        'getUserId' => \App\Http\Middleware\GetUserId::class,  // Agrega tu middleware aquí
+        'auth:sanctum' => \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,

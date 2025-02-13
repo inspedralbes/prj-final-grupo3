@@ -85,7 +85,7 @@
         document.getElementById('register-button').addEventListener('click', function(e) {
             e.preventDefault();
             const form = document.getElementById('register-form');
-            const formButton = document.getElementById('register-button');
+            const formButton = document.getElementById('toggle-form');
 
             // Mostrar el formulario y ocultar el botón
             if (form.classList.contains('hidden')) {
@@ -95,7 +95,7 @@
         });
 
         // Función para cerrar el formulario de registro de usuari
-        document.getElementById('close-register').addEventListener('click', function() {
+        document.getElementById('close-form').addEventListener('click', function() {
             const form = document.getElementById('register-form');
             const formButton = document.getElementById('toggle-form');
 

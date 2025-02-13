@@ -5,36 +5,41 @@
       <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6">
         <h2 class="text-3xl font-bold text-center mb-8">Planificació del teu viatge</h2>
 
-        <!-- only text for planning -->
         <div v-if="responseText" v-html="formattedResponseText" class="prose prose-lg max-w-none custom-prose"></div>
 
-        <!-- if not have response we show a message -->
         <div v-else>
           <p class="text-lg text-red-500">No hi ha cap resultat a mostrar.</p>
         </div>
 
-        <!-- principal buttons -->
-        <div v-if="!showConfirmation" class="flex justify-center gap-x-6 mt-8">
-          <button @click="handleAccept"
+        <!--download pdf-->
+        <div v-if="responseText" class="flex justify-center mt-6">
+          <button @click="downloadPDF"
+          class="bg-green-600 text-white py-4 px-5 rounded-lg hover:bg-green-700 transition duration-200 text-lg font-semibold">
+          📄 Descarregar PDF
+        </button>
+        </div>
+        <!--buttons accept or decline-->
+        <div v-if="!result.showConfirmation.value" class="flex justify-center gap-x-6 mt-8">
+          <button @click="result.handleAccept"
             class="bg-blue-600 text-white py-4 px-8 rounded-lg hover:bg-blue-700 transition duration-200 text-lg font-semibold">
             Acceptar
           </button>
 
-          <button @click="showCancelOptions"
+          <button @click="result.showCancelOptions"
             class="bg-red-600 text-white py-4 px-8 rounded-lg hover:bg-red-700 transition duration-200 text-lg font-semibold">
             Cancel·lar
           </button>
         </div>
 
-        <!-- confirmation for cancelation -->
-        <div v-if="showConfirmation" class="mt-8 text-center">
+        <!--button for new trip if the user wants to do it-->
+        <div v-if="result.showConfirmation.value" class="mt-8 text-center">
           <p class="text-lg font-semibold text-gray-700 mb-4">Estàs segur que vols cancel·lar?</p>
           <div class="flex justify-center gap-x-6">
-            <button @click="handleCancel"
+            <button @click="result.handleCancel"
               class="bg-red-600 text-white py-4 px-8 rounded-lg hover:bg-red-700 transition duration-200 text-lg font-semibold">
               Sí, cancel·lar
             </button>
-            <button @click="generateNewTrip"
+            <button @click="result.generateNewTrip"
               class="bg-blue-600 text-white py-4 px-8 rounded-lg hover:bg-blue-700 transition duration-200 text-lg font-semibold">
               No, generar un nou viatge
             </button>
@@ -46,16 +51,19 @@
 </template>
 
 <script setup>
+import { useResult } from '~/composable/useResult';
 import { useRoute, useRouter } from 'vue-router';
 import { computed, ref, watch } from 'vue'; 
 import { marked } from 'marked';
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
 
-// Captura el resultat de la query
+const result = useResult();
 const route = useRoute();
 const router = useRouter();
-const response = ref(route.query.response ? JSON.parse(route.query.response) : null); 
 
-// function to stay alert if the new response changes
+const response = ref(route.query.response ? JSON.parse(route.query.response) : null);
+
 watch(
   () => route.query.response,
   (newResponse) => {
@@ -63,7 +71,6 @@ watch(
   }
 );
 
-// only select the text that we want to show
 const responseText = computed(() => {
   if (response.value && response.value.candidates && response.value.candidates[0]?.content?.parts[0]?.text) {
     return response.value.candidates[0].content.parts[0].text;
@@ -71,7 +78,6 @@ const responseText = computed(() => {
   return null;
 });
 
-// convert markdown to html
 const formattedResponseText = computed(() => {
   if (responseText.value) {
     return marked(responseText.value);
@@ -79,68 +85,60 @@ const formattedResponseText = computed(() => {
   return '';
 });
 
-// show option for confirmation
-const showConfirmation = ref(false);
-const showCancelOptions = () => {
-  showConfirmation.value = true;
-};
+const downloadPDF = () => {
+  const element = document.querySelector(".custom-prose");
+  if (!element) return;
 
-// function if we accept the plan
-const handleAccept = () => {
-  alert("Planning del viatge guardat correctament");
-  router.push("/"); 
-};
+  const doc = new jsPDF("p", "mm", "a4");
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
 
-// function for cancelation to return to home
-const handleCancel = () => {
-  alert("El viatge s'ha cancel·lat.");
-  router.push("/");
-};
+  // Definir márgenes y espacio
+  const leftMargin = 15;
+  const rightMargin = 15;
+  const topMargin = 15;
+  const bottomMargin = 15;
+  const titleGap = 10; // Espacio entre el título y el contenido
 
-// function to generate a new trip
-async function generateNewTrip() {
-  try {
-    console.log('Generando un nuevo viaje con los datos anteriores...');
+  // Añadir título centrado
+  const title = "PLANIFICACIÓ DEL VIATGE";
+  doc.setFont("times", "bold");
+  doc.setFontSize(20);
+  const titleX = (pageWidth - doc.getTextWidth(title)) / 2;
+  doc.text(title, titleX, topMargin);
 
-    // Asegúrate de que 'responseText' contiene los datos relevantes del viaje anterior
-    const previousDataText = responseText.value;
-    router.push({ name: 'loading' });
-    // Crear el mensaje para la API, incluyendo los datos previos
-    const newTripMessage = `
-      Hazme un nuevo viaje basándote en estos datos:
-      ${previousDataText}
-    `;
+  // Configurar el estilo para el cuerpo del texto
+  doc.setFont("times", "normal");
+  doc.setFontSize(10);
 
-    // Enviar los datos anteriores y el mensaje para generar un nuevo plan
-    const response = await fetch('/api/gemini', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        text: newTripMessage // Aquí estamos enviando el mensaje que incluye los datos previos
-      }),
-    });
+  // Extraer el texto del elemento (sin etiquetas HTML)
+  const text = element.innerText; 
+  // Calcular el ancho disponible (respectando los márgenes)
+  const availableWidth = pageWidth - leftMargin - rightMargin;
+  // Dividir el texto en líneas que se ajusten al ancho disponible
+  const lines = doc.splitTextToSize(text, availableWidth);
 
-    if (!response.ok) {
-      throw new Error('Error en la respuesta del servidor');
+  // Calcular la altura de línea (ajusta este valor si es necesario)
+  const lineHeight = 7; 
+
+  // La posición inicial en Y se sitúa debajo del título (se estima unos 20 mm para el título)
+  let y = topMargin + 20 + titleGap; 
+
+  // Iterar las líneas y agregarlas al PDF, añadiendo páginas cuando sea necesario
+  lines.forEach(line => {
+    if (y + lineHeight > pageHeight - bottomMargin) {
+      doc.addPage();
+      y = topMargin; // reiniciamos en la nueva página
     }
+    doc.text(line, leftMargin, y);
+    y += lineHeight;
+  });
 
-    const data = await response.json(); // Aquí se espera un JSON válido
-    console.log('Respuesta del servidor:', data);
+  doc.save("planificacio_viatge.pdf");
+};
 
-    // Redirigir a la misma página pero con la nueva respuesta
-    router.push({
-      path: '/result',
-      query: { response: JSON.stringify(data) }
-    });
 
-    showConfirmation.value = false;
 
-  } catch (error) {
-    console.error('Error al generar un nuevo viaje:', error);
-  }
-}
 </script>
 
 <style>

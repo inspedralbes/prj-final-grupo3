@@ -9,7 +9,8 @@
             "password": "hashed_password_1",
             "phone_number": 600123456,
             "gender": "Male",
-            "remember_token": "randomtoken123"
+            "remember_token": "randomtoken123",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Jane",
@@ -20,7 +21,8 @@
             "password": "hashed_password_2",
             "phone_number": 600654321,
             "gender": "Female",
-            "remember_token": "randomtoken456"
+            "remember_token": "randomtoken456",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Michael",
@@ -31,7 +33,8 @@
             "password": "hashed_password_3",
             "phone_number": 600789012,
             "gender": "Male",
-            "remember_token": "randomtoken789"
+            "remember_token": "randomtoken789",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Laura",
@@ -42,7 +45,8 @@
             "password": "hashed_password_4",
             "phone_number": 600112233,
             "gender": "Female",
-            "remember_token": "randomtoken101"
+            "remember_token": "randomtoken101",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Carlos",
@@ -53,7 +57,8 @@
             "password": "hashed_password_5",
             "phone_number": 600445566,
             "gender": "Male",
-            "remember_token": "randomtoken102"
+            "remember_token": "randomtoken102",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Ana",
@@ -64,7 +69,8 @@
             "password": "hashed_password_6",
             "phone_number": 600778899,
             "gender": "Female",
-            "remember_token": "randomtoken103"
+            "remember_token": "randomtoken103",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "David",
@@ -75,7 +81,8 @@
             "password": "hashed_password_7",
             "phone_number": 600889900,
             "gender": "Male",
-            "remember_token": "randomtoken104"
+            "remember_token": "randomtoken104",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Marta",
@@ -86,7 +93,8 @@
             "password": "hashed_password_8",
             "phone_number": 600556677,
             "gender": "Female",
-            "remember_token": "randomtoken105"
+            "remember_token": "randomtoken105",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Javier",
@@ -97,7 +105,8 @@
             "password": "hashed_password_9",
             "phone_number": 600998877,
             "gender": "Male",
-            "remember_token": "randomtoken106"
+            "remember_token": "randomtoken106",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Lucía",
@@ -108,7 +117,8 @@
             "password": "hashed_password_10",
             "phone_number": 600334455,
             "gender": "Female",
-            "remember_token": "randomtoken107"
+            "remember_token": "randomtoken107",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Sergio",
@@ -119,7 +129,8 @@
             "password": "hashed_password_11",
             "phone_number": 600223344,
             "gender": "Male",
-            "remember_token": "randomtoken108"
+            "remember_token": "randomtoken108",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "María",
@@ -130,7 +141,8 @@
             "password": "hashed_password_12",
             "phone_number": 600778899,
             "gender": "Female",
-            "remember_token": "randomtoken109"
+            "remember_token": "randomtoken109",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Pablo",
@@ -141,7 +153,8 @@
             "password": "hashed_password_13",
             "phone_number": 600445566,
             "gender": "Male",
-            "remember_token": "randomtoken110"
+            "remember_token": "randomtoken110",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Carmen",
@@ -152,7 +165,8 @@
             "password": "hashed_password_14",
             "phone_number": 600112233,
             "gender": "Female",
-            "remember_token": "randomtoken111"
+            "remember_token": "randomtoken111",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         },
         {
             "name": "Alberto",
@@ -163,7 +177,153 @@
             "password": "hashed_password_15",
             "phone_number": 600778899,
             "gender": "Male",
-            "remember_token": "randomtoken112"
+            "remember_token": "randomtoken112",
+            "avatar": "https://example.com/avatars/john_doe.jpg"
         }
+    ],
+    "travels": [
+    {
+        "id_user": 1,
+        "id_country": 4,
+        "id_type": 2,
+        "id_budget": 4,
+        "id_movility": 3,
+        "qunt_date": 5,
+        "date_init": "2025-12-19",
+        "date_end": "2026-01-01",
+        "description": "Descripción del evento 9"
+    },
+    {
+        "id_user": 5,
+        "id_country": 4,
+        "id_type": 1,
+        "id_budget": 1,
+        "id_movility": 4,
+        "qunt_date": 3,
+        "date_init": "2025-01-13",
+        "date_end": "2025-01-27",
+        "description": "Descripción del evento 98"
+    },
+    {
+        "id_user": 6,
+        "id_country": 2,
+        "id_type": 2,
+        "id_budget": 2,
+        "id_movility": 1,
+        "qunt_date": 1,
+        "date_init": "2025-11-26",
+        "date_end": "2025-12-04",
+        "description": "Descripción del evento 84"
+    },
+    {
+        "id_user": 9,
+        "id_country": 1,
+        "id_type": 3,
+        "id_budget": 4,
+        "id_movility": 2,
+        "qunt_date": 7,
+        "date_init": "2025-11-07",
+        "date_end": "2025-11-20",
+        "description": "Descripción del evento 14"
+    },
+    {
+        "id_user": 7,
+        "id_country": 1,
+        "id_type": 2,
+        "id_budget": 1,
+        "id_movility": 4,
+        "qunt_date": 1,
+        "date_init": "2025-09-20",
+        "date_end": "2025-10-02",
+        "description": "Descripción del evento 5"
+    },
+    {
+        "id_user": 10,
+        "id_country": 4,
+        "id_type": 3,
+        "id_budget": 4,
+        "id_movility": 2,
+        "qunt_date": 6,
+        "date_init": "2025-05-20",
+        "date_end": "2025-06-01",
+        "description": "Descripción del evento 99"
+    },
+    {
+        "id_user": 10,
+        "id_country": 3,
+        "id_type": 3,
+        "id_budget": 4,
+        "id_movility": 3,
+        "qunt_date": 6,
+        "date_init": "2025-01-12",
+        "date_end": "2025-01-17",
+        "description": "Descripción del evento 39"
+    },
+    {
+        "id_user": 3,
+        "id_country": 4,
+        "id_type": 2,
+        "id_budget": 1,
+        "id_movility": 3,
+        "qunt_date": 4,
+        "date_init": "2025-10-25",
+        "date_end": "2025-11-09",
+        "description": "Descripción del evento 1"
+    },
+    {
+        "id_user": 8,
+        "id_country": 2,
+        "id_type": 2,
+        "id_budget": 2,
+        "id_movility": 2,
+        "qunt_date": 5,
+        "date_init": "2025-08-04",
+        "date_end": "2025-08-17",
+        "description": "Descripción del evento 58"
+    },
+    {
+        "id_user": 8,
+        "id_country": 1,
+        "id_type": 1,
+        "id_budget": 4,
+        "id_movility": 3,
+        "qunt_date": 6,
+        "date_init": "2025-10-22",
+        "date_end": "2025-11-06",
+        "description": "Descripción del evento 48"
+    }],
+    "travel_types": [
+        { "type": "solo" },
+        { "type": "family" },
+        { "type": "friends" },
+        { "type": "partner" }
+    ],
+    "budgets": [
+        {
+            "min_budget": 100.0,
+            "max_budget": 500.0
+        },
+        {
+            "min_budget": 200.0,
+            "max_budget": 600.0
+        },
+        {
+            "min_budget": 300.0,
+            "max_budget": 700.0
+        },
+        {
+            "min_budget": 400.0,
+            "max_budget": 800.0
+        },
+        {
+            "min_budget": 500.0,
+            "max_budget": 900.0
+        }
+    ],
+    "movilities": [
+        { "type": "bike" },
+        { "type": "car" },
+        { "type": "moto" },
+        { "type": "no_rent" }
     ]
 }

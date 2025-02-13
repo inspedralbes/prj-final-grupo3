@@ -19,7 +19,6 @@
         <SwiperSlide>
           <img src="~/assets/images/img4.png" alt="Destí 4" class="w-full h-full object-cover" />
         </SwiperSlide>
-        
       </Swiper>
     </div>
 
@@ -52,6 +51,5 @@ import { useAuthStore } from '~/store/authUser';
 
 const authStore = useAuthStore();
 const index = useIndex();
-index
 
 </script> 

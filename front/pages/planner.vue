@@ -3,39 +3,52 @@
     <title>Triplan</title>
   </header>
   <div class="min-h-screen bg-gray-50">
-
     <main class="container mx-auto mt-10 p-4">
       <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6">
-        <h2 class="text-3xl font-bold text-center mb-8">Planifica el viatge dels teus somnis</h2>
+        <h2 class="text-3xl font-bold text-center mb-8">
+          Planifica el viatge dels teus somnis
+        </h2>
 
         <!--form for planner-->
         <form @submit.prevent="handleSubmit" class="space-y-6">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Destination -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Destí</label>
-              <input type="text" v-model="formData.destination"
-                class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Ciutat on viatges">
-            </div>
+            <!-- country -->
+            <div class="relative">
+              <label class="block text-sm font-medium text-gray-700 mb-2">País</label>
 
+              <!-- user writes -->
+              <input required v-model="searchQuery" @input="filterCountries" @focus="showDropdown = true" @blur="hideDropdown"
+                type="text"
+                class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                placeholder="On viatges?" />
+
+              <!-- dropdown countries list -->
+              <ul v-if="showDropdown && filteredCountries.length"
+                class="absolute w-full border border-gray-300 bg-white shadow-md rounded-md mt-1 max-h-40 overflow-y-auto z-50">
+                <li v-for="country in filteredCountries" :key="country.id" @mousedown="selectCountry(country)"
+                  class="p-2 hover:bg-gray-200 cursor-pointer">
+                  {{ country.name }}
+                </li>
+              </ul>
+            </div>
+           
             <!--type of trip -->
-            <div class="flex items-center space x-4">
+            <div class="flex items-center space-x-4">
               <div class="w-1/2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Amb qui viatges?</label>
-                <select v-model="formData.type" name="type" id="" class="border p-2 rounded">
+                <select v-model="formData.type" name="type" class="border p-2 rounded w-full" required>
                   <option disabled selected value="">Selecciona</option>
-                  <option value="sol">Sol</option>
-                  <option value="amics">Amics</option>
-                  <option value="familia">Família</option>
-                  <option value="parella">Parella</option>
+                  <option v-for="type in types" :key="type.id" :value="type.id">
+                    {{ type.id === 1 ? "Sol/a" : type.id === 2 ? "Família" : type.id === 3 ? "Amics" : type.id === 4 ?
+                    "Parella" : "" }}
+                  </option>
                 </select>
               </div>
-              <!-- if selectedtype is friends or family -->
-              <div v-if="selectedType === 'amics' || selectedType === 'familia'" class="w-1/2">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Quant. de persones:</label>
+
+              <div v-if="formData.type === 2 || formData.type === 3" class="w-1/2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Quant. de persones</label>
                 <input type="number" v-model="formData.travelers" min="1" class="border p-2 rounded w-full"
-                  placeholder="2" />
+                  placeholder="3" required>
               </div>
             </div>
 
@@ -45,32 +58,37 @@
               <VueDatePicker v-model="dateRange" range multi-calendars :enable-time-picker="false" locale="ca"
                 class="w-full border p-2 rounded-md" :text-input="true" :text-input-options="{
                   selectText: 'Confirmar',
-                  cancelText: 'Cancel·lar'
+                  cancelText: 'Cancel·lar',
                 }" :min-date="new Date()" />
             </div>
 
             <div class="flex items-center space x-4">
-              <!-- Lloguer de vehicle -->
+              <!-- rent a car -->
               <div class="w-1/2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Lloguer de vehicle</label>
-                <select v-model="formData.vehicle" class="border p-2 rounded">
-                  <option value="" selected disabled>Selecciona</option>
+                <select v-model="formData.vehicle" class="border p-2 rounded" required>
+                  <option disabled selected value="">Selecciona</option>
                   <option value="yes">Si</option>
-                  <option value="no">No</option>
+                  <!-- <option value="no">No</option> -->
+                  <option v-for="movility in movilities.filter(m => m.id === 4)" :key="movility.id"
+                    :value="movility.id">
+                    {{ movility.id === 1 ? "Bicicleta" : movility.id === 2 ? "Cotxe" : movility.id === 3 ? "Moto" :
+                      movility.id === 4 ? "No" : "" }}
+                  </option>
                 </select>
               </div>
-
               <!-- if vehicle is yes-->
+              <!-- Selección de Tipus de vehicle usando la lista de movilities -->
               <div v-if="formData.vehicle === 'yes'" class="w-1/2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Tipus de vehicle</label>
-                <select v-model="formData.vehicletype" class="border p-2 rounded w-full">
-                  <option value="" selected disabled>Selecciona</option>
-                  <option value="car">Cotxe</option>
-                  <option value="bike">Bici</option>
-                  <option value="motorcycle">Moto</option>
+                <select v-model.number="formData.vehicletype" class="border p-2 rounded w-full" required>
+                  <option disabled selected value="">Selecciona</option>
+                  <option v-for="movility in movilities.filter(m => m.id !== 4)" :key="movility.id"
+                    :value="movility.id">
+                    {{ movility.id === 1 ? "Bicicleta" : movility.id === 2 ? "Cotxe" : movility.id === 3 ? "Moto" : "" }}
+                  </option>
                 </select>
-              </div>
-
+              </div>           
             </div>
 
             <!-- Budget -->
@@ -79,7 +97,7 @@
               <div>
                 <!-- Budget Min -->
                 <div class="w-3/3">
-                  <input id="minBudget" type="number" v-model="formData.budgetmin" min="0" placeholder="200"
+                  <input required id="minBudget" type="number" v-model="formData.budgetmin" min="0" placeholder="200"
                     class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                     @input="syncWithBudget" />
                   <!-- Range Slider-->
@@ -92,7 +110,7 @@
               <!-- Budget Min -->
               <label class="block text-sm font-medium text-gray-700 mb-2">Estableix el pressupost màxim (€)</label>
               <div class="w-3/3">
-                <input id="maxBudget" type="number" v-model="formData.budgetmax" min="0" placeholder="3000"
+                <input required id="maxBudget" type="number" v-model="formData.budgetmax" min="0" placeholder="3000"
                   class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                   @input="syncWithBudget" />
                 <!-- Range Slider -->
@@ -107,7 +125,7 @@
             <label class="block text-sm font-medium text-gray-700 mb-2">Interessos</label>
             <textarea v-model="formData.interests"
               class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" rows="3"
-              placeholder="Que t'interessa? (e.x., cultura, aventura, relax)"></textarea>
+              placeholder="Que t'interessa? (e.x., cultura, aventura, relax)" required></textarea>
           </div>
 
           <button type="submit"
@@ -121,37 +139,97 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router';
-import { ref, computed, watch } from 'vue';
-import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
+import { useRouter } from "vue-router";
+import { ref, computed, watch, onMounted } from "vue";
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
+import { getCountries, getTypes, getMovilities } from "@/services/communicationManager";
+import { useAuthStore } from "~/store/authUser";
+
 
 const router = useRouter();
 
 const formData = ref({
-  destination: '',
-  datesinit: '',
-  datesfinal: '',
-  travelers: '',
-  interests: '',
-  type: '',
-  budgetmin: '',
-  budgetmax: '',
-  vehicle: '',
-  vehicletype: '',
+  country: "",
+  datesinit: "",
+  datesfinal: "",
+  travelers: "",
+  interests: "",
+  type: "",
+  budgetmin: "",
+  budgetmax: "",
+  vehicle: "",
+  vehicletype: "",
 });
 
 const dateRange = ref([]);
+const countries = ref([]);
+const filteredCountries = ref([]);
+const filteredMovilities = ref([]);
+const searchQuery = ref("");
+const showDropdown = ref(false);
 const budgetMax = ref(7500);
 const budgetMin = ref(250);
+const types = ref([]);
+const movilities = ref([]);
+const authStore = useAuthStore();
 
 
+
+// charge list of countries p
+onMounted(async () => {
+  try {
+    const countryList = await getCountries();
+    countries.value = countryList;
+    filteredCountries.value = countryList; // Inicialmente muestra todos
+
+    const movilityList = await getMovilities();
+    movilities.value = movilityList;
+    filteredMovilities.value = movilityList;
+
+
+    const typeList = await getTypes();
+    types.value = typeList;
+    //filteredTypes.value=typeList;
+  } catch (error) {
+    console.error("Error carregant dades:", error);
+  }
+});
+
+// filter countries
+const filterCountries = () => {
+  const query = searchQuery.value.toLowerCase();
+  filteredCountries.value = countries.value.filter((country) =>
+    country.name.toLowerCase().includes(query)
+  );
+  formData.value.country = searchQuery.value;
+};
+
+const filterMovilities = (query) => {
+  filteredMovilities.value = movilities.value.filter(movility =>
+    movility.name.toLowerCase().includes(query.toLowerCase())
+  );
+};
+
+
+// choose country from list
+const selectCountry = (country) => {
+  searchQuery.value = country.name; // Para que aparezca en el input
+  formData.value.country = country.id; // Para que se guarde correctamente en el formulario
+  showDropdown.value = false; // Ocultar la lista desplegable
+};
+// hides dropdown
+const hideDropdown = () => {
+  setTimeout(() => {
+    showDropdown.value = false;
+  }, 200);
+};
+
+// control type of trip
 const selectedType = computed(() => formData.value.type);
-
 const vehicle = computed(() => formData.value.vehicle);
 
-// Watchers
-
+// Watch sincronize dates
 watch(dateRange, (newValue) => {
   if (newValue.length === 2) {
     formData.value.datesinit = newValue[0];
@@ -159,6 +237,7 @@ watch(dateRange, (newValue) => {
   }
 });
 
+// Watch update budget min and max
 watch(budgetMin, (newValue) => {
   formData.value.budgetmin = newValue;
 });
@@ -167,7 +246,48 @@ watch(budgetMax, (newValue) => {
   formData.value.budgetmax = newValue;
 });
 
-// methods
+watch(() => formData.value.vehicle, (newVal) => {
+  if (newVal !== "yes") {
+    formData.value.vehicletype = 4;
+  } else {
+    formData.value.vehicletype = "";
+  }
+});
+
+// validates form
+const validateForm = () => {
+  if (budgetMin.value >= budgetMax.value) {
+    alert("El pressupost mínim ha de ser inferior al màxim.");
+    return false;
+  }
+
+  if (!dateRange.value || dateRange.value.length !== 2) {
+    alert("Selecciona una data inicial i final per al viatge.");
+    return false;
+  }
+
+  const startDate = new Date(formData.value.datesinit);
+  const endDate = new Date(formData.value.datesfinal);
+  const today = new Date();
+
+  today.setHours(0, 0, 0, 0);
+  startDate.setHours(0, 0, 0, 0);
+  endDate.setHours(0, 0, 0, 0);
+
+  if (startDate < today) {
+    alert("La data d'inici no pot ser anterior a la data actual.");
+    return false;
+  }
+
+  if (endDate <= startDate) {
+    alert("La data de tornada ha de ser posterior a la d'anada.");
+    return false;
+  }
+
+  return true;
+};
+
+// updates budgets
 const syncWithBudget = () => {
   if (budgetMin.value > budgetMax.value) {
     budgetMin.value = budgetMax.value - 100;
@@ -177,78 +297,77 @@ const syncWithBudget = () => {
   }
 };
 
-const validateForm = () => {
-  // validation of budget
-  if (budgetMin.value >= budgetMax.value) {
-    alert('El pressupost mínim ha de ser inferior al màxim.');
-    return false;
-  }
-
-  // validation of dates
-  if (!dateRange.value || dateRange.value.length !== 2) {
-    alert('Selecciona una data inicial i final per al viatge.');
-    return false;
-  }
-
-  const startDate = new Date(formData.value.datesinit);
-  const endDate = new Date(formData.value.datesfinal);
-  const today = new Date();
-
-  // update dates at 00:00
-  today.setHours(0, 0, 0, 0);
-  startDate.setHours(0, 0, 0, 0);
-  endDate.setHours(0, 0, 0, 0);
-
-  if (startDate < today) {
-    alert('La data d\'inici no pot ser anterior a la data actual.');
-    return false;
-  }
-
-  if (endDate <= startDate) {
-    alert('La data de tornada ha de ser posterior a la d\'anada.');
-    return false;
-  }
-
-  return true;
-};
-
-// Submit handle
+// sends form
 const handleSubmit = async () => {
+
+
   if (!validateForm()) return;
 
+  console.log('Enviant dades a la bd...')
+
   try {
-    // prepare request to API
+    const travelData = {
+      id_user: authStore.user.id, // Asegúrate de obtener el ID del usuario autenticado
+      id_country: formData.value.country, // Aquí debe ser el ID y no el nombre
+      date_init: formData.value.datesinit,
+      date_end: formData.value.datesfinal,
+      id_type: formData.value.type,/* asignar el ID correspondiente al tipo de viaje */
+      id_budget_min: formData.value.budgetmin,
+      id_budget_max: formData.value.budgetmax,
+      id_movility: formData.value.vehicletype, /* asignar el ID correspondiente a la movilidad, según vehicle/vehicletype */
+      description: formData.value.interests,
+    };
+    console.log('Viatge que s\'envia:', travelData);
+
+    const dbResponse = await fetch("http://localhost:8000/api/travels", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify(travelData),
+    });
+
+    if (!dbResponse.ok) {
+      throw new Error("Error al guardar el viatge en la base de dades");
+    };
+
+    const vehicleTypes = {
+      1: "Bicicleta",
+      2: "Moto",
+      3: "Cotxe",
+      4: "No vehicle"
+    };
+
     const requestText = `
-      Planifica un viatge per a ${formData.value.travelers} persones ${formData.value.type === 'alone' ? 'sol' : `amb ${formData.value.type}`}.
-      Destí: ${formData.value.destination}.
+      Planifica un viatge per a ${formData.value.travelers} persones ${formData.value.type === "alone" ? "sol" : `amb ${formData.value.type}`}.
+      Destí: ${formData.value.country}.
       Dates: del ${formData.value.datesinit} al ${formData.value.datesfinal}.
       Pressupost: entre ${formData.value.budgetmin}€ i ${formData.value.budgetmax}€.
       Interessos: ${formData.value.interests}.
-      Vehicul: ${formData.value.vehicle}.
-      Tipus de vehicul: ${formData.value.vehicletype}.
+      Vehicle: ${formData.value.vehicletype}.
+      Tipus de vehicle: ${vehicleTypes[formData.value.vehicletype] || "No especificat"}.
     `;
 
-    // navigate to loading
-    router.push({ name: 'loading' });
+    router.push({ name: "loading" });
 
-    const response = await fetch('/api/gemini', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    const response = await fetch("/api/gemini", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text: requestText }),
     });
 
-    if (!response.ok) throw new Error('Error al cridar la IA de Gemini');
+    if (!response.ok) throw new Error("Error al cridar la IA de Gemini");
 
     const result = await response.json();
 
     router.push({
-      name: 'result',
+      name: "result",
       query: { response: JSON.stringify(result) },
     });
-
   } catch (error) {
-    console.error('Error al enviar el formulari:', error);
-    alert('S\'ha produït un error en processar la sol·licitud');
+    console.error("Error al enviar el formulari:", error);
+    alert("S'ha produït un error en processar la sol·licitud");
   }
 };
 </script>

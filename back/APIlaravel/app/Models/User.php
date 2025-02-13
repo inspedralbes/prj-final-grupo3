@@ -27,11 +27,17 @@ class User extends Authenticatable
         'email',
         'email_alternative',
         'password',
-        'birthdate',
+        'birth_date',
         'phone_number',
         'gender',
         'avatar'
     ];
+
+    /**
+     * Summary of dates
+     * @var array
+     */
+    protected $dates = ['birth_date'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -73,5 +79,13 @@ class User extends Authenticatable
         ]);
 
         return new NewAccessToken($token, $plainTextToken);
+    }
+
+    /**
+     * Definir la relacion de los viajes con el usuario
+     */
+    public function travels()
+    {
+        return $this->hasMany(Travel::class, 'id_user');
     }
 }

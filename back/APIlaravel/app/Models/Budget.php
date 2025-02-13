@@ -9,10 +9,11 @@ class Budget extends Model
 {
     use HasFactory;
 
+    protected $table = 'budget';
     protected $fillable = [
-        'min_price',
-        'max_price',
-        'final_price',
+        'min_budget',
+        'max_budget',
+        // 'final_price',
     ];
 
     public function travel(){

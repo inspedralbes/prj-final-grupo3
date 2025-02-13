@@ -21,13 +21,19 @@
             @if (Auth::check())
                 <div class="flex flex-row justify-center gap-4 mt-4">
                     <a href="{{ route('users') }}"
-                        class="cursor-pointer text-basefont-medium hover:text-blue-600">Gestió de
+                        class="cursor-pointer text-basefont-medium p-1 delay-75 hover:text-black hover:bg-white rounded-full transition">Gestió de
                         usuaris</a>
                     <a href="{{ route('countries') }}"
-                        class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de països</a>
-                    {{-- <a href="{{ route('countries') }}"
-                        class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de viatges</a>
-                    <a href="{{ route('countries') }}"
+                        class="cursor-pointer text-base font-medium p-1 delay-75 hover:text-black hover:bg-white rounded-full transition">Gestió de països</a>
+                    <a href="{{ route('travel-types') }}"
+                        class="cursor-pointer text-base font-medium p-1 delay-75 hover:text-black hover:bg-white rounded-full transition">Gestió de tipus del viatge</a>
+                    <a href="{{ route('movilities') }}"
+                        class="cursor-pointer text-base font-medium p-1 delay-75 hover:text-black hover:bg-white rounded-full transition">Gestió de mobilitats</a>
+                    <a href="{{ route('budgets') }}"
+                        class="cursor-pointer text-base font-medium p-1 delay-75 hover:text-black hover:bg-white rounded-full transition">Gestió de pressupost</a>
+                    <a href="{{ route('travels') }}"
+                        class="cursor-pointer text-base font-medium p-1 delay-75 hover:text-black hover:bg-white rounded-full transition">Gestió de viatges</a>
+                    {{-- <a href="{{ route('publications') }}"
                         class="cursor-pointer text-base font-medium hover:text-blue-600">Gestió de publicacions</a> --}}
                 </div>
             @endif

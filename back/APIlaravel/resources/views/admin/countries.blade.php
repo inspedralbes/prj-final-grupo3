@@ -76,7 +76,7 @@
 
         document.getElementById('close-form').addEventListener('click', function() {
             const form = document.getElementById('register-form');
-            const formButton = document.getElementById('register-button');
+            const formButton = document.getElementById('toggle-form');
 
             // Ocultar el formulario y mostrar el botón
             form.classList.add('hidden');
