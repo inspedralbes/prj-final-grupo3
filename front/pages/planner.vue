@@ -18,8 +18,7 @@
 
               <!-- user writes -->
               <input v-model="searchQuery" @input="filterCountries" @focus="showDropdown = true" @blur="hideDropdown"
-                type="text"
-                class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                type="text" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="On viatges?" />
 
               <!-- dropdown countries list -->
@@ -35,21 +34,22 @@
             <!-- Destination -->
 
             <!--type of trip -->
-            <div class="flex items-center space x-4">
+            <div class="flex items-center space-x-4">
               <div class="w-1/2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Amb qui viatges?</label>
-                <select v-model="formData.type" name="type" class="border p-2 rounded">
+                <select v-model="formData.type" name="type" class="border p-2 rounded w-full">
                   <option disabled selected value="">Selecciona</option>
                   <option v-for="type in types" :key="type.id" :value="type.id">
                     {{ type.type }}
                   </option>
                 </select>
               </div>
-            </div>
-            <div v-if="formData.type === 2 || formData.type === 3" class="w-1/2">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Quantitat de persones</label>
-              <input type="number" v-model="formData.travelers" min="1" class="border p-2 rounded v-full"
-                placeholder="3">
+
+              <div v-if="formData.type === 2 || formData.type === 3" class="w-1/2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Quant. de persones</label>
+                <input type="number" v-model="formData.travelers" min="1" class="border p-2 rounded w-full"
+                  placeholder="3">
+              </div>
             </div>
 
             <!-- Select dates -->
