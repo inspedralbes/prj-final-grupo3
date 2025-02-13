@@ -325,7 +325,7 @@ const handleSubmit = async () => {
     const vehicleTypes = {
   1: "Bici",
   2: "Moto",
-  3: "Coche",
+  3: "Cotxe",
   4: "No vehicle"
 };
 
