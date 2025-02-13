@@ -17,8 +17,9 @@
               <label class="block text-sm font-medium text-gray-700 mb-2">País</label>
 
               <!-- user writes -->
-              <input v-model="searchQuery" @input="filterCountries" @focus="showDropdown = true" @blur="hideDropdown"
-                type="text" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              <input required v-model="searchQuery" @input="filterCountries" @focus="showDropdown = true" @blur="hideDropdown"
+                type="text"
+                class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="On viatges?" />
 
               <!-- dropdown countries list -->
@@ -30,25 +31,24 @@
                 </li>
               </ul>
             </div>
-
-            <!-- Destination -->
-
+           
             <!--type of trip -->
             <div class="flex items-center space-x-4">
               <div class="w-1/2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Amb qui viatges?</label>
-                <select v-model="formData.type" name="type" class="border p-2 rounded w-full">
+                <select v-model="formData.type" name="type" class="border p-2 rounded w-full" required>
                   <option disabled selected value="">Selecciona</option>
                   <option v-for="type in types" :key="type.id" :value="type.id">
-                    {{ type.id === 1 ? "Sol/a" : type.id === 2 ? "Família" : type.id === 3 ? "Amics" : type.id === 4 ? "Parella" : "" }}
-                  </option>  
-                </select> 
+                    {{ type.id === 1 ? "Sol/a" : type.id === 2 ? "Família" : type.id === 3 ? "Amics" : type.id === 4 ?
+                    "Parella" : "" }}
+                  </option>
+                </select>
               </div>
 
               <div v-if="formData.type === 2 || formData.type === 3" class="w-1/2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Quant. de persones</label>
                 <input type="number" v-model="formData.travelers" min="1" class="border p-2 rounded w-full"
-                  placeholder="3">
+                  placeholder="3" required>
               </div>
             </div>
 
@@ -66,36 +66,38 @@
               <!-- rent a car -->
               <div class="w-1/2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Lloguer de vehicle</label>
-                <select v-model="formData.vehicletype" class="border p-2 rounded">
+                <select v-model="formData.vehicle" class="border p-2 rounded" required>
                   <option disabled selected value="">Selecciona</option>
                   <option value="yes">Si</option>
                   <!-- <option value="no">No</option> -->
-                  <option v-for="movility in movilities.filter(m => m.id === 4)" :key="movility.id" :value="movility.id">
-                    {{ movility.id === 1 ? "Bici" : movility.id === 2 ? "Coche" : movility.id === 3 ? "Moto" : movility.id === 4 ? "No" : "" }}
+                  <option v-for="movility in movilities.filter(m => m.id === 4)" :key="movility.id"
+                    :value="movility.id">
+                    {{ movility.id === 1 ? "Bicicleta" : movility.id === 2 ? "Cotxe" : movility.id === 3 ? "Moto" :
+                      movility.id === 4 ? "No" : "" }}
                   </option>
                 </select>
               </div>
-
               <!-- if vehicle is yes-->
               <!-- Selección de Tipus de vehicle usando la lista de movilities -->
               <div v-if="formData.vehicle === 'yes'" class="w-1/2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Tipus de vehicle</label>
-                <select v-model.number="formData.vehicletype" class="border p-2 rounded w-full">
+                <select v-model.number="formData.vehicletype" class="border p-2 rounded w-full" required>
                   <option disabled selected value="">Selecciona</option>
-                  <option v-for="movility in movilities.filter(m => m.id !== 4)" :key="movility.id" :value="movility.id">
-                    {{ movility.id === 1 ? "Bici" : movility.id === 2 ? "Coche" : movility.id === 3 ? "Moto" : "" }}
+                  <option v-for="movility in movilities.filter(m => m.id !== 4)" :key="movility.id"
+                    :value="movility.id">
+                    {{ movility.id === 1 ? "Bicicleta" : movility.id === 2 ? "Cotxe" : movility.id === 3 ? "Moto" : "" }}
                   </option>
                 </select>
-              </div>
-
+              </div>           
             </div>
+
             <!-- Budget -->
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Estableix el pressupost mínim (€)</label>
               <div>
                 <!-- Budget Min -->
                 <div class="w-3/3">
-                  <input id="minBudget" type="number" v-model="formData.budgetmin" min="0" placeholder="200"
+                  <input required id="minBudget" type="number" v-model="formData.budgetmin" min="0" placeholder="200"
                     class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                     @input="syncWithBudget" />
                   <!-- Range Slider-->
@@ -108,7 +110,7 @@
               <!-- Budget Min -->
               <label class="block text-sm font-medium text-gray-700 mb-2">Estableix el pressupost màxim (€)</label>
               <div class="w-3/3">
-                <input id="maxBudget" type="number" v-model="formData.budgetmax" min="0" placeholder="3000"
+                <input required id="maxBudget" type="number" v-model="formData.budgetmax" min="0" placeholder="3000"
                   class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                   @input="syncWithBudget" />
                 <!-- Range Slider -->
@@ -123,7 +125,7 @@
             <label class="block text-sm font-medium text-gray-700 mb-2">Interessos</label>
             <textarea v-model="formData.interests"
               class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" rows="3"
-              placeholder="Que t'interessa? (e.x., cultura, aventura, relax)"></textarea>
+              placeholder="Que t'interessa? (e.x., cultura, aventura, relax)" required></textarea>
           </div>
 
           <button type="submit"
@@ -244,6 +246,14 @@ watch(budgetMax, (newValue) => {
   formData.value.budgetmax = newValue;
 });
 
+watch(() => formData.value.vehicle, (newVal) => {
+  if (newVal !== "yes") {
+    formData.value.vehicletype = 4;
+  } else {
+    formData.value.vehicletype = "";
+  }
+});
+
 // validates form
 const validateForm = () => {
   if (budgetMin.value >= budgetMax.value) {
@@ -323,11 +333,11 @@ const handleSubmit = async () => {
     };
 
     const vehicleTypes = {
-  1: "Bici",
-  2: "Moto",
-  3: "Cotxe",
-  4: "No vehicle"
-};
+      1: "Bicicleta",
+      2: "Moto",
+      3: "Cotxe",
+      4: "No vehicle"
+    };
 
     const requestText = `
       Planifica un viatge per a ${formData.value.travelers} persones ${formData.value.type === "alone" ? "sol" : `amb ${formData.value.type}`}.
