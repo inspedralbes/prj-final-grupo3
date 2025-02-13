@@ -17,8 +17,8 @@
               <label class="block text-sm font-medium text-gray-700 mb-2">País</label>
 
               <!-- user writes -->
-              <input required v-model="searchQuery" @input="filterCountries" @focus="showDropdown = true" @blur="hideDropdown"
-                type="text"
+              <input required v-model="searchQuery" @input="filterCountries" @focus="showDropdown = true"
+                @blur="hideDropdown" type="text"
                 class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="On viatges?" />
 
@@ -31,7 +31,7 @@
                 </li>
               </ul>
             </div>
-           
+
             <!--type of trip -->
             <div class="flex items-center space-x-4">
               <div class="w-1/2">
@@ -40,7 +40,7 @@
                   <option disabled selected value="">Selecciona</option>
                   <option v-for="type in types" :key="type.id" :value="type.id">
                     {{ type.id === 1 ? "Sol/a" : type.id === 2 ? "Família" : type.id === 3 ? "Amics" : type.id === 4 ?
-                    "Parella" : "" }}
+                      "Parella" : "" }}
                   </option>
                 </select>
               </div>
@@ -85,10 +85,11 @@
                   <option disabled selected value="">Selecciona</option>
                   <option v-for="movility in movilities.filter(m => m.id !== 4)" :key="movility.id"
                     :value="movility.id">
-                    {{ movility.id === 1 ? "Bicicleta" : movility.id === 2 ? "Cotxe" : movility.id === 3 ? "Moto" : "" }}
+                    {{ movility.id === 1 ? "Bicicleta" : movility.id === 2 ? "Cotxe" : movility.id === 3 ? "Moto" : ""
+                    }}
                   </option>
                 </select>
-              </div>           
+              </div>
             </div>
 
             <!-- Budget -->
@@ -351,10 +352,19 @@ const handleSubmit = async () => {
 
     router.push({ name: "loading" });
 
-    const response = await fetch("/api/gemini", {
+    const config = useRuntimeConfig();
+    const key = config.public.apiKey
+
+    const text = JSON.stringify(requestText)
+
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: requestText }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text }] }]
+      })
     });
 
     if (!response.ok) throw new Error("Error al cridar la IA de Gemini");
