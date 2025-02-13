@@ -18,8 +18,7 @@
 
               <!-- user writes -->
               <input v-model="searchQuery" @input="filterCountries" @focus="showDropdown = true" @blur="hideDropdown"
-                type="text"
-                class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                type="text" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="On viatges?" />
 
               <!-- dropdown countries list -->
@@ -35,21 +34,22 @@
             <!-- Destination -->
 
             <!--type of trip -->
-            <div class="flex items-center space x-4">
+            <div class="flex items-center space-x-4">
               <div class="w-1/2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Amb qui viatges?</label>
-                <select v-model="formData.type" name="type" class="border p-2 rounded">
+                <select v-model="formData.type" name="type" class="border p-2 rounded w-full">
                   <option disabled selected value="">Selecciona</option>
                   <option v-for="type in types" :key="type.id" :value="type.id">
-                    {{ type.type }}
-                  </option>
-                </select>
+                    {{ type.id === 1 ? "Sol/a" : type.id === 2 ? "Família" : type.id === 3 ? "Amics" : type.id === 4 ? "Parella" : "" }}
+                  </option>  
+                </select> 
               </div>
-            </div>
-            <div v-if="formData.type === 2 || formData.type === 3" class="w-1/2">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Quantitat de persones</label>
-              <input type="number" v-model="formData.travelers" min="1" class="border p-2 rounded v-full"
-                placeholder="3">
+
+              <div v-if="formData.type === 2 || formData.type === 3" class="w-1/2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Quant. de persones</label>
+                <input type="number" v-model="formData.travelers" min="1" class="border p-2 rounded w-full"
+                  placeholder="3">
+              </div>
             </div>
 
             <!-- Select dates -->
@@ -66,10 +66,13 @@
               <!-- rent a car -->
               <div class="w-1/2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Lloguer de vehicle</label>
-                <select v-model="formData.vehicle" class="border p-2 rounded">
-                  <option value="" selected disabled>Selecciona</option>
+                <select v-model="formData.vehicletype" class="border p-2 rounded">
+                  <option disabled selected value="">Selecciona</option>
                   <option value="yes">Si</option>
-                  <option value="no">No</option>
+                  <!-- <option value="no">No</option> -->
+                  <option v-for="movility in movilities.filter(m => m.id === 4)" :key="movility.id" :value="movility.id">
+                    {{ movility.id === 1 ? "Bici" : movility.id === 2 ? "Coche" : movility.id === 3 ? "Moto" : movility.id === 4 ? "No" : "" }}
+                  </option>
                 </select>
               </div>
 
@@ -79,8 +82,8 @@
                 <label class="block text-sm font-medium text-gray-700 mb-2">Tipus de vehicle</label>
                 <select v-model.number="formData.vehicletype" class="border p-2 rounded w-full">
                   <option disabled selected value="">Selecciona</option>
-                  <option v-for="movility in movilities" :key="movility.id" :value="movility.id">
-                    {{ movility.type }}
+                  <option v-for="movility in movilities.filter(m => m.id !== 4)" :key="movility.id" :value="movility.id">
+                    {{ movility.id === 1 ? "Bici" : movility.id === 2 ? "Coche" : movility.id === 3 ? "Moto" : "" }}
                   </option>
                 </select>
               </div>
@@ -319,14 +322,21 @@ const handleSubmit = async () => {
       throw new Error("Error al guardar el viatge en la base de dades");
     };
 
+    const vehicleTypes = {
+  1: "Bici",
+  2: "Moto",
+  3: "Cotxe",
+  4: "No vehicle"
+};
+
     const requestText = `
       Planifica un viatge per a ${formData.value.travelers} persones ${formData.value.type === "alone" ? "sol" : `amb ${formData.value.type}`}.
       Destí: ${formData.value.country}.
       Dates: del ${formData.value.datesinit} al ${formData.value.datesfinal}.
       Pressupost: entre ${formData.value.budgetmin}€ i ${formData.value.budgetmax}€.
       Interessos: ${formData.value.interests}.
-      Vehicle: ${formData.value.vehicle}.
-      Tipus de vehicle: ${formData.value.vehicletype}.
+      Vehicle: ${formData.value.vehicletype}.
+      Tipus de vehicle: ${vehicleTypes[formData.value.vehicletype] || "No especificat"}.
     `;
 
     router.push({ name: "loading" });
