@@ -75,7 +75,7 @@
     
     <p>🎉 Gràcies per unir-te a Triplan! Ara pots explorar destinacions, descobrir activitats i crear records inoblidables. 🚀✈️</p>
 
-    <a href="{{ env('https://triplan.cat/') }}/login" class="btn">Accedeix a Triplan</a>
+    <a href="https://triplan.cat" class="btn">Accedeix a Triplan</a>
 
     <p class="footer">&copy; {{ date('Y') }} Triplan App. Tots els drets reservats.</p>
 </div>
