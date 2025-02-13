@@ -40,9 +40,9 @@
                 <select v-model="formData.type" name="type" class="border p-2 rounded w-full">
                   <option disabled selected value="">Selecciona</option>
                   <option v-for="type in types" :key="type.id" :value="type.id">
-                    {{ type.type }}
-                  </option>
-                </select>
+                    {{ type.id === 1 ? "Sol/a" : type.id === 2 ? "Família" : type.id === 3 ? "Amics" : type.id === 4 ? "Parella" : "" }}
+                  </option>  
+                </select> 
               </div>
 
               <div v-if="formData.type === 2 || formData.type === 3" class="w-1/2">
@@ -67,7 +67,7 @@
               <div class="w-1/2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Lloguer de vehicle</label>
                 <select v-model="formData.vehicle" class="border p-2 rounded">
-                  <option value="" selected disabled>Selecciona</option>
+                  <option disabled selected value="">Selecciona</option>
                   <option value="yes">Si</option>
                   <option value="no">No</option>
                 </select>
@@ -80,7 +80,7 @@
                 <select v-model.number="formData.vehicletype" class="border p-2 rounded w-full">
                   <option disabled selected value="">Selecciona</option>
                   <option v-for="movility in movilities" :key="movility.id" :value="movility.id">
-                    {{ movility.type }}
+                    {{ movility.id === 1 ? "Bici" : movility.id === 2 ? "Coche" : movility.id === 3 ? "Moto" : "" }}
                   </option>
                 </select>
               </div>
