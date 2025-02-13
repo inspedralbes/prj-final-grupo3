@@ -66,10 +66,13 @@
               <!-- rent a car -->
               <div class="w-1/2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Lloguer de vehicle</label>
-                <select v-model="formData.vehicle" class="border p-2 rounded">
+                <select v-model="formData.vehicletype" class="border p-2 rounded">
                   <option disabled selected value="">Selecciona</option>
                   <option value="yes">Si</option>
-                  <option value="no">No</option>
+                  <!-- <option value="no">No</option> -->
+                  <option v-for="movility in movilities.filter(m => m.id === 4)" :key="movility.id" :value="movility.id">
+                    {{ movility.id === 1 ? "Bici" : movility.id === 2 ? "Coche" : movility.id === 3 ? "Moto" : movility.id === 4 ? "No" : "" }}
+                  </option>
                 </select>
               </div>
 
@@ -79,7 +82,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-2">Tipus de vehicle</label>
                 <select v-model.number="formData.vehicletype" class="border p-2 rounded w-full">
                   <option disabled selected value="">Selecciona</option>
-                  <option v-for="movility in movilities" :key="movility.id" :value="movility.id">
+                  <option v-for="movility in movilities.filter(m => m.id !== 4)" :key="movility.id" :value="movility.id">
                     {{ movility.id === 1 ? "Bici" : movility.id === 2 ? "Coche" : movility.id === 3 ? "Moto" : "" }}
                   </option>
                 </select>
