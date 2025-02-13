@@ -5,22 +5,29 @@
       <div class="flex flex-col gap-4">
         <p class="text-2xl font-bold">Historial de viatges</p>
         <div class="flex gap-2">
-          <input type="search" placeholder="Buscar viatge" class="p-3 border border-gray-300 rounded-lg flex-grow" />
-          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
+          <input v-model="searchQuery" type="search" placeholder="Buscar viatge (quantitat de dies, pres. min, pres. max, destí, data, movilitat ...)"
+            class="p-3 border border-gray-300 rounded-lg flex-grow" />
+          <!-- <button @click="searchTrips" type="submit"
+            class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
             Buscar
-          </button>
+          </button> -->
         </div>
       </div>
     </div>
     <div class="min-h-[50vh] max-h-[80vh] w-[80%] rounded-lg shadow-2xl bg-white p-6 flex flex-col overflow-y-auto">
       <div class="flex flex-col gap-6 items-center">
 
-        <p v-if="travelData.data.length == 0"
+        <!-- <p v-if="travelData.data.length == 0"
+          class="text-center text-lg font-semibold text-gray-300 flex items-center justify-center min-h-[50vh]">
+          No hi ha cap historial de viatges. Has de viatjar més!
+        </p> -->
+
+        <p v-if="filteredTrips.length === 0"
           class="text-center text-lg font-semibold text-gray-300 flex items-center justify-center min-h-[50vh]">
           No hi ha cap historial de viatges. Has de viatjar més!
         </p>
 
-        <div class="box" v-for="travel in travelData.data" :key="travel.id">
+        <div class="box" v-for="travel in filteredTrips" :key="travel.id">
           <div class="ticket">
             <div class="ticket-header">
               <p class="flex text-2xl font-bold font-['Arial'] text-blue-950">TRIPLAN</p>
@@ -77,10 +84,10 @@
                     <p class="font-semibold">Pressupost max</p>
                     <p class="break-words">{{ travel.budget.max_budget }}€</p>
                   </div>
-                  <div class="flex flex-col gap-2">
+                  <!-- <div class="flex flex-col gap-2">
                     <p class="font-semibold">Preu final</p>
                     <p class="break-words">{{ travel.budget.final_price }}€</p>
-                  </div>
+                  </div> -->
                 </div>
                 <div class="description-trip relative p-4 w-[30%]">
                   <div class="flex flex-col gap-2">
@@ -107,32 +114,48 @@
 </template>
 
 <script setup>
+import { ref, computed, onMounted } from 'vue';
 import { useAuthStore } from '~/store/authUser';
 import { getUserTravelHistory } from '@/services/communicationManager';
-import { data } from 'autoprefixer';
+// import { data } from 'autoprefixer';
 
-</script>
-<script>
-export default {
-  data() {
-    const travelData = reactive({ data: [] });
-    onMounted(async () => {
-      console.log(this.authStore.user.id);
-      try {
-        const data = await getUserTravelHistory(this.authStore.user.id, this.authStore.token);
-        travelData.data = data.travels;
-        console.log(travelData.data);
+const authStore = useAuthStore();
+const travelData = ref([]);
+const searchQuery = ref('');
 
-      } catch (error) {
-        console.error('Error carregant el historial de viatges:', error);
-      }
-    })
-    return {
-      authStore: useAuthStore(),
-      travelData
-    };
-  },
-}
+onMounted(async () => {
+  try {
+    const data = await getUserTravelHistory(authStore.user.id, authStore.token);
+    travelData.value = data.travels;
+  } catch (error) {
+    console.error('Error carregant el historial de viatges:', error);
+  }
+});
+
+const filteredTrips = computed(() => {
+  const query = searchQuery.value.toLowerCase();
+
+  return travelData.value.filter(travel => {
+    const countryName = travel?.country?.name?.toLowerCase() || '';
+    const dateInit = travel?.date_init ? new Date(travel.date_init).toLocaleDateString('es-ES') : '';
+    const dateEnd = travel?.date_end ? new Date(travel.date_end).toLocaleDateString('es-ES') : '';
+    const minBudget = travel?.budget.min_budget?.toString() + '€' || '';
+    const maxBudget = travel?.budget.max_budget?.toString() + '€' || '';
+    const movility = travel?.movility?.type || '';
+    const quantDate = travel?.qunt_date?.toString() + ' dies' || '';
+    console.log(countryName, dateInit, dateEnd, minBudget);
+
+    return (
+      countryName.includes(query) ||
+      dateInit.includes(query) ||
+      dateEnd.includes(query) ||
+      minBudget.includes(query)||
+      maxBudget.includes(query) ||
+      movility.includes(query) ||
+      quantDate.includes(query)
+    );
+  });
+});
 </script>
 
 
