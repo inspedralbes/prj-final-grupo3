@@ -322,14 +322,21 @@ const handleSubmit = async () => {
       throw new Error("Error al guardar el viatge en la base de dades");
     };
 
+    const vehicleTypes = {
+  1: "Bici",
+  2: "Moto",
+  3: "Coche",
+  4: "No vehicle"
+};
+
     const requestText = `
       Planifica un viatge per a ${formData.value.travelers} persones ${formData.value.type === "alone" ? "sol" : `amb ${formData.value.type}`}.
       Destí: ${formData.value.country}.
       Dates: del ${formData.value.datesinit} al ${formData.value.datesfinal}.
       Pressupost: entre ${formData.value.budgetmin}€ i ${formData.value.budgetmax}€.
       Interessos: ${formData.value.interests}.
-      Vehicle: ${formData.value.vehicle}.
-      Tipus de vehicle: ${formData.value.vehicletype}.
+      Vehicle: ${formData.value.vehicletype}.
+      Tipus de vehicle: ${vehicleTypes[formData.value.vehicletype] || "No especificat"}.
     `;
 
     router.push({ name: "loading" });
