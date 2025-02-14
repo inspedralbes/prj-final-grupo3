@@ -147,7 +147,7 @@ import "@vuepic/vue-datepicker/dist/main.css";
 import { getCountries, getTypes, getMovilities } from "@/services/communicationManager";
 import { useAuthStore } from "~/store/authUser";
 
-
+const config = useRuntimeConfig();
 const router = useRouter();
 
 const formData = ref({
@@ -320,7 +320,9 @@ const handleSubmit = async () => {
     };
     console.log('Viatge que s\'envia:', travelData);
 
-    const dbResponse = await fetch("http://localhost:8000/api/travels", {
+    const HOST = config.public.apiUrl;
+
+    const dbResponse = await fetch(`${HOST}/travels`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -352,7 +354,6 @@ const handleSubmit = async () => {
 
     router.push({ name: "loading" });
 
-    const config = useRuntimeConfig();
     const key = config.public.apiKey
 
     const text = JSON.stringify(requestText)
