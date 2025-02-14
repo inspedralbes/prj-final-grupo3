@@ -1,3 +1,4 @@
+import { split } from 'postcss/lib/list';
 import * as com from '../services/communicationManager';
 import { useAuthStore } from '../store/authUser';
 import { useAlert } from './useAlert';
@@ -39,14 +40,14 @@ export function useSettings() {
 
         // console.log(newDataUser.birth_date);
         const formatData = (data) => {
-            console.log("pre form data",data);
+            console.log("pre form data", data);
             const birth = data.split(' ');  // Asumiendo formato DD/MM/YYYY
             console.log(birth[0] + ' 00:00:00');
-            
+
             return birth[0];
         }
-        
-        console.log("new Data User =>",newDataUser.birth_date);
+
+        console.log("new Data User =>", newDataUser.birth_date);
         // newDataUser.birth_date = formatData(newDataUser.birth_date)
 
         // Logic to confirm changes
@@ -55,7 +56,7 @@ export function useSettings() {
 
         const data = await com.getCurrentUser(authStore.token);
         console.log(data);
-        
+
         const birth = data.birth_date.split(' ');
         console.log(birth[0]);
         data.birth_date = birth[0];
@@ -76,7 +77,12 @@ export function useSettings() {
 
     onMounted(async () => {
         getCurrentUser();
-        avatar.value = config.public.appName + authStore.user.avatar
+        const baseURL = config.public.appName
+        const avatarParts = authStore.user.avatar
+            .split("/")
+            .filter((_, index) => index !== 2)
+        const avatarUrl = `${baseURL}/${avatarParts[3]}`;
+        avatar.value = avatarUrl;
     })
 
     return {

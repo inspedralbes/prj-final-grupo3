@@ -41,7 +41,12 @@ export function useNavBar() {
             const response = await com.getCurrentUser(authStore.token);
 
             if (authStore.user && authStore.user.avatar) {
-                avatar.value = `${config.public.appName}${authStore.user.avatar}`;
+                const baseURL = config.public.appName
+                const avatarParts = authStore.user.avatar
+                    .split("/")
+                    .filter((_, index) => index !== 2)  // Elimina la tercera posición
+                const avatarUrl = `${baseURL}/${avatarParts[3]}`;
+                avatar.value = avatarUrl;
             } else {
                 avatar.value = '/default-avatar.png'; // Imagen por defecto si no hay avatar
             }
