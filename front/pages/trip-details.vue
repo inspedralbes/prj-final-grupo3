@@ -5,7 +5,8 @@
       <div class="flex flex-col gap-4">
         <p class="text-2xl font-bold">Historial de viatges</p>
         <div class="flex gap-2">
-          <input v-model="searchQuery" type="search" placeholder="Buscar viatge (quantitat de dies, pres. min, pres. max, destí, data, movilitat ...)"
+          <input v-model="searchQuery" type="search"
+            placeholder="Buscar viatge (quantitat de dies, pres. min, pres. max, destí, data, movilitat ...)"
             class="p-3 border border-gray-300 rounded-lg flex-grow" />
           <!-- <button @click="searchTrips" type="submit"
             class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
@@ -117,7 +118,6 @@
 import { ref, computed, onMounted } from 'vue';
 import { useAuthStore } from '~/store/authUser';
 import { getUserTravelHistory } from '@/services/communicationManager';
-// import { data } from 'autoprefixer';
 
 const authStore = useAuthStore();
 const travelData = ref([]);
@@ -149,7 +149,7 @@ const filteredTrips = computed(() => {
       countryName.includes(query) ||
       dateInit.includes(query) ||
       dateEnd.includes(query) ||
-      minBudget.includes(query)||
+      minBudget.includes(query) ||
       maxBudget.includes(query) ||
       movility.includes(query) ||
       quantDate.includes(query)
