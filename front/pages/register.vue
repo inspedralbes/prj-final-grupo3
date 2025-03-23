@@ -71,13 +71,13 @@
           <div class="flex-1">
             <label class="block text-sm font-medium text-gray-700 mb-2">Contrasenya*</label>
             <div class="relative">
-              <input :type="isPasswordVisible ? 'text' : 'password'" v-model="registerAuth.registerData.password"
-                required minlength="8"
+              <input :type="registerAuth.isPasswordVisible.value ? 'text' : 'password'"
+                v-model="registerAuth.registerData.password" required minlength="8"
                 class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="••••••••">
-              <button type="button" @click="togglePasswordVisibility('password')"
+              <button type="button" @click="registerAuth.togglePasswordVisibility('password')"
                 class="absolute right-2 top-1/2 transform -translate-y-1/2">
-                <span v-if="isPasswordVisible">👁️</span>
+                <span v-if="registerAuth.isPasswordVisible.value">👁️</span>
                 <span v-else>👁️‍🗨️</span>
               </button>
             </div>
@@ -87,13 +87,13 @@
           <div class="flex-1">
             <label class="block text-sm font-medium text-gray-700 mb-2">Confirmar contrasenya*</label>
             <div class="relative">
-              <input :type="isConfirmPasswordVisible ? 'text' : 'password'"
+              <input :type="registerAuth.isConfirmPasswordVisible.value ? 'text' : 'password'"
                 v-model="registerAuth.registerData.password_confirmation" required minlength="8"
                 class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="••••••••">
-              <button type="button" @click="togglePasswordVisibility('confirmpassword')"
+              <button type="button" @click="registerAuth.togglePasswordVisibility('confirmpassword')"
                 class="absolute right-2 top-1/2 transform -translate-y-1/2">
-                <span v-if="isConfirmPasswordVisible">👁️</span>
+                <span v-if="registerAuth.isConfirmPasswordVisible.value">👁️</span>
                 <span v-else>👁️‍🗨️</span>
               </button>
             </div>
@@ -121,26 +121,7 @@
 </template>
 
 <script setup>
-
-import { ssrInterpolate } from 'vue/server-renderer';
 import { useRegisterAuth } from '~/composable/useRegisterAuth';
 
 const registerAuth = useRegisterAuth();
-
-const isPasswordVisible = ref(false);
-const isConfirmPasswordVisible = ref(false);
-
-
-const togglePasswordVisibility = (field) => {
-  if (field === 'password') {
-    isPasswordVisible.value = !isPasswordVisible.value;
-  } else if (field === 'confirmpassword') {
-    isConfirmPasswordVisible.value = !isConfirmPasswordVisible.value;
-  }
-};
-
-function handleRegister() {
-  user.value = { name: name.value, email: email.value };
-  navigateTo('/app');
-}
 </script>
