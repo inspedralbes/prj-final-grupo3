@@ -14,9 +14,9 @@
         <!--download pdf-->
         <div v-if="responseText" class="flex justify-center mt-6">
           <button @click="downloadPDF"
-          class="bg-green-600 text-white py-4 px-5 rounded-lg hover:bg-green-700 transition duration-200 text-lg font-semibold">
-          📄 Descarregar PDF
-        </button>
+            class="bg-green-600 text-white py-4 px-5 rounded-lg hover:bg-green-700 transition duration-200 text-lg font-semibold">
+            📄 Descarregar PDF
+          </button>
         </div>
         <!--buttons accept or decline-->
         <div v-if="!result.showConfirmation.value" class="flex justify-center gap-x-6 mt-8">
@@ -53,7 +53,7 @@
 <script setup>
 import { useResult } from '~/composable/useResult';
 import { useRoute, useRouter } from 'vue-router';
-import { computed, ref, watch } from 'vue'; 
+import { computed, ref, watch } from 'vue';
 import { marked } from 'marked';
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
@@ -112,17 +112,17 @@ const downloadPDF = () => {
   doc.setFontSize(10);
 
   // Extraer el texto del elemento (sin etiquetas HTML)
-  const text = element.innerText; 
+  const text = element.innerText;
   // Calcular el ancho disponible (respectando los márgenes)
   const availableWidth = pageWidth - leftMargin - rightMargin;
   // Dividir el texto en líneas que se ajusten al ancho disponible
   const lines = doc.splitTextToSize(text, availableWidth);
 
   // Calcular la altura de línea (ajusta este valor si es necesario)
-  const lineHeight = 7; 
+  const lineHeight = 7;
 
   // La posición inicial en Y se sitúa debajo del título (se estima unos 20 mm para el título)
-  let y = topMargin + 20 + titleGap; 
+  let y = topMargin + 20 + titleGap;
 
   // Iterar las líneas y agregarlas al PDF, añadiendo páginas cuando sea necesario
   lines.forEach(line => {
@@ -136,8 +136,6 @@ const downloadPDF = () => {
 
   doc.save("planificacio_viatge.pdf");
 };
-
-
 
 </script>
 

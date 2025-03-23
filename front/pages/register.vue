@@ -15,7 +15,7 @@
               class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="Carles">
           </div>
-          
+
           <div class="flex-1">
             <label class="block text-sm font-medium text-gray-700 mb-2">Cognoms*</label>
             <input type="text" v-model="registerAuth.registerData.surname" required
@@ -45,7 +45,8 @@
         <!--phone -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">Número de telèfon*</label>
-          <input type="text" v-model="registerAuth.registerData.phone_number" minlength="8" placeholder="+34 655 767 876"
+          <input type="text" v-model="registerAuth.registerData.phone_number" minlength="8"
+            placeholder="+34 655 767 876"
             class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
         </div>
 
@@ -70,7 +71,8 @@
           <div class="flex-1">
             <label class="block text-sm font-medium text-gray-700 mb-2">Contrasenya*</label>
             <div class="relative">
-              <input :type="isPasswordVisible ? 'text' : 'password'" v-model="registerAuth.registerData.password" required minlength="8"
+              <input :type="isPasswordVisible ? 'text' : 'password'" v-model="registerAuth.registerData.password"
+                required minlength="8"
                 class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="••••••••">
               <button type="button" @click="togglePasswordVisibility('password')"
@@ -85,8 +87,8 @@
           <div class="flex-1">
             <label class="block text-sm font-medium text-gray-700 mb-2">Confirmar contrasenya*</label>
             <div class="relative">
-              <input :type="isConfirmPasswordVisible ? 'text' : 'password'" v-model="registerAuth.registerData.password_confirmation" required
-                minlength="8"
+              <input :type="isConfirmPasswordVisible ? 'text' : 'password'"
+                v-model="registerAuth.registerData.password_confirmation" required minlength="8"
                 class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="••••••••">
               <button type="button" @click="togglePasswordVisibility('confirmpassword')"
@@ -128,6 +130,7 @@ const registerAuth = useRegisterAuth();
 const isPasswordVisible = ref(false);
 const isConfirmPasswordVisible = ref(false);
 
+
 const togglePasswordVisibility = (field) => {
   if (field === 'password') {
     isPasswordVisible.value = !isPasswordVisible.value;
@@ -135,8 +138,6 @@ const togglePasswordVisibility = (field) => {
     isConfirmPasswordVisible.value = !isConfirmPasswordVisible.value;
   }
 };
-
-
 
 function handleRegister() {
   user.value = { name: name.value, email: email.value };

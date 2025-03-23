@@ -18,13 +18,13 @@
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">Contrasenya</label>
           <div class="relative">
-            <input :type="loginAuth.isPasswordVisible ? 'text' : 'password'" v-model="loginAuth.loginData.password"
-              required minlength="8"
+            <input :type="loginAuth.isPasswordVisible.value ? 'text' : 'password'"
+              v-model="loginAuth.loginData.password" required minlength="8"
               class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="••••••••" />
             <button type="button" @click="loginAuth.togglePasswordVisibility('password')"
               class="absolute right-2 top-1/2 transform -translate-y-1/2">
-              <span v-if="loginAuth.isPasswordVisible">👁️</span>
+              <span v-if="loginAuth.isPasswordVisible.value">👁️</span>
               <span v-else>👁️‍🗨️</span>
             </button>
           </div>
@@ -54,6 +54,4 @@
 import { useLoginAuth } from '~/composable/useLoginAuth';
 
 const loginAuth = useLoginAuth();
-
-
 </script>
