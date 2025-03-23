@@ -1,7 +1,8 @@
 services:
   # DATABASE
   db:
-    image: mysql:8.2.0
+    image: mysql:8.2
+    container_name: mysqlDB
     restart: always
     environment:
       MYSQL_DATABASE: triplan
@@ -12,20 +13,20 @@ services:
       - 3306:3306
     volumes:
       - ./back/mysql_data:/var/lib/mysql
-      # - ./back/triplan.sql:/docker-entrypoint-initdb.d/dades.sql
 
   # ADMINER
   adminer:
     image: adminer
     restart: always
     depends_on:
-    - db
+      - db
     ports:
-    - "8080:8080"
+      - "8080:8080"
 
   # LARAVEL
   laravel:
     build: ./back/APIlaravel
+    restart: always
     ports:
       - 8000:8000
     volumes:
@@ -33,14 +34,15 @@ services:
     working_dir: /var/www/
     depends_on:
       - db
-    command: bash -c 'composer update && php artisan serve --host=0.0.0.0'   
+    command: bash -c 'composer update && php artisan serve --host=0.0.0.0'
 
   # NUXT
   nuxt:
-    build: 
+    build:
       context: ./front
+    restart: always
     ports:
-      - 3010:3000
+      - 3000:3000
     volumes:
       - ./front:/app
     depends_on:
@@ -49,3 +51,7 @@ services:
       NUXT_APP_API_URL: http://laravel:8000
       CHOKIDAR_USEPOLLING: true
     command: bash -c "npm install && npm run dev"
+
+# Add this at the bottom of your docker-compose.yml
+volumes:
+  mysql_data:
