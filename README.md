@@ -4,7 +4,7 @@
 - Andrew Turner
 - Aivan Antonio
 - Brian Jaén
-- Eduard Villaseca
+- Eduard Vilaseca Vilà
 
 ## Descripció
 - TriPlan és una eina integral per planificar i gaudir del teu viatge de manera personalitzada. Els usuaris poden registrar-se i adaptar completament la seva experiència seleccionant la destinació, la durada, el tipus de viatge (familiar, en parella, amb amics o en solitari) i el pressupost, oferint plans optimitzats segons les seves necessitats i preferències.
