@@ -167,27 +167,32 @@ export async function getCurrentUser(currentUserToken) {
 }
 
 export async function changeInfoUser(currentUserToken, userData) {
+
   const URL = `${HOST}/changeInfoProfile`
 
   try {
     const response = await fetch(URL, {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${currentUserToken}`,
       },
       body: JSON.stringify({ ...userData }),
     });
+
     if (!response.ok) {
       throw new Error(`Error en la solicitud: ${response.statusText}`);
     }
 
     const json = await response.json();
     console.log("Respuesta del servidor:", json);
-    return json.user;
+    return json;
   } catch (error) {
     console.error("Error al cambiar la información del usuario:", error);
-    throw error;
+    return {
+      status: "error",
+      message: "Error al cambiar la información del usuario.",
+    };
   }
 }
 

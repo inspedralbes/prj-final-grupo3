@@ -8,8 +8,12 @@ export default defineNuxtConfig({
   ],
   css: [
     '~/assets/css/tailwind.css',
+    'element-plus/dist/index.css'
   ],
-  ssr: false, 
+  build: {
+    transpile: ['element-plus/es'],
+  },
+  ssr: false,
   runtimeConfig: {
     // Public vars
     public: {

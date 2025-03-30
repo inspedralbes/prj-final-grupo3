@@ -18,10 +18,10 @@ export function useSettings() {
     const response = await com.getCurrentUser(authStore.token);
     // console.log(response);
     if (response.status === 'error') {
-      customAlert(response.message, 'negative', 'error', 'top', 5000);
+      customAlert(response.message, 'negative', 'error', 'top', 1500);
       authStore.logout();
     } else {
-      customAlert('Informació carregada', 'success', 'success', 'top', 5000);
+      customAlert('Informació carregada', 'success', 'success', 'top', 1500);
       const birth = response.birth_date.split(' ');
       response.birth_date = birth[0];
       currentUser.value = response
@@ -37,34 +37,17 @@ export function useSettings() {
       ...currentUser.value
     })
 
-    // console.log(newDataUser.birth_date);
-    const formatData = (data) => {
-      console.log("pre form data", data);
-      const birth = data.split(' ');  // Asumiendo formato DD/MM/YYYY
-      console.log(birth[0] + ' 00:00:00');
-
-      return birth[0];
-    }
-
-    console.log("new Data User =>", newDataUser.birth_date);
-    // newDataUser.birth_date = formatData(newDataUser.birth_date)
-
     // Logic to confirm changes
     const response = await com.changeInfoUser(authStore.token, newDataUser);
-    // console.log(response);
+    const dataUser = await com.getCurrentUser(authStore.token);
 
-    const data = await com.getCurrentUser(authStore.token);
-    console.log(data);
-
-    const birth = data.birth_date.split(' ');
-    console.log(birth[0]);
-    data.birth_date = birth[0];
-    currentUser.value = data
-    console.log(currentUser.value);
-
-    currentUser.value = data;
-
-    // Poner alerta para notificar al usuario de que ha realizado los cambios de manera crorrecta
+    if (response.status === 'error') {
+      customAlert(response.message, 'negative', 'error', 'top', 2000);
+      return;
+    } else {
+      currentUser.value = dataUser;
+      customAlert(response.message, 'success', 'success', 'top', 2000);
+    }
 
     toggleEdit();
   };
@@ -77,9 +60,6 @@ export function useSettings() {
   onMounted(async () => {
     getCurrentUser();
     const baseURL = config.public.appName
-    // const avatarParts = authStore.user.avatar
-    //     .split("/")
-    //     .filter((_, index) => index !== 2)
     const avatarUrl = `${baseURL}/${authStore.user.avatar}`;
     avatar.value = avatarUrl;
   })
@@ -88,7 +68,6 @@ export function useSettings() {
     currentUser,
     avatar,
     isEditing,
-    // newDataUser,
     toggleEdit,
     confirmEdit,
     cancelEdit
