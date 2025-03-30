@@ -12,9 +12,19 @@ export function useNavBar() {
   const isOpen = ref(false);
   const avatar = ref('');
 
+  // Add a watch on authStore.user
+  watch(() => authStore.user, async (newUser) => {
+    if (newUser && newUser.avatar) {
+      const baseURL = config.public.appName;
+      const avatarUrl = `${baseURL}/${newUser.avatar}`;
+      avatar.value = avatarUrl;
+    }
+  }, { immediate: true });
+
+
   const handleLogout = async () => {
     authStore.logout();
-    await navigateTo('/login'); // Esperar la navegación
+    await navigateTo('/login'); // wait for the navigation is completed
   };
 
   const toggleDropdown = (event) => {
@@ -27,7 +37,7 @@ export function useNavBar() {
     }
   };
 
-  // Cerrar el dropdown al cambiar de ruta
+  // Close the dropdown when the route changes
   watch(route, () => {
     isOpen.value = false;
   });
@@ -37,20 +47,8 @@ export function useNavBar() {
     document.addEventListener('click', handleClickOutside);
 
     if (process.client) {
-      await authStore.initialize(); // Asegúrate de inicializar el authStore
+      await authStore.initialize();
       const response = await com.getCurrentUser(authStore.token);
-
-      if (authStore.user && authStore.user.avatar) {
-        const baseURL = config.public.appName
-        console.log(authStore.user.avatar);
-        // const avatarParts = authStore.user.avatar
-        //   .split("/")
-        //   .filter((_, index) => index !== 2)  // Elimina la tercera posición
-        const avatarUrl = `${baseURL}/${authStore.user.avatar}`;
-        avatar.value = avatarUrl;
-      } else {
-        avatar.value = authStore.user.avatar; // Imagen por defecto si no hay avatar
-      }
 
       if (!authStore.token && response.status === 'error') {
         authStore.logout();
