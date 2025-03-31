@@ -1,130 +1,109 @@
 <template>
-  <header>
-    <title>Triplan</title>
-  </header>
-  <div class="min-h-screen bg-gray-50 flex items-center justify-center">
-    <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
-      <h2 class="text-3xl font-bold text-center mb-8">Crear un compte</h2>
+  <div class="min-h-screen bg-gray-50 pt-2 flex items-center justify-center">
+    <el-card class="w-[500px]">
+      <template #header>
+        <h2 class="text-2xl font-semibold text-center">Crear un compte</h2>
+      </template>
 
-      <!--name and surname-->
-      <form @submit.prevent="registerAuth.registerUser" class="space-y-6">
-        <div class="flex space-x-4">
-          <div class="flex-1">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Nom*</label>
-            <input type="text" v-model="registerAuth.registerData.name" required
-              class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Carles">
-          </div>
+      <el-form @submit.prevent="registerAuth.registerUser" :model="registerAuth.registerData" label-position="top">
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="Nom*">
+              <el-input v-model="registerAuth.registerData.name" placeholder="Carles" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="Cognoms*">
+              <el-input v-model="registerAuth.registerData.surname" placeholder="Fernández Marín" />
+            </el-form-item>
+          </el-col>
+        </el-row>
 
-          <div class="flex-1">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Cognoms*</label>
-            <input type="text" v-model="registerAuth.registerData.surname" required
-              class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Fernández Marín">
-          </div>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="Gènere*">
+              <el-select v-model="registerAuth.registerData.gender" placeholder="Selecciona" class="w-full">
+                <el-option label="Masculí" value="male" />
+                <el-option label="Femení" value="female" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="Data de naixement*">
+              <el-date-picker v-model="registerAuth.registerData.birth_date" type="date" format="YYYY-MM-DD"
+                value-format="YYYY-MM-DD" class="w-full" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-form-item label="Número de telèfon*">
+          <el-input v-model="registerAuth.registerData.phone_number" placeholder="+34 655 767 876" />
+        </el-form-item>
+
+        <el-form-item label="Correu*">
+          <el-input v-model="registerAuth.registerData.email" type="email" placeholder="elteucorreu@gmail.com" />
+        </el-form-item>
+
+        <el-form-item label="Correu alternatiu*">
+          <el-input v-model="registerAuth.registerData.email_alternative" type="email"
+            placeholder="elteucorreualternatiu@gmail.com" />
+        </el-form-item>
+
+        <div class="space-y-6">
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form label="Contrasenya*">
+                <div class="relative group">
+                  <el-input v-model="registerAuth.registerData.password"
+                    :type="registerAuth.isPasswordVisible.value ? 'text' : 'password'" placeholder="••••••••"
+                    class="hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition-all duration-200" />
+                  <button type="button" @click="registerAuth.togglePasswordVisibility('password')"
+                    class="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 rounded-full hover:bg-gray-100 transition-colors duration-200">
+                    <span v-if="registerAuth.isPasswordVisible.value">
+                      <EyeSlashIcon class="h-5 w-5 text-gray-600 hover:text-blue-600" />
+                    </span>
+                    <span v-else>
+                      <EyeIcon class="h-5 w-5 text-gray-600 hover:text-blue-600" />
+                    </span>
+                  </button>
+                </div>
+                <span class="text-xs text-gray-500 mt-1 block">Mínim 8 caràcters</span>
+              </el-form>
+            </el-col>
+            <el-col :span="12">
+              <el-form label="Confirmar contrasenya*">
+                <div class="relative group">
+                  <el-input v-model="registerAuth.registerData.password_confirmation"
+                    :type="registerAuth.isConfirmPasswordVisible.value ? 'text' : 'password'" placeholder="••••••••"
+                    class="hover:border-blue-400 focus:ring-2 focus:ring-blue-500 transition-all duration-200" />
+                  <button type="button" @click="registerAuth.togglePasswordVisibility('confirmpassword')"
+                    class="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 rounded-full hover:bg-gray-100 transition-colors duration-200">
+                    <span v-if="registerAuth.isConfirmPasswordVisible.value">
+                      <EyeSlashIcon class="h-5 w-5 text-gray-600 hover:text-blue-600" />
+                    </span>
+                    <span v-else>
+                      <EyeIcon class="h-5 w-5 text-gray-600 hover:text-blue-600" />
+                    </span>
+                  </button>
+                </div>
+              </el-form>
+            </el-col>
+          </el-row>
         </div>
 
-        <!--gender and birthdate-->
-        <div class="flex space-x-4">
-          <div class="flex-1">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Gènere*</label>
-            <select name="gender" v-model="registerAuth.registerData.gender" id="" class="border p-2 rounded ">
-              <option selected disabled value="">Selecciona</option>
-              <option value="male">Masculí</option>
-              <option value="female">Femení</option>
-            </select>
-          </div>
-
-          <div class="flex-1">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Data de naixement*</label>
-            <input type="date" v-model="registerAuth.registerData.birth_date"
-              class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-          </div>
-        </div>
-
-        <!--phone -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Número de telèfon*</label>
-          <input type="text" v-model="registerAuth.registerData.phone_number" minlength="8"
-            placeholder="+34 655 767 876"
-            class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-        </div>
-
-        <!--mail-->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Correu*</label>
-          <input type="email" v-model="registerAuth.registerData.email" required
-            class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-            placeholder="elteucorreu@gmail.com">
-        </div>
-
-        <!--mailalternative-->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Correu alternatiu*</label>
-          <input type="email" v-model="registerAuth.registerData.email_alternative" required
-            class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-            placeholder="elteucorreualternatiu@gmail.com">
-        </div>
-
-        <!--password and password confirmation-->
-        <div class="flex space-x-4">
-          <div class="flex-1">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Contrasenya*</label>
-            <div class="relative">
-              <input :type="registerAuth.isPasswordVisible.value ? 'text' : 'password'"
-                v-model="registerAuth.registerData.password" required minlength="8"
-                class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                placeholder="••••••••">
-              <button type="button" @click="registerAuth.togglePasswordVisibility('password')"
-                class="absolute right-2 top-1/2 transform -translate-y-1/2">
-                <span v-if="registerAuth.isPasswordVisible.value">
-                  <EyeSlashIcon class="h-4 w-4 text-blue-700" />
-                </span>
-                <span v-else>
-                  <EyeIcon class="h-4 w-4 text-blue-700" />
-                </span>
-              </button>
-            </div>
-            <p class="mt-1 text-sm text-gray-500">Mínim 8 caràcters</p>
-          </div>
-
-          <div class="flex-1">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Confirmar contrasenya*</label>
-            <div class="relative">
-              <input :type="registerAuth.isConfirmPasswordVisible.value ? 'text' : 'password'"
-                v-model="registerAuth.registerData.password_confirmation" required minlength="8"
-                class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                placeholder="••••••••">
-              <button type="button" @click="registerAuth.togglePasswordVisibility('confirmpassword')"
-                class="absolute right-2 top-1/2 transform -translate-y-1/2">
-                <span v-if="registerAuth.isConfirmPasswordVisible.value">
-                  <EyeSlashIcon class="h-4 w-4 text-blue-700" />
-                </span>
-                <span v-else>
-                  <EyeIcon class="h-4 w-4 text-blue-700" />
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <button type="submit"
-          class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition duration-200">
+        <el-button type="primary" native-type="submit" class="w-full mt-4">
           Crear un compte
-        </button>
-      </form>
+        </el-button>
 
-      <p class="mt-6 text-center text-gray-600">
-        Ja tens un compte?
-        <NuxtLink to="/login" class="text-blue-600 hover:text-blue-800 font-medium">
-          Inicia sessió aquí
-        </NuxtLink>
-      </p>
-
-      <NuxtLink to="/" class="block mt-4 text-center text-gray-500 hover:text-gray-700">
-        Tornar a inici
-      </NuxtLink>
-    </div>
+        <div class="text-center mt-6">
+          <p class="text-gray-600">
+            Ja tens un compte?
+            <el-link type="primary" href="/login">Inicia sessió aquí</el-link>
+          </p>
+          <el-link type="info" href="/" class="mt-2">Tornar a inici</el-link>
+        </div>
+      </el-form>
+    </el-card>
   </div>
 </template>
 

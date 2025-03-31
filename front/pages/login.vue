@@ -23,12 +23,12 @@
               class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
               placeholder="••••••••" />
             <button type="button" @click="loginAuth.togglePasswordVisibility('password')"
-              class="absolute right-2 top-1/2 transform -translate-y-1/2">
+              class="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 rounded-full hover:bg-gray-100 transition-colors duration-200">
               <span v-if="loginAuth.isPasswordVisible.value">
-                <EyeSlashIcon class="h-4 w-4 text-blue-700" />
+                <EyeSlashIcon class="h-4 w-4 text-gray-600 hover:text-blue-600" />
               </span>
               <span v-else>
-                <EyeIcon class="h-4 w-4 text-blue-700" />
+                <EyeIcon class="h-4 w-4 text-gray-600 hover:text-blue-600" />
               </span>
             </button>
           </div>

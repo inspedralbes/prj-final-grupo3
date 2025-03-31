@@ -21,7 +21,3 @@
     </div>
   </footer>
 </template>
-
-<script setup>
-// No additional setup needed for now
-</script>
