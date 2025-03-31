@@ -24,8 +24,12 @@
               placeholder="••••••••" />
             <button type="button" @click="loginAuth.togglePasswordVisibility('password')"
               class="absolute right-2 top-1/2 transform -translate-y-1/2">
-              <span v-if="loginAuth.isPasswordVisible.value">👁️</span>
-              <span v-else>👁️‍🗨️</span>
+              <span v-if="loginAuth.isPasswordVisible.value">
+                <EyeSlashIcon class="h-4 w-4 text-blue-700" />
+              </span>
+              <span v-else>
+                <EyeIcon class="h-4 w-4 text-blue-700" />
+              </span>
             </button>
           </div>
         </div>
@@ -52,6 +56,7 @@
 
 <script setup>
 import { useLoginAuth } from '~/composable/useLoginAuth';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/solid';
 
 const loginAuth = useLoginAuth();
 </script>

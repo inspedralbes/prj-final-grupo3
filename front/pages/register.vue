@@ -77,8 +77,12 @@
                 placeholder="••••••••">
               <button type="button" @click="registerAuth.togglePasswordVisibility('password')"
                 class="absolute right-2 top-1/2 transform -translate-y-1/2">
-                <span v-if="registerAuth.isPasswordVisible.value">👁️</span>
-                <span v-else>👁️‍🗨️</span>
+                <span v-if="registerAuth.isPasswordVisible.value">
+                  <EyeSlashIcon class="h-4 w-4 text-blue-700" />
+                </span>
+                <span v-else>
+                  <EyeIcon class="h-4 w-4 text-blue-700" />
+                </span>
               </button>
             </div>
             <p class="mt-1 text-sm text-gray-500">Mínim 8 caràcters</p>
@@ -93,8 +97,12 @@
                 placeholder="••••••••">
               <button type="button" @click="registerAuth.togglePasswordVisibility('confirmpassword')"
                 class="absolute right-2 top-1/2 transform -translate-y-1/2">
-                <span v-if="registerAuth.isConfirmPasswordVisible.value">👁️</span>
-                <span v-else>👁️‍🗨️</span>
+                <span v-if="registerAuth.isConfirmPasswordVisible.value">
+                  <EyeSlashIcon class="h-4 w-4 text-blue-700" />
+                </span>
+                <span v-else>
+                  <EyeIcon class="h-4 w-4 text-blue-700" />
+                </span>
               </button>
             </div>
           </div>
@@ -122,6 +130,7 @@
 
 <script setup>
 import { useRegisterAuth } from '~/composable/useRegisterAuth';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/solid';
 
 const registerAuth = useRegisterAuth();
 </script>
