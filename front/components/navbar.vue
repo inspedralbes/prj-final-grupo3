@@ -1,5 +1,5 @@
 <template>
-  <nav class="bg-white shadow-md p-4">
+  <nav class="bg-white shadow-md px-4 py-2">
     <div v-if="!authStore.token">
       <div class="container mx-auto flex justify-between items-center">
         <h1 class="text-2xl font-bold text-blue-600">
@@ -24,8 +24,8 @@
 
           <div class="relative inline-block text-left dropdown-container">
             <!-- Avatar open/close menu -->
-            <img @click="navBar.toggleDropdown" :src="navBar.avatar.value" :alt="authStore.user.name"
-              class="w-8 h-8 rounded-full cursor-pointer" />
+            <img @click="navBar.toggleDropdown" :src="navBar.avatar.value" :alt="authStore.user?.name"
+              class="w-10 h-10 rounded-full border b-grey cursor-pointer" />
 
             <!-- Dropdown Menu -->
             <div v-if="navBar.isOpen.value"
