@@ -2,8 +2,8 @@
   <header>
     <title>Triplan</title>
   </header>
-  <div class="min-h-screen bg-gray-50">
-    <main class="container mx-auto mt-10 p-4">
+  <div class="h-screen bg-gray-50">
+    <main class="container mx-auto p-4">
       <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6">
         <h2 class="text-3xl font-bold text-center mb-8">
           Planifica el viatge dels teus somnis
