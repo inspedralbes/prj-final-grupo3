@@ -15,7 +15,7 @@ export function usePlanner() {
     country: "",
     datesinit: "",
     datesfinal: "",
-    travelers: "",
+    travelers: 1,
     interests: "",
     type: "",
     budgetmin: "",

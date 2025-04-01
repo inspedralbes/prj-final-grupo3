@@ -25,19 +25,21 @@
 
             <!-- Tipus de viatge -->
             <el-col :span="12">
-              <el-form-item label="Amb qui viatges?*">
-                <el-select v-model="planner.formData.value.type" placeholder="Selecciona" class="w-full">
-                  <el-option v-for="type in planner.types.value" :key="type.id"
-                    :label="type.id === 1 ? 'Sol/a' : type.id === 2 ? 'Família' : type.id === 3 ? 'Amics' : 'Parella'"
-                    :value="type.id" />
-                </el-select>
-              </el-form-item>
+              <div class="flex flex-col sm:flex-row gap-4">
+                <el-form-item label="Amb qui viatges?*">
+                  <el-select v-model="planner.formData.value.type" placeholder="Selecciona" class="flex-1">
+                    <el-option v-for="type in planner.types.value" :key="type.id"
+                      :label="type.id === 1 ? 'Sol/a' : type.id === 2 ? 'Família' : type.id === 3 ? 'Amics' : 'Parella'"
+                      :value="type.id" />
+                  </el-select>
+                </el-form-item>
 
-              <el-form-item v-if="planner.formData.value.type === 2 || planner.formData.value.type === 3"
-                label="Quant. de persones*">
-                <el-input-number v-model="planner.formData.value.travelers" :min="1" controls-position="right"
-                  class="w-full" />
-              </el-form-item>
+                <el-form-item v-if="planner.formData.value.type === 2 || planner.formData.value.type === 3"
+                  label="Quant. de persones*">
+                  <el-input-number v-model="planner.formData.value.travelers" :min="1" :max="20"
+                    controls-position="right" class="flex-1" />
+                </el-form-item>
+              </div>
             </el-col>
           </el-row>
 
