@@ -221,3 +221,22 @@ export async function getUserTravelHistory(userId, currentUserToken) {
     throw error;
   }
 }
+
+export async function postTravel(travelData, currentUserToken) {
+
+  console.log(travelData);
+
+  const response = await fetch(`${HOST}/travels`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${currentUserToken}`
+    },
+    body: JSON.stringify(travelData),
+  });
+
+  const json = await response.json();
+  console.log("Respuesta desde el communication manager", json);
+
+  return json;
+}

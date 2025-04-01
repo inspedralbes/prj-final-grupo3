@@ -45,16 +45,9 @@
             <!-- Dates -->
             <el-col :span="12">
               <el-form-item label="Selecciona les dates*">
-                <el-date-picker 
-                  v-model="planner.dateRange.value" 
-                  type="daterange" 
-                  range-separator="a"
-                  start-placeholder="Data inici" 
-                  end-placeholder="Data fi" 
-                  :min-date="new Date()" 
-                  :disabled-date="(time) => time.getTime() < Date.now() - 8.64e7"
-                  class="w-full" 
-                />
+                <el-date-picker v-model="planner.dateRange.value" type="daterange" range-separator="a"
+                  start-placeholder="Data inici" end-placeholder="Data fi" :min-date="new Date()"
+                  :disabled-date="(time) => time.getTime() < Date.now() - 8.64e7" class="w-full" />
               </el-form-item>
             </el-col>
 
@@ -82,27 +75,26 @@
             <!-- Pressupost -->
             <el-col :span="12">
               <el-form-item label="Pressupost mínim (€)*">
-                <el-input-number v-model="planner.formData.value.budgetmin" :min="0"
-                  :max="planner.formData.value.budgetmax" controls-position="right" class="w-full"
-                  @change="planner.syncWithBudget" />
-                <el-slider v-model="planner.budgetMin.value" :min="0" :max="planner.budgetMax.value" :step="100"
-                  class="mt-2" @input="planner.syncWithBudget" />
+                <el-input-number v-model="planner.budgetMin.value" :min="0" :max="planner.budgetMax.value || 10000"
+                  controls-position="right" class="w-full" @change="planner.syncWithBudget" />
+                <el-slider v-model="planner.budgetMin.value" :min="0" :max="planner.budgetMax.value || 10000"
+                  :step="100" class="mt-2" @input="planner.syncWithBudget" />
               </el-form-item>
             </el-col>
 
             <el-col :span="12">
               <el-form-item label="Pressupost màxim (€)*">
-                <el-input-number v-model="planner.formData.value.budgetmax" :min="planner.formData.value.budgetmin"
-                  :max="10000" controls-position="right" class="w-full" @change="planner.syncWithBudget" />
-                <el-slider v-model="planner.budgetMax.value" :min="planner.budgetMin.value" :max="10000" :step="100"
-                  class="mt-2" @input="planner.syncWithBudget" />
+                <el-input-number v-model="planner.budgetMax.value" :min="planner.budgetMin.value || 0" :max="10000"
+                  controls-position="right" class="w-full" @change="planner.syncWithBudget" />
+                <el-slider v-model="planner.budgetMax.value" :min="planner.budgetMin.value || 0" :max="10000"
+                  :step="100" class="mt-2" @input="planner.syncWithBudget" />
               </el-form-item>
             </el-col>
           </el-row>
 
           <!-- Interessos -->
           <el-form-item label="Interessos*">
-            <el-input v-model="planner.formData.value.interests" type="textarea" rows="3"
+            <el-input v-model="planner.formData.value.interests" type="textarea" :rows="3"
               placeholder="Que t'interessa? (e.x., cultura, aventura, relax)" class="w-full" />
           </el-form-item>
 
@@ -117,7 +109,6 @@
 
 <script setup>
 import { onMounted } from 'vue';
-import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { usePlanner } from '~/composable/usePlanner';
 

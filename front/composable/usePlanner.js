@@ -1,12 +1,15 @@
 import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '~/store/authUser';
-import { getCountries, getTypes, getMovilities } from '@/services/communicationManager';
+import { useAlert } from './useAlert';
+import { getCountries, getTypes, getMovilities, postTravel } from '@/services/communicationManager';
+import { use } from 'marked';
 
 export function usePlanner() {
   const config = useRuntimeConfig();
   const router = useRouter();
   const authStore = useAuthStore();
+  const { customAlert } = useAlert(); // Importa el hook useAler
 
   const formData = ref({
     country: "",
@@ -38,7 +41,7 @@ export function usePlanner() {
       const [countryList, movilityList, typeList] = await Promise.all([
         getCountries(),
         getMovilities(),
-        getTypes()
+        getTypes(),
       ]);
 
 
@@ -47,7 +50,6 @@ export function usePlanner() {
       movilities.value = movilityList;
       filteredMovilities.value = movilityList;
       types.value = typeList;
-      console.log(types.value);
     } catch (error) {
       console.error("Error carregant dades:", error);
     }
@@ -109,12 +111,20 @@ export function usePlanner() {
 
   const validateForm = () => {
     if (budgetMin.value >= budgetMax.value) {
-      alert("El pressupost mínim ha de ser inferior al màxim.");
+      customAlert("El pressupost mínim ha de ser inferior al màxim.",
+        'negative',
+        'error',
+        'top',
+        3500);
       return false;
     }
 
     if (!dateRange.value || dateRange.value.length !== 2) {
-      alert("Selecciona una data inicial i final per al viatge.");
+      customAlert("Selecciona una data d'inici i una data final.",
+        'negative',
+        'error',
+        'top',
+        3500);
       return false;
     }
 
@@ -127,12 +137,20 @@ export function usePlanner() {
     endDate.setHours(0, 0, 0, 0);
 
     if (startDate < today) {
-      alert("La data d'inici no pot ser anterior a la data actual.");
+      customAlert("La data d'inici no pot ser anterior a la data actual.",
+        'negative',
+        'error',
+        'top',
+        3500);
       return false;
     }
 
     if (endDate <= startDate) {
-      alert("La data de tornada ha de ser posterior a la d'anada.");
+      customAlert("La data de tornada ha de ser posterior a la d'anada.",
+        'negative',
+        'error',
+        'top',
+        3500);
       return false;
     }
 
@@ -164,63 +182,59 @@ export function usePlanner() {
         description: formData.value.interests,
       };
 
-      const HOST = config.public.apiUrl;
-      const dbResponse = await fetch(`${HOST}/travels`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify(travelData),
-      });
+      const dbResponse = await postTravel(travelData, authStore.token);
 
-      if (!dbResponse.ok) {
-        throw new Error("Error al guardar el viatge en la base de dades");
+      if (dbResponse.code === 201) {
+        const vehicleTypes = {
+          1: "Bicicleta",
+          2: "Moto",
+          3: "Cotxe",
+          4: "No vehicle"
+        };
+
+        const requestText = `
+          Planifica un viatge per a ${formData.value.travelers} persones ${formData.value.type === "alone" ? "sol" : `amb ${formData.value.type}`}.
+          Destí: ${formData.value.country}.
+          Dates: del ${formData.value.datesinit} al ${formData.value.datesfinal}.
+          Pressupost: entre ${formData.value.budgetmin}€ i ${formData.value.budgetmax}€.
+          Interessos: ${formData.value.interests}.
+          Vehicle: ${formData.value.vehicletype}.
+          Tipus de vehicle: ${vehicleTypes[formData.value.vehicletype] || "No especificat"}.
+        `;
+
+        router.push({ name: "loading" });
+
+        const key = config.public.apiKey;
+        const text = JSON.stringify(requestText);
+
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text }] }]
+          })
+        });
+
+        if (!response.ok) throw new Error("Error al cridar la IA de Gemini");
+
+        const result = await response.json();
+
+        router.push({
+          name: "result",
+          query: { response: JSON.stringify(result) },
+        });
       }
-
-      const vehicleTypes = {
-        1: "Bicicleta",
-        2: "Moto",
-        3: "Cotxe",
-        4: "No vehicle"
-      };
-
-      const requestText = `
-        Planifica un viatge per a ${formData.value.travelers} persones ${formData.value.type === "alone" ? "sol" : `amb ${formData.value.type}`}.
-        Destí: ${formData.value.country}.
-        Dates: del ${formData.value.datesinit} al ${formData.value.datesfinal}.
-        Pressupost: entre ${formData.value.budgetmin}€ i ${formData.value.budgetmax}€.
-        Interessos: ${formData.value.interests}.
-        Vehicle: ${formData.value.vehicletype}.
-        Tipus de vehicle: ${vehicleTypes[formData.value.vehicletype] || "No especificat"}.
-      `;
-
-      router.push({ name: "loading" });
-
-      const key = config.public.apiKey;
-      const text = JSON.stringify(requestText);
-
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text }] }]
-        })
-      });
-
-      if (!response.ok) throw new Error("Error al cridar la IA de Gemini");
-
-      const result = await response.json();
-
-      router.push({
-        name: "result",
-        query: { response: JSON.stringify(result) },
-      });
     } catch (error) {
       console.error("Error al enviar el formulari:", error);
-      alert("S'ha produït un error en processar la sol·licitud");
+      customAlert({
+        title: 'Error',
+        message: 'S\'ha produït un error en processar la sol·licitud. Si el problema persisteix, siusplau, contacta amb el nostre equip de suport.',
+        type: 'error',
+        showCancelButton: false,
+        confirmButtonText: 'Tancar'
+      })
     }
   };
 
