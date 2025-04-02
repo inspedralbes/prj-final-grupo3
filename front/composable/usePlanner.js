@@ -67,9 +67,14 @@ export function usePlanner() {
     );
   };
 
+  // const selectCountry = (country) => {
+  //   searchQuery.value = country.name;
+  //   formData.value.country = country.id;
+  //   showDropdown.value = false;
+  // };
   const selectCountry = (country) => {
+    formData.value.country = country; // GUARDA EL OBJETO COMPLETO ✅
     searchQuery.value = country.name;
-    formData.value.country = country.id;
     showDropdown.value = false;
   };
 
@@ -154,7 +159,11 @@ export function usePlanner() {
     try {
       const travelData = {
         id_user: authStore.user.id,
-        id_country: formData.value.country,
+        // id_country: formData.value.country,
+        id_country: {  
+          id: formData.value.country.id,  
+          name: formData.value.country.name  
+        }, 
         date_init: formData.value.datesinit,
         date_end: formData.value.datesfinal,
         id_type: formData.value.type,
@@ -187,7 +196,7 @@ export function usePlanner() {
 
       const requestText = `
         Planifica un viatge per a ${formData.value.travelers} persones ${formData.value.type === "alone" ? "sol" : `amb ${formData.value.type}`}.
-        Destí: ${formData.value.country}.
+        Destí: ${formData.value.country.name}.
         Dates: del ${formData.value.datesinit} al ${formData.value.datesfinal}.
         Pressupost: entre ${formData.value.budgetmin}€ i ${formData.value.budgetmax}€.
         Interessos: ${formData.value.interests}.

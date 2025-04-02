@@ -47,6 +47,7 @@ class TravelsController extends Controller
         $request->validate([
             'id_user' => 'required|exists:users,id',
             'id_country' => 'required|exists:countries,id',
+            'id_country_name' => 'required|string',
             'id_type' => 'required|exists:type,id',
             // 'id_budget' => 'required|exists:budget,id',
             'id_budget_min' => 'required|numeric',
@@ -69,6 +70,7 @@ class TravelsController extends Controller
         Travel::create([
             'id_user' => $request->input('id_user'),
             'id_country' => $request->input('id_country'),
+            'country_name' => $request['id_country']['name'],
             'id_type' => $request->input('id_type'),
             'id_budget' => $budget->id,
             'id_movility' => $request->input('id_movility'),
@@ -85,6 +87,7 @@ class TravelsController extends Controller
         $request->validate([
             'id_user' => 'required|exists:users,id',
             'id_country' => 'required|exists:countries,id',
+            'id_country.name' => 'required|string',
             'id_type' => 'required|exists:type,id',
             // 'id_budget' => 'required|exists:budget,id',
             'id_budget_min' => 'required|numeric',
