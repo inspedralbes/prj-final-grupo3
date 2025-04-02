@@ -30,7 +30,7 @@ class UsersController extends Controller
             'email_alternative' => 'nullable|email|unique:users,email_alternative',
             'password' => 'required|string|min:8',
             'phone_number' => 'required|string|max:15',
-            'gender' => 'required|in:Male,Female',
+            'gender' => 'required|in:Male,Female,Other',
         ]);
 
         User::create([

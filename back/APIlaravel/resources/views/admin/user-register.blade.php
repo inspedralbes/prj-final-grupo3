@@ -47,6 +47,7 @@
                 <option value="" disabled selected>Genere</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
+                <option value="other">Prefereixo no dir-ho</option>
             </select>
         </div>
         <button type="submit" id="submit-button" disabled

@@ -87,6 +87,8 @@ class AuthenticatorController extends Controller
             } else {
                 $user->avatar = '/default_avatar_female.png';
             }
+            // if ($data['gender'] == 'other') {
+            //     $user->avatar = '/default_avatar_other.png';
     
             $user->save();
     

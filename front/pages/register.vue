@@ -25,6 +25,7 @@
               <el-select v-model="registerAuth.registerData.gender" placeholder="Selecciona" class="w-full">
                 <el-option label="Masculí" value="male" />
                 <el-option label="Femení" value="female" />
+                <el-option label="Prefereixo no dir-ho" value="other" />
               </el-select>
             </el-form-item>
           </el-col>

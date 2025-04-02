@@ -270,7 +270,7 @@ CREATE TABLE `users` (
   `email_alternative` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `phone_number` int NOT NULL DEFAULT '0',
-  `gender` enum('male','female') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `gender` enum('male','female','other') COLLATE utf8mb4_unicode_ci NOT NULL,
   `id_travel` bigint unsigned NOT NULL DEFAULT '1',
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
