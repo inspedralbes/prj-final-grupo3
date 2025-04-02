@@ -1,13 +1,17 @@
-import { useRoute, useRouter } from 'vue-router';
-import { computed, ref, watch } from 'vue';
-import { marked } from 'marked';
+import { useRoute, useRouter } from "vue-router";
+import { computed, ref, watch } from "vue";
+import { marked } from "marked";
 import { jsPDF } from "jspdf";
 
 export function useResult() {
   const route = useRoute();
   const router = useRouter();
-  const response = ref(route.query.response ? JSON.parse(route.query.response) : null);
+  const response = ref(
+    route.query.response ? JSON.parse(route.query.response) : null
+  );
   const showConfirmation = ref(false);
+  const diaActualIndex = ref(0);
+  const modeVista = ref("pas-a-pas");
 
   watch(
     () => route.query.response,
@@ -17,7 +21,11 @@ export function useResult() {
   );
 
   const responseText = computed(() => {
-    if (response.value && response.value.candidates && response.value.candidates[0]?.content?.parts[0]?.text) {
+    if (
+      response.value &&
+      response.value.candidates &&
+      response.value.candidates[0]?.content?.parts[0]?.text
+    ) {
       return response.value.candidates[0].content.parts[0].text;
     }
     return null;
@@ -27,7 +35,7 @@ export function useResult() {
     if (responseText.value) {
       return marked(responseText.value);
     }
-    return '';
+    return "";
   });
 
   const showCancelOptions = () => {
@@ -76,7 +84,7 @@ export function useResult() {
     const lineHeight = 7;
     let y = topMargin + 20 + titleGap;
 
-    lines.forEach(line => {
+    lines.forEach((line) => {
       if (y + lineHeight > pageHeight - bottomMargin) {
         doc.addPage();
         y = topMargin;
@@ -91,38 +99,59 @@ export function useResult() {
   const generateNewTrip = async () => {
     try {
       const previousDataText = responseText.value;
-      router.push({ name: 'loading' });
-      
+      router.push({ name: "loading" });
+
       const newTripMessage = `
-        Hazme un nuevo viaje basándote en estos datos:
+      Hazme un nuevo viaje basándote en estos datos:
         ${previousDataText}
       `;
 
-      const response = await fetch('/api/gemini', {
-        method: 'POST',
+      const response = await fetch("/api/gemini", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          text: newTripMessage
+          text: newTripMessage,
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Error en la respuesta del servidor');
+        throw new Error("Error en la respuesta del servidor");
       }
 
       const data = await response.json();
-      
+
       router.push({
-        path: '/result',
-        query: { response: JSON.stringify(data) }
+        path: "/result",
+        query: { response: JSON.stringify(data) },
       });
 
       showConfirmation.value = false;
-
     } catch (error) {
-      console.error('Error al generar un nuevo viaje:', error);
+      console.error("Error al generar un nuevo viaje:", error);
+    }
+  };
+
+  const diesViatge = computed(() => {
+    try {
+      const json = JSON.parse(responseText.value);
+      console.log(json);
+      return json.viatge?.dies || [];
+    } catch (e) {
+      return [];
+    }
+  });
+
+  const diaActual = computed(() => {
+    return diesViatge.value[diaActualIndex.value] || null;
+  });
+
+  const mostrarSeguentDia = () => {
+    if (diaActualIndex.value < diesViatge.value.length - 1) {
+      diaActualIndex.value++;
+    } else {
+      modeVista.value = "resum";
     }
   };
 
@@ -135,6 +164,10 @@ export function useResult() {
     handleAccept,
     handleCancel,
     generateNewTrip,
-    downloadPDF
+    downloadPDF,
+    diesViatge,
+    diaActual,
+    mostrarSeguentDia,
+    modeVista,
   };
 }
