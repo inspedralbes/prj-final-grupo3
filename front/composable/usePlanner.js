@@ -18,7 +18,7 @@ export function usePlanner() {
     travelers: 1,
     interests: "",
     type: "",
-    budgetmin: "",
+    budgetmin: 250,
     budgetmax: "",
     vehicle: "",
     vehicletype: "",
@@ -205,12 +205,29 @@ export function usePlanner() {
           Bastant detallat i a més que el resultat ha d'estar estructurat com un objecte que contingui un array anomenat dies, on cada element representa un dia del viatge.
           📌 **Important:** la resposta ha de ser **només un JSON vàlid**, **sense text introductori**, sense cap bloc de codi (res de \`\`\`json), i sense formatació markdown. Retorna només l'objecte JSON pur.
           Exemple esperat:
+          Retorna la resposta sempre en el mateix format.
           {
             "viatge": {
               "titol": "...",
-              "dies": [...]
+              "dies": [
+                {
+                  "dia": Data del dia,
+                  "allotjament": "...",
+                  "activitats": [
+                    {
+                      "nom": "...",
+                      "descripcio": "...",
+                      "preu": "...",
+                      "horari": "..."
+                    },
+                    ...
+                  ]
+                }
+              ],
+              preuTotal: "...",
             }
           }
+          Tota la informació ha d'estar en català.
           Gràcies!
          `;
 

@@ -135,15 +135,20 @@ export function useResult() {
     }
   };
 
-  const diesViatge = computed(() => {    
-      //const rawText = responseText.value.candidates.content.parts.text;
-      const rawText =response.value.candidates[0].content.parts[0].text;
-      // console.log('rawText', rawText);
-      const json = JSON.parse(rawText);
-      console.log("JSON VIATGE:", json);
-      return json.viatge?.dies || [];
-    }
-  ); 
+  const diesViatge = computed(() => {
+    //const rawText = responseText.value.candidates.content.parts.text;
+    const rawText = response.value.candidates[0].content.parts[0].text;
+    // console.log('rawText', rawText);
+    const json = JSON.parse(rawText);
+    console.log("JSON VIATGE:", json);
+    return json.viatge?.dies || [];
+  });
+
+  const preuTotal = computed(() => {
+    const rawText = response.value.candidates[0].content.parts[0].text;
+    const json = JSON.parse(rawText);
+    return json.viatge?.preuTotal || 0;
+  })
 
   const mostrarSeguentDia = () => {
     if (diaActualIndex.value < diesViatge.value.length - 1) {
@@ -169,5 +174,6 @@ export function useResult() {
     diaActual,
     mostrarSeguentDia,
     modeVista,
+    preuTotal,
   };
 }
