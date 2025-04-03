@@ -6,7 +6,8 @@
     <div class="relative flex-1 flex items-center justify-center">
       <!-- carrusel background -->
       <div class="absolute inset-0">
-        <Swiper class="h-full" :slides-per-view="1" :space-between="0" loop pagination :autoplay="{ delay: 2500 }">
+        <Swiper effect="fade" class="h-full" :modules="[Autoplay, Pagination, EffectFade]" :slides-per-view="1" :space-between="0" :loop="true"
+          :autoplay="{ delay: 3000 }" :pagination="true" :speed="1000">
           <SwiperSlide>
             <img src="~/assets/images/img1.png" alt="Destí 1" class="w-full h-full object-cover" />
           </SwiperSlide>
@@ -46,7 +47,9 @@
 <script setup>
 
 import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Autoplay, EffectFade, Pagination } from 'swiper/modules';
 import 'swiper/css';
+import 'swiper/css/pagination';
 import 'swiper/swiper-bundle.css';
 import { useIndex } from '~/composable/useIndex';
 import { useAuthStore } from '~/store/authUser';
