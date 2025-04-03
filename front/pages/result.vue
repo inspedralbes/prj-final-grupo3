@@ -5,12 +5,36 @@
       <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6">
         <h2 class="text-3xl font-bold text-center mb-8">Planificació del teu viatge</h2>
 
-        <div v-if="result.responseText.value" v-html="result.formattedResponseText.value"
-          class="prose prose-lg max-w-none custom-prose"></div>
+        <div v-if="result.modeVista.value === 'pas-a-pas' && result.diaActual.value">
+          <TargetDay :vista="result.modeVista.value" :dia="result.diaActual.value" />
 
-        <div v-else>
-          <p class="text-lg text-red-500">No hi ha cap resultat a mostrar.</p>
+          <div class="flex justify-center gap-4 mt-6">
+            <button @click="result.mostrarSeguentDia"
+              class="bg-red-600 text-white py-2 px-6 rounded-lg hover:bg-red-700 transition">
+              No m'agrada
+            </button>
+            <button @click="result.mostrarSeguentDia"
+              class="bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700 transition">
+              M'agrada
+            </button>
+          </div>
         </div>
+
+
+        <!-- Vista resum -->
+        <div v-if="result.modeVista.value === 'resum'">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <TargetDay v-for="(dia, i) in result.diesViatge.value" :key="i" :vista="result.modeVista.value"
+              :dia="dia" />
+          </div>
+
+          <div class="flex place-content-center mt-4">
+            <p class="text-md">
+              <strong>Preu total:</strong> {{ result.preuTotal.value }}
+            </p>
+          </div>
+        </div>
+        <!-- Si no hi ha dies -->
 
         <!--download pdf-->
         <div v-if="result.responseText.value" class="flex justify-center mt-6">
