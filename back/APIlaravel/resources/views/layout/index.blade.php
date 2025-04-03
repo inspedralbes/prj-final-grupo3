@@ -7,7 +7,8 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>TriPlan | Pagina d'administració</title>
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-  @vite(['resources/css/app.css', 'resources/js/app.js'])
+  {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
 <body>
