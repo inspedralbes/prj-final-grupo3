@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('password')->default('');
             $table->integer('phone_number')->default(0);
             $table->string('avatar');
-            $table->enum('gender', ['Male','Female','Other'])->default('other');
+            $table->enum('gender', ['Male','Female','Other']);
             $table->rememberToken();
             $table->timestamps();
         });
