@@ -11,6 +11,7 @@ export function useResult() {
   );
   const showConfirmation = ref(false);
   const diaActualIndex = ref(0);
+  const diaActual = computed(() => diesViatge.value[diaActualIndex.value] || null);
   const modeVista = ref("pas-a-pas");
 
   watch(
@@ -26,6 +27,7 @@ export function useResult() {
       response.value.candidates &&
       response.value.candidates[0]?.content?.parts[0]?.text
     ) {
+      console.log('json', response.value.candidates[0].content.parts[0].text);
       return response.value.candidates[0].content.parts[0].text;
     }
     return null;
@@ -102,7 +104,7 @@ export function useResult() {
       router.push({ name: "loading" });
 
       const newTripMessage = `
-      Hazme un nuevo viaje basándote en estos datos:
+      Fes un nou vaitge basan-te en aquestes dades:
         ${previousDataText}
       `;
 
@@ -133,24 +135,22 @@ export function useResult() {
     }
   };
 
-  const diesViatge = computed(() => {
-    try {
-      const json = JSON.parse(responseText.value);
-      console.log(json);
+  const diesViatge = computed(() => {    
+      //const rawText = responseText.value.candidates.content.parts.text;
+      const rawText =response.value.candidates[0].content.parts[0].text;
+      // console.log('rawText', rawText);
+      const json = JSON.parse(rawText);
+      console.log("JSON VIATGE:", json);
       return json.viatge?.dies || [];
-    } catch (e) {
-      return [];
     }
-  });
-
-  const diaActual = computed(() => {
-    return diesViatge.value[diaActualIndex.value] || null;
-  });
+  ); 
 
   const mostrarSeguentDia = () => {
     if (diaActualIndex.value < diesViatge.value.length - 1) {
+      console.log('avanço');
       diaActualIndex.value++;
     } else {
+      console.log('no avanço, ja que @click no m"magrada');
       modeVista.value = "resum";
     }
   };
