@@ -3,13 +3,18 @@ import { useRouter } from 'vue-router';
 import { useAuthStore } from '~/store/authUser';
 import { useAlert } from './useAlert';
 import { getCountries, getTypes, getMovilities, postTravel } from '@/services/communicationManager';
-import { use } from 'marked';
+import { useAIGeminiStore } from '~/store/aiGeminiStore';
+import { storeToRefs } from 'pinia'
+
 
 export function usePlanner() {
+  // Al inicio del composable, elimina la duplicación del store
   const config = useRuntimeConfig();
   const router = useRouter();
   const authStore = useAuthStore();
-  const { customAlert } = useAlert(); // Importa el hook useAler
+  const aiGeminiStore = useAIGeminiStore();
+  const { customAlert } = useAlert();
+  const { responseText } = storeToRefs(aiGeminiStore); // Usa la misma instancia del store
 
   const formData = ref({
     country: "",
@@ -186,9 +191,6 @@ export function usePlanner() {
 
       const currentCountry = countries.value.find(country => country.id === formData.value.country);
 
-      console.log(currentCountry.name);
-
-
       if (dbResponse.code === 201) {
         const vehicleTypes = {
           1: "Bicicleta",
@@ -255,10 +257,15 @@ export function usePlanner() {
 
         const result = await response.json();
 
-        router.push({
-          name: "result",
-          query: { response: JSON.stringify(result) },
-        });
+        await aiGeminiStore.setResponse(result); // Espera a que se complete la actualización
+
+        console.log('Persistencia en pinia', aiGeminiStore.responseText); // Accede directamente al store
+
+
+        // router.push({
+        //   name: "result",
+        //   query: { response: JSON.stringify(result) },
+        // });
       }
     } catch (error) {
       console.error("Error al enviar el formulari:", error);
