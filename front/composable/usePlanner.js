@@ -257,7 +257,21 @@ export function usePlanner() {
 
         const result = await response.json();
 
-        await aiGeminiStore.setResponse(result); // Espera a que se complete la actualización
+        const responseText = computed(() => {
+          if (
+            result &&
+            result.candidates &&
+            result.candidates[0]?.content?.parts[0]?.text
+          ) {
+            console.log('json', result.candidates[0].content.parts[0].text);
+            return result.candidates[0].content.parts[0].text;
+          }
+          return null;
+        })
+
+        console.log('Respuesta de la IA procesada', responseText.value);
+
+        await aiGeminiStore.setResponse(responseText.value);
 
         console.log('Persistencia en pinia', aiGeminiStore.responseText); // Accede directamente al store
 
