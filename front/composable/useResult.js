@@ -144,6 +144,13 @@ export function useResult() {
     return json.viatge?.dies || [];
   });
 
+  const titol = computed(() => {
+    const rawText = response.value.candidates[0].content.parts[0].text;
+    const json = JSON.parse(rawText);
+    return json.viatge?.titol || "";
+  });
+
+
   const preuTotal = computed(() => {
     const rawText = response.value.candidates[0].content.parts[0].text;
     const json = JSON.parse(rawText);
@@ -175,5 +182,6 @@ export function useResult() {
     mostrarSeguentDia,
     modeVista,
     preuTotal,
+    titol,
   };
 }

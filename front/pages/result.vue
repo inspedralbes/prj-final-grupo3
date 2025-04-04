@@ -3,7 +3,8 @@
   <div class="min-h-screen bg-gray-50">
     <main class="container mx-auto mt-10 p-4">
       <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6">
-        <h2 class="text-3xl font-bold text-center mb-8">Planificació del teu viatge</h2>
+        <h2 class="text-3xl font-bold text-center mb-2.5">Planificació del teu viatge</h2>
+        <h2 class="text-xl font-bold text-center mb-8">{{ result.titol.value }}</h2>
 
         <div v-if="result.modeVista.value === 'pas-a-pas' && result.diaActual.value">
           <TargetDay :vista="result.modeVista.value" :dia="result.diaActual.value" />

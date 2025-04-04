@@ -184,6 +184,11 @@ export function usePlanner() {
 
       const dbResponse = await postTravel(travelData, authStore.token);
 
+      const currentCountry = countries.value.find(country => country.id === formData.value.country);
+
+      console.log(currentCountry.name);
+
+
       if (dbResponse.code === 201) {
         const vehicleTypes = {
           1: "Bicicleta",
@@ -194,7 +199,7 @@ export function usePlanner() {
 
         const requestText = `
           Planifica un viatge per a ${formData.value.travelers} persones ${formData.value.type === "alone" ? "sol" : `amb ${formData.value.type}`}.
-          Destí: ${formData.value.country}.
+          Destí: ${currentCountry.name}.
           Dates: del ${formData.value.datesinit} al ${formData.value.datesfinal}.
           Pressupost: entre ${formData.value.budgetmin}€ i ${formData.value.budgetmax}€.
           Interessos: ${formData.value.interests}.
