@@ -4,17 +4,14 @@ import { useAuthStore } from '~/store/authUser';
 import { useAlert } from './useAlert';
 import { getCountries, getTypes, getMovilities, postTravel } from '@/services/communicationManager';
 import { useAIGeminiStore } from '~/store/aiGeminiStore';
-import { storeToRefs } from 'pinia'
 
 
 export function usePlanner() {
-  // Al inicio del composable, elimina la duplicación del store
   const config = useRuntimeConfig();
   const router = useRouter();
   const authStore = useAuthStore();
   const aiGeminiStore = useAIGeminiStore();
   const { customAlert } = useAlert();
-  const { responseText } = storeToRefs(aiGeminiStore); // Usa la misma instancia del store
 
   const formData = ref({
     country: "",
@@ -24,7 +21,7 @@ export function usePlanner() {
     interests: "",
     type: "",
     budgetmin: 250,
-    budgetmax: "",
+    budgetmax: 7500,
     vehicle: "",
     vehicletype: "",
   });
@@ -48,7 +45,6 @@ export function usePlanner() {
         getMovilities(),
         getTypes(),
       ]);
-
 
       countries.value = countryList;
       filteredCountries.value = countryList;
@@ -158,7 +154,6 @@ export function usePlanner() {
         3500);
       return false;
     }
-
     return true;
   };
 
@@ -257,29 +252,22 @@ export function usePlanner() {
 
         const result = await response.json();
 
-        const responseText = computed(() => {
-          if (
-            result &&
-            result.candidates &&
-            result.candidates[0]?.content?.parts[0]?.text
-          ) {
-            console.log('json', result.candidates[0].content.parts[0].text);
-            return result.candidates[0].content.parts[0].text;
-          }
-          return null;
-        })
+        let responseText = null
 
-        console.log('Respuesta de la IA procesada', responseText.value);
+        if (
+          result &&
+          result.candidates &&
+          result.candidates[0]?.content?.parts[0]?.text
+        ) {
+          console.log('json', result.candidates[0].content.parts[0].text);
+          responseText = result.candidates[0].content.parts[0].text;
+        }
 
-        await aiGeminiStore.setResponse(responseText.value);
+        await aiGeminiStore.setResponse(responseText);
 
         console.log('Persistencia en pinia', aiGeminiStore.responseText); // Accede directamente al store
 
-
-        // router.push({
-        //   name: "result",
-        //   query: { response: JSON.stringify(result) },
-        // });
+        router.push({ name: "result", });
       }
     } catch (error) {
       console.error("Error al enviar el formulari:", error);
@@ -311,6 +299,6 @@ export function usePlanner() {
     handleSubmit,
     loadInitialData,
     selectedType,
-    vehicle
+    vehicle,
   };
 }

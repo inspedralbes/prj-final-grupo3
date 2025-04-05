@@ -1,36 +1,24 @@
 import { useRoute, useRouter } from "vue-router";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import { marked } from "marked";
 import { jsPDF } from "jspdf";
+import { useAIGeminiStore } from "~/store/aiGeminiStore";
 
 export function useResult() {
-  const route = useRoute();
+  const aiGeminiStore = useAIGeminiStore();
+  const response = ref(null);
   const router = useRouter();
-  const response = ref(
-    route.query.response ? JSON.parse(route.query.response) : null
-  );
   const showConfirmation = ref(false);
   const diaActualIndex = ref(0);
   const diaActual = computed(() => diesViatge.value[diaActualIndex.value] || null);
   const modeVista = ref("pas-a-pas");
 
-  watch(
-    () => route.query.response,
-    (newResponse) => {
-      response.value = newResponse ? JSON.parse(newResponse) : null;
-    }
-  );
-
   const responseText = computed(() => {
-    if (
-      response.value &&
-      response.value.candidates &&
-      response.value.candidates[0]?.content?.parts[0]?.text
-    ) {
-      console.log('json', response.value.candidates[0].content.parts[0].text);
-      return response.value.candidates[0].content.parts[0].text;
+    if (aiGeminiStore.responseText) {
+      const json = JSON.parse(aiGeminiStore.responseText);
+      console.log("JSON RESPONSE:", json);
+      return json;
     }
-    return null;
   });
 
   const formattedResponseText = computed(() => {
@@ -136,25 +124,16 @@ export function useResult() {
   };
 
   const diesViatge = computed(() => {
-    //const rawText = responseText.value.candidates.content.parts.text;
-    const rawText = response.value.candidates[0].content.parts[0].text;
-    // console.log('rawText', rawText);
-    const json = JSON.parse(rawText);
-    console.log("JSON VIATGE:", json);
-    return json.viatge?.dies || [];
+    return responseText.value.viatge?.dies || [];
   });
 
   const titol = computed(() => {
-    const rawText = response.value.candidates[0].content.parts[0].text;
-    const json = JSON.parse(rawText);
-    return json.viatge?.titol || "";
+    return responseText.value.viatge?.titol || "";
   });
 
 
   const preuTotal = computed(() => {
-    const rawText = response.value.candidates[0].content.parts[0].text;
-    const json = JSON.parse(rawText);
-    return json.viatge?.preuTotal || 0;
+    return responseText.value.viatge?.preuTotal || 0;
   })
 
   const mostrarSeguentDia = () => {
