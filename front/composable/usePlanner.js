@@ -248,7 +248,7 @@ export function usePlanner() {
         };
 
         const requestText = `
-          Planifica un viatge per a ${formData.value.travelers} persones ${formData.value.type === "alone" ? "sol" : `amb ${formData.value.type}`}.
+          Planifica un viatge per a ${formData.value.travelers} persones ${formData.value.type === 1 ? "sol" : `amb ${formData.value.type}`}.
           Destí: ${currentCountry.name}.
           Dates: del ${formData.value.datesinit} al ${formData.value.datesfinal}.
           Pressupost: entre ${formData.value.budgetmin}€ i ${formData.value.budgetmax}€.

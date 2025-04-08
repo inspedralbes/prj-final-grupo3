@@ -125,6 +125,7 @@ const planner = usePlanner();
 onMounted(() => {
   planner.loadInitialData();
 });
+
 </script>
 
 <style>
