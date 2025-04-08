@@ -9,17 +9,24 @@
         <div v-if="result.modeVista.value === 'pas-a-pas' && result.diaActual.value">
           <TargetDay :vista="result.modeVista.value" :dia="result.diaActual.value" />
 
-          <div class="flex justify-center gap-4 mt-6">
-            <button @click="result.mostrarSeguentDia"
-              class="bg-red-600 text-white py-2 px-6 rounded-lg hover:bg-red-700 transition">
-              No m'agrada
-            </button>
-            <button @click="result.mostrarSeguentDia"
-              class="bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700 transition">
-              M'agrada
-            </button>
+          <div class="flex flex-col justify-center items-center gap-2 mt-6 ">
+            <p class="text-sm text-gray-500">{{ result.diaActualIndex.value + 1 }} de {{ result.diesViatge.value.length }}</p>
+            <div class="flex justify-center gap-4">
+              <button @click="result.mostrarDiaAnterior" class="">
+                <!-- No m'agrada -->
+                <img src="../assets/images/left.svg" alt="" class="size-8">
+              </button>
+              <button @click="result.mostrarDiaSeguent" class="">
+                <!-- M'agrada -->
+                <img src="../assets/images/right.svg" alt="" class="size-8">
+              </button>
+            </div>
+            <button
+              class="border-b border-blue-600/50 text-blue-600/50 hover:text-blue-600 transition duration-200 hover:border-blue-600 mt-4"
+              @click="result.modeVista.value = 'resum'">Ver resum</button>
           </div>
         </div>
+
 
 
         <!-- Vista resum -->
@@ -37,25 +44,28 @@
         </div>
         <!-- Si no hi ha dies -->
 
-        <!--download pdf-->
-        <div v-if="result.responseText.value" class="flex justify-center mt-6">
-          <button @click="result.downloadPDF"
-            class="bg-green-600 text-white py-4 px-5 rounded-lg hover:bg-green-700 transition duration-200 text-lg font-semibold">
-            📄 Descarregar PDF
-          </button>
-        </div>
+
 
         <!--buttons accept or decline-->
-        <div v-if="!result.showConfirmation.value" class="flex justify-center gap-x-6 mt-8">
-          <button @click="result.handleAccept"
-            class="bg-blue-600 text-white py-4 px-8 rounded-lg hover:bg-blue-700 transition duration-200 text-lg font-semibold">
-            Acceptar
-          </button>
+        <div v-if="!result.showConfirmation.value" class="flex justify-between mt-8">
+          <!--download pdf-->
+          <div v-if="result.modeVista.value === 'resum'" class="flex">
+            <button @click="result.downloadPDF"
+              class="text-green-600 hover:text-white border-b-2 border-green-600 py-2 px-4 rounded-t-lg hover:bg-green-700 transition duration-200 text-lg font-semibold">
+              📄 Descarregar PDF
+            </button>
+          </div>
+          <div class="flex justify-end gap-2 ml-auto">
+            <button @click="result.handleAccept"
+              class="text-blue-600 py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200 text-lg font-semibold border-2 border-blue-600 hover:text-white">
+              Acceptar
+            </button>
 
-          <button @click="result.showCancelOptions"
-            class="bg-red-600 text-white py-4 px-8 rounded-lg hover:bg-red-700 transition duration-200 text-lg font-semibold">
-            Cancel·lar
-          </button>
+            <button @click="result.showCancelOptions"
+              class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition duration-200 text-lg font-semibold">
+              Cancel·lar
+            </button>
+          </div>
         </div>
 
         <!--button for new trip if the user wants to do it-->

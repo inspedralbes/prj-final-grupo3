@@ -153,13 +153,33 @@ export function useResult() {
     return responseText.value.viatge?.preuTotal || 0;
   })
 
-  const mostrarSeguentDia = () => {
+  // const mostrarSeguentDia = () => {
+  //   if (diaActualIndex.value < diesViatge.value.length - 1) {
+  //     console.log('avanço');
+  //     diaActualIndex.value++;
+  //   } else {
+  //     console.log('no avanço, ja que @click no m"magrada');
+  //     modeVista.value = "resum";
+  //   }
+  // };
+
+  const mostrarDiaAnterior = () => {
+    if (diaActualIndex.value > 0) {
+      console.log('torno');
+      diaActualIndex.value--;
+    } else {
+      console.log('no avanço, ja estic al primer dia');
+      // modeVista.value = "resum";
+    }
+  };
+
+  const mostrarDiaSeguent = () => {
     if (diaActualIndex.value < diesViatge.value.length - 1) {
       console.log('avanço');
       diaActualIndex.value++;
     } else {
-      console.log('no avanço, ja que @click no m"magrada');
-      modeVista.value = "resum";
+      console.log('no avanço, ja estic al ultim dia');
+      // modeVista.value = "resum";
     }
   };
 
@@ -175,7 +195,10 @@ export function useResult() {
     downloadPDF,
     diesViatge,
     diaActual,
-    mostrarSeguentDia,
+    mostrarDiaAnterior,
+    mostrarDiaSeguent,
+    diaActualIndex,
+    // mostrarSeguentDia,
     modeVista,
     preuTotal,
     titol,
