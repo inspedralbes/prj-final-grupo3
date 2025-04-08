@@ -37,7 +37,7 @@
                 <el-form-item v-if="planner.formData.value.type === 2 || planner.formData.value.type === 3"
                   label="Quant. de persones*">
                   <el-input-number v-model="planner.formData.value.travelers" :min="1" :max="20"
-                    controls-position="right" class="flex-1" required/>
+                    controls-position="right" class="flex-1" />
                 </el-form-item>
               </div>
             </el-col>
@@ -58,9 +58,9 @@
               <div class="flex flex-col sm:flex-row gap-4">
                 <el-form-item label="Lloguer de vehicle*">
                   <el-select v-model="planner.formData.value.vehicle" placeholder="Selecciona" class="w-full">
-                    <el-option label="Si" value="yes" required/>
+                    <el-option label="Si" value="yes" />
                     <el-option v-for="movility in planner.movilities.value.filter(m => m.id === 4)" :key="movility.id"
-                      :label="movility.id === 4 ? 'No' : ''" :value="movility.id" required/>
+                      :label="movility.id === 4 ? 'No' : ''" :value="movility.id" />
                   </el-select>
                 </el-form-item>
 
@@ -103,7 +103,7 @@
           <!-- Interests -->
           <el-form-item label="Interessos*">
             <el-input v-model="planner.formData.value.interests" type="textarea" :rows="3"
-              placeholder="Que t'interessa? (e.x., cultura, aventura, relax)" class="w-full" required/>
+              placeholder="Que t'interessa? (e.x., cultura, aventura, relax)" class="w-full"/>
           </el-form-item>
 
           <el-button type="primary" native-type="submit" class="w-full mt-8 h-12 text-lg font-medium">
