@@ -143,6 +143,52 @@ export function usePlanner() {
       return false;
     }
 
+    if (!formData.value.country) {
+      customAlert("Selecciona un país.",
+        'negative',
+        'error',
+        'top',
+        3500);
+      return false;
+    }
+
+    if (!formData.value.type) {
+      customAlert("Selecciona amb qui viatges.",
+        'negative',
+        'error',
+        'top',
+        3500);  
+      return false;
+    }
+
+    if (!formData.value.vehicle){
+      customAlert("Selecciona el lloguer de vehicle",
+        'negative',
+        'error',
+        'top',
+        3500);
+      return false;
+    }
+
+    if (!formData.value.vehicletype) { 
+      customAlert("Selecciona el tipus de vehicle.",
+        'negative',
+        'error',
+        'top',
+        3500);
+      return false;
+    }
+
+    if (!formData.value.interests) {
+      customAlert("Selecciona alguns interessos.",
+        'negative',
+        'error',
+        'top',
+        3500);
+      return false;
+    }
+
+
     const startDate = new Date(formData.value.datesinit);
     const endDate = new Date(formData.value.datesfinal);
     const today = new Date();

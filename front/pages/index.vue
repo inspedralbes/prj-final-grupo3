@@ -7,7 +7,7 @@
       <!-- carrusel background -->
       <div class="absolute inset-0">
         <Swiper effect="fade" class="h-full" :modules="[Autoplay, Pagination, EffectFade]" :slides-per-view="1" :space-between="0" :loop="true"
-          :autoplay="{ delay: 3000 }" :pagination="true" :speed="1000">
+          :autoplay="{ delay: 2500 }" :pagination="true" :speed="1000">
           <SwiperSlide>
             <img src="~/assets/images/img1.png" alt="Destí 1" class="w-full h-full object-cover" />
           </SwiperSlide>
