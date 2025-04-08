@@ -56,8 +56,8 @@
         Si tens qualsevol dubte o pregunta sobre aquestes condicions del servei, pots posar-te en contacte amb nosaltres a través del nostre correu electrònic:
       </p>
       <p class="text-gray-700 text-lg">
-        📧 <a href="mailto:triplan.contacte@gmail.com" class="text-blue-600 hover:underline">triplan.contacte@gmail.com</a><br>
-        📞 <a href="tel:+34612345678" class="text-blue-600 hover:underline">+34 612 345 678</a>
+        📧 <a href="https://mail.google.com/mail/?view=cm&fs=1&to=triplan25@gmail.com" target="_blank" class="text-blue-600 hover:underline">triplan.contacte@gmail.com</a><br>
+        📞 <a href="tel:+34658806608" class="text-blue-600 hover:underline">+34 658 806 608</a>
       </p>
     </div>
   </template>
