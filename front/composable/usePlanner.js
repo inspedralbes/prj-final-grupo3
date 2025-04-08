@@ -19,7 +19,7 @@ export function usePlanner() {
     interests: "",
     type: "",
     budgetmin: 250,
-    budgetmax: "",
+    budgetmax: 3500,
     vehicle: "",
     vehicletype: "",
   });
@@ -32,8 +32,9 @@ export function usePlanner() {
   const showDropdown = ref(false);
   const budgetMax = ref(7500);
   const budgetMin = ref(250);
+  const budgetRange = ref([budgetMin.value, budgetMax.value])
   const types = ref([]);
-  const movilities = ref([]);
+  const movilities = ref([]);    
 
   // Load initial data
   const loadInitialData = async () => {
@@ -43,7 +44,6 @@ export function usePlanner() {
         getMovilities(),
         getTypes(),
       ]);
-
 
       countries.value = countryList;
       filteredCountries.value = countryList;
@@ -84,6 +84,13 @@ export function usePlanner() {
   const selectedType = computed(() => formData.value.type);
   const vehicle = computed(() => formData.value.vehicle);
 
+  const onSliderChange = ([min, max]) => {
+    budgetMin.value = min
+    budgetMax.value = max
+    formData.value.budgetmin = min
+    formData.value.budgetmax = max
+  }
+
   // Watch for date changes
   watch(dateRange, (newValue) => {
     if (newValue.length === 2) {
@@ -92,15 +99,7 @@ export function usePlanner() {
     }
   });
 
-  // Watch for budget changes
-  watch(budgetMin, (newValue) => {
-    formData.value.budgetmin = newValue;
-  });
-
-  watch(budgetMax, (newValue) => {
-    formData.value.budgetmax = newValue;
-  });
-
+  //Watch for vehicle
   watch(() => formData.value.vehicle, (newVal) => {
     if (newVal !== "yes") {
       formData.value.vehicletype = 4;
@@ -108,6 +107,20 @@ export function usePlanner() {
       formData.value.vehicletype = "";
     }
   });
+
+  //Watch for budget
+  watch([budgetMin, budgetMax], ([min, max]) => {
+    budgetRange.value = [min, max]
+    formData.value.budgetmin = min
+    formData.value.budgetmax = max
+  })
+
+  watch(budgetRange, ([min, max]) => {
+    budgetMin.value = min
+    budgetMax.value = max
+    formData.value.budgetmin = min
+    formData.value.budgetmax = max
+  })
 
   const validateForm = () => {
     if (budgetMin.value >= budgetMax.value) {
@@ -157,17 +170,11 @@ export function usePlanner() {
     return true;
   };
 
-  const syncWithBudget = () => {
-    if (budgetMin.value > budgetMax.value) {
-      budgetMin.value = budgetMax.value - 100;
-    }
-    if (budgetMax.value < budgetMin.value) {
-      budgetMax.value = budgetMin.value + 100;
-    }
-  };
-
   const handleSubmit = async () => {
     if (!validateForm()) return;
+
+    // formData.value.budgetmin = budgetMin.value
+    // formData.value.budgetmax = budgetMax.value
 
     try {
       const travelData = {
@@ -183,12 +190,8 @@ export function usePlanner() {
       };
 
       const dbResponse = await postTravel(travelData, authStore.token);
-
       const currentCountry = countries.value.find(country => country.id === formData.value.country);
-
-      console.log(currentCountry.name);
-
-
+      console.log('currentCountry', currentCountry.name)
       if (dbResponse.code === 201) {
         const vehicleTypes = {
           1: "Bicicleta",
@@ -286,10 +289,12 @@ export function usePlanner() {
     filterMovilities,
     selectCountry,
     hideDropdown,
-    syncWithBudget,
+    // syncWithBudget,
     handleSubmit,
     loadInitialData,
     selectedType,
-    vehicle
+    vehicle,
+    budgetRange,
+    onSliderChange,
   };
 }
