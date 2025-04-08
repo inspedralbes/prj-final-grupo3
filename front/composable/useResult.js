@@ -1,36 +1,24 @@
 import { useRoute, useRouter } from "vue-router";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import { marked } from "marked";
 import { jsPDF } from "jspdf";
+import { useAIGeminiStore } from "~/store/aiGeminiStore";
 
 export function useResult() {
-  const route = useRoute();
+  const aiGeminiStore = useAIGeminiStore();
+  const response = ref(null);
   const router = useRouter();
-  const response = ref(
-    route.query.response ? JSON.parse(route.query.response) : null
-  );
   const showConfirmation = ref(false);
   const diaActualIndex = ref(0);
   const diaActual = computed(() => diesViatge.value[diaActualIndex.value] || null);
   const modeVista = ref("pas-a-pas");
 
-  watch(
-    () => route.query.response,
-    (newResponse) => {
-      response.value = newResponse ? JSON.parse(newResponse) : null;
-    }
-  );
-
   const responseText = computed(() => {
-    if (
-      response.value &&
-      response.value.candidates &&
-      response.value.candidates[0]?.content?.parts[0]?.text
-    ) {
-      console.log('json', response.value.candidates[0].content.parts[0].text);
-      return response.value.candidates[0].content.parts[0].text;
+    if (aiGeminiStore.responseText) {
+      const json = JSON.parse(aiGeminiStore.responseText);
+      console.log("JSON RESPONSE:", json);
+      return json;
     }
-    return null;
   });
 
   const formattedResponseText = computed(() => {
@@ -46,11 +34,13 @@ export function useResult() {
 
   const handleAccept = () => {
     alert("Planning del viatge guardat correctament");
+    aiGeminiStore.responseText = null;
     router.push("/");
   };
 
   const handleCancel = () => {
     alert("El viatge s'ha cancel·lat.");
+    aiGeminiStore.responseText = null;
     router.push("/");
   };
 
@@ -100,12 +90,13 @@ export function useResult() {
 
   const generateNewTrip = async () => {
     try {
-      const previousDataText = responseText.value;
+      // const previousDataText = responseText.value;
       router.push({ name: "loading" });
 
       const newTripMessage = `
-      Fes un nou vaitge basan-te en aquestes dades:
-        ${previousDataText}
+      Fes un nou vaitge basan-te en aquestes dades, intenta que sigui un viatge diferent, però sigui coherent amb aquestes dades i dintre de un preu raonable:
+        ${aiGeminiStore.responseText}.
+         Sense cap bloc de codi (res de \`\`\`json), i sense formatació markdown. Retorna només l'objecte JSON pur.
       `;
 
       const response = await fetch("/api/gemini", {
@@ -124,9 +115,23 @@ export function useResult() {
 
       const data = await response.json();
 
+      let newResponseText = null
+
+      if (
+        data &&
+        data.candidates &&
+        data.candidates[0]?.content?.parts[0]?.text
+      ) {
+        console.log('json', data.candidates[0].content.parts[0].text);
+        newResponseText = data.candidates[0].content.parts[0].text;
+      }
+
+      await aiGeminiStore.setResponse(newResponseText);
+      // await aiGeminiStore.setResponse(JSON.stringify(newResponseText));
+
       router.push({
         path: "/result",
-        query: { response: JSON.stringify(data) },
+        // query: { response: JSON.stringify(data) },
       });
 
       showConfirmation.value = false;
@@ -136,25 +141,16 @@ export function useResult() {
   };
 
   const diesViatge = computed(() => {
-    //const rawText = responseText.value.candidates.content.parts.text;
-    const rawText = response.value.candidates[0].content.parts[0].text;
-    // console.log('rawText', rawText);
-    const json = JSON.parse(rawText);
-    console.log("JSON VIATGE:", json);
-    return json.viatge?.dies || [];
+    return responseText.value.viatge?.dies || [];
   });
 
   const titol = computed(() => {
-    const rawText = response.value.candidates[0].content.parts[0].text;
-    const json = JSON.parse(rawText);
-    return json.viatge?.titol || "";
+    return responseText.value.viatge?.titol || "";
   });
 
 
   const preuTotal = computed(() => {
-    const rawText = response.value.candidates[0].content.parts[0].text;
-    const json = JSON.parse(rawText);
-    return json.viatge?.preuTotal || 0;
+    return responseText.value.viatge?.preuTotal || 0;
   })
 
   const mostrarSeguentDia = () => {
