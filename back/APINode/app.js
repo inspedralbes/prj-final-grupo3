@@ -1,0 +1,23 @@
+import  express  from 'express';
+import cors from 'cors';
+import { corsOptions, dynamicCors, corsErrorHandler} from './src/config/cors.js';
+import { CONFIG } from "./src/config/config.js";
+import { geminiRoutes } from './src/routes/geminiRoutes.js';
+
+
+const app = express();
+
+app.use(cors(corsOptions));
+
+const PORT = CONFIG.PORT || 3006;
+
+app.get("/", (req, res) => {
+        res.send("Hello from Node.js!");
+    });
+
+app.use("/api/gemini", cors(corsOptions), geminiRoutes);
+
+app.listen(PORT, () => {
+    console.log(`Servidor escuchando en el puerto ${PORT}`);
+  });
+
