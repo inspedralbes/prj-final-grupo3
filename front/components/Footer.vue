@@ -13,7 +13,7 @@
 
         <!-- Links -->
         <div class="flex space-x-6">
-          <button @click="navigateToPage('about-us')" class="text-gray-600 hover:text-blue-600 text-sm">Sobre Nosaltres</button>
+          <button @click="navigateToPage('about-us')" class="text-gray-600 hover:text-blue-600 text-sm">Sobre nosaltres</button>
           <button @click="navigateToPage('privacy-policy')" class="text-gray-600 hover:text-blue-600 text-sm">Política de privacitat</button>
           <button @click="navigateToPage('terms-of-service')" class="text-gray-600 hover:text-blue-600 text-sm">Condicions del servei</button>
           <button @click="navigateToPage('contact')" class="text-gray-600 hover:text-blue-600 text-sm">Contacta amb nosaltres</button>
