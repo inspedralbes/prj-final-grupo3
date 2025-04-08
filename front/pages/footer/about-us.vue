@@ -1,4 +1,6 @@
 <template>
+  <div class="min-h-screen flex flex-col">
+    <!-- Contenido principal de la página -->
     <div class="max-w-4xl mx-auto px-4 py-12">
       <h1 class="text-4xl font-bold mb-6 text-center text-blue-600">Sobre Nosaltres</h1>
   
@@ -22,7 +24,8 @@
         </p>
       </div>
     </div>
-  </template>
-  
-  <script setup>
-  </script>
+  </div>
+</template>
+
+<script setup>
+</script>

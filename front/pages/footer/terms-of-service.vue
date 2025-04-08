@@ -28,7 +28,7 @@
   
       <h2 class="text-2xl font-semibold text-blue-600 mb-4">5. Privacitat i protecció de dades</h2>
       <p class="text-gray-700 text-lg mb-6">
-        Ens comprometem a protegir la teva informació personal. Les teves dades seran utilitzades només per proporcionar-te els nostres serveis, tal com es detalla a la nostra <a href="/privacy" class="text-blue-600 hover:underline">Política de Privacitat</a>.
+        Ens comprometem a protegir la teva informació personal. Les teves dades seran utilitzades només per proporcionar-te els nostres serveis, tal com es detalla a la nostra <a href="/footer/privacy-policy" class="text-blue-600 hover:underline">Política de Privacitat</a>.
       </p>
   
       <h2 class="text-2xl font-semibold text-blue-600 mb-4">6. Responsabilitat</h2>

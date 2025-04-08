@@ -38,7 +38,7 @@
         </el-row>
 
         <el-form-item label="Número de telèfon*">
-          <el-input v-model="registerAuth.registerData.phone_number" placeholder="+34 655 767 876" />
+          <el-input v-model="registerAuth.registerData.phone_number" placeholder="655767876" />
         </el-form-item>
 
         <el-form-item label="Correu*">
@@ -53,7 +53,7 @@
         <div class="space-y-6">
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form label="Contrasenya*">
+              <el-form-item label="Contrasenya*">
                 <div class="relative group">
                   <el-input v-model="registerAuth.registerData.password"
                     :type="registerAuth.isPasswordVisible.value ? 'text' : 'password'" placeholder="••••••••"
@@ -69,10 +69,10 @@
                   </button>
                 </div>
                 <span class="text-xs text-gray-500 mt-1 block">Mínim 8 caràcters</span>
-              </el-form>
+              </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form label="Confirmar contrasenya*">
+              <el-form-item label="Confirmar contrasenya*">
                 <div class="relative group">
                   <el-input v-model="registerAuth.registerData.password_confirmation"
                     :type="registerAuth.isConfirmPasswordVisible.value ? 'text' : 'password'" placeholder="••••••••"
@@ -87,7 +87,7 @@
                     </span>
                   </button>
                 </div>
-              </el-form>
+              </el-form-item>
             </el-col>
           </el-row>
         </div>

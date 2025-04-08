@@ -13,12 +13,12 @@
   
       <h2 class="text-2xl font-semibold text-blue-600 mb-4">2. Ús de la informació</h2>
       <p class="text-gray-700 text-lg mb-6">
-        La informació que ens proporciones s'utilitza exclusivament per dissenyar el teu itinerari de viatge personalitzat. Això inclou l'ús d'algoritmes de **Intel·ligència Artificial** per generar les rutes i activitats que millor s'adapten a les teves preferències.
+        La informació que ens proporciones s'utilitza exclusivament per dissenyar el teu itinerari de viatge personalitzat. Això inclou l'ús d'algoritmes de <strong>Intel·ligència Artificial</strong> per generar les rutes i activitats que millor s'adapten a les teves preferències.
       </p>
       
       <h2 class="text-2xl font-semibold text-blue-600 mb-4">3. Compartició de la informació</h2>
       <p class="text-gray-700 text-lg mb-6">
-        La teva informació **NO es ven ni es comparteix amb tercers amb fins comercials**. Només compartirem informació amb tercers en els següents casos:
+        La teva informació <strong>NO es ven ni es comparteix amb tercers amb fins comercials.</strong> Només compartirem informació amb tercers en els següents casos:
       </p>
       <ul class="list-disc pl-8 text-gray-700 text-lg mb-6">
         <li>Amb els nostres socis i proveïdors de serveis per a proporcionar-te els serveis de viatge que has sol·licitat (per exemple, hotels, transports, etc.).</li>
@@ -46,8 +46,8 @@
         Si tens qualsevol dubte o pregunta sobre la nostra Política de Privacitat, pots contactar-nos a:
       </p>
       <p class="text-gray-700 text-lg">
-        📧 <a href="mailto:triplan.contacte@gmail.com" class="text-blue-600 hover:underline">triplan.contacte@gmail.com</a><br>
-        📞 <a href="tel:+34612345678" class="text-blue-600 hover:underline">+34 612 345 678</a>
+        📧 <a href="https://mail.google.com/mail/?view=cm&fs=1&to=triplan25@gmail.com" target="_blank" class="text-blue-600 hover:underline">triplan25@gmail.com</a>
+        📞 <a href="tel:++34658806608" class="text-blue-600 hover:underline">+34 658 806 608</a>
       </p>
     </div>
   </template>
