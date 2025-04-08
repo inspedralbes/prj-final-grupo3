@@ -34,11 +34,13 @@ export function useResult() {
 
   const handleAccept = () => {
     alert("Planning del viatge guardat correctament");
+    aiGeminiStore.responseText = null;
     router.push("/");
   };
 
   const handleCancel = () => {
     alert("El viatge s'ha cancel·lat.");
+    aiGeminiStore.responseText = null;
     router.push("/");
   };
 
@@ -88,12 +90,13 @@ export function useResult() {
 
   const generateNewTrip = async () => {
     try {
-      const previousDataText = responseText.value;
+      // const previousDataText = responseText.value;
       router.push({ name: "loading" });
 
       const newTripMessage = `
-      Fes un nou vaitge basan-te en aquestes dades:
-        ${previousDataText}
+      Fes un nou vaitge basan-te en aquestes dades, intenta que sigui un viatge diferent, però sigui coherent amb aquestes dades i dintre de un preu raonable:
+        ${aiGeminiStore.responseText}.
+         Sense cap bloc de codi (res de \`\`\`json), i sense formatació markdown. Retorna només l'objecte JSON pur.
       `;
 
       const response = await fetch("/api/gemini", {
@@ -112,9 +115,23 @@ export function useResult() {
 
       const data = await response.json();
 
+      let newResponseText = null
+
+      if (
+        data &&
+        data.candidates &&
+        data.candidates[0]?.content?.parts[0]?.text
+      ) {
+        console.log('json', data.candidates[0].content.parts[0].text);
+        newResponseText = data.candidates[0].content.parts[0].text;
+      }
+
+      await aiGeminiStore.setResponse(newResponseText);
+      // await aiGeminiStore.setResponse(JSON.stringify(newResponseText));
+
       router.push({
         path: "/result",
-        query: { response: JSON.stringify(data) },
+        // query: { response: JSON.stringify(data) },
       });
 
       showConfirmation.value = false;
