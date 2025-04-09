@@ -1,8 +1,10 @@
-import { GeminiModel } from "../models/GeminiModel";
+import { GeminiModel } from "../models/GeminiModel.js";
 export class GeminiController {
     static async getGeminiResponse(req, res) {
+      const { text } = req.body;
+      console.log(text);
       try {
-        const response = await GeminiModel.getResponse(req.body.text);
+        const response = await GeminiModel.getResponse(text);
         res.status(200).json(response);
       } catch (error) {
         console.error(error);

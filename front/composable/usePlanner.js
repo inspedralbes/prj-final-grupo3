@@ -188,7 +188,6 @@ export function usePlanner() {
       return false;
     }
 
-
     const startDate = new Date(formData.value.datesinit);
     const endDate = new Date(formData.value.datesfinal);
     const today = new Date();
@@ -291,13 +290,13 @@ export function usePlanner() {
         const key = config.public.apiKey;
         const text = JSON.stringify(requestText);
 
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+        const response = await fetch(`http://localhost:3006/api/gemini/response`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            contents: [{ parts: [{ text }] }]
+            text:text
           })
         });
 
@@ -305,18 +304,18 @@ export function usePlanner() {
 
         const result = await response.json();
 
-        let responseText = null
+        // let responseText = null
 
-        if (
-          result &&
-          result.candidates &&
-          result.candidates[0]?.content?.parts[0]?.text
-        ) {
-          console.log('json', result.candidates[0].content.parts[0].text);
-          responseText = result.candidates[0].content.parts[0].text;
-        }
+        // if (
+        //   result &&
+        //   result.candidates &&
+        //   result.candidates[0]?.content?.parts[0]?.text
+        // ) {
+        //   console.log('json', result.candidates[0].content.parts[0].text);
+        //   responseText = result.candidates[0].content.parts[0].text;
+        // }
 
-        await aiGeminiStore.setResponse(responseText);
+        await aiGeminiStore.setResponse(result);
 
         console.log('Persistencia en pinia', aiGeminiStore.responseText); // Accede directamente al store
 

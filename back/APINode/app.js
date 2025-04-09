@@ -2,12 +2,13 @@ import  express  from 'express';
 import cors from 'cors';
 import { corsOptions, dynamicCors, corsErrorHandler} from './src/config/cors.js';
 import { CONFIG } from "./src/config/config.js";
-import { geminiRoutes } from './src/routes/geminiRoutes.js';
+import  geminiRoutes  from './src/routes/geminiRoutes.js';
 
 
 const app = express();
 
 app.use(cors(corsOptions));
+app.disable('x-powered-by');
 
 const PORT = CONFIG.PORT || 3006;
 
