@@ -157,11 +157,11 @@ export function usePlanner() {
         'negative',
         'error',
         'top',
-        3500);  
+        3500);
       return false;
     }
 
-    if (!formData.value.vehicle){
+    if (!formData.value.vehicle) {
       customAlert("Selecciona el lloguer de vehicle",
         'negative',
         'error',
@@ -170,7 +170,7 @@ export function usePlanner() {
       return false;
     }
 
-    if (!formData.value.vehicletype) { 
+    if (!formData.value.vehicletype) {
       customAlert("Selecciona el tipus de vehicle.",
         'negative',
         'error',
@@ -296,7 +296,7 @@ export function usePlanner() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            text:text
+            text
           })
         });
 

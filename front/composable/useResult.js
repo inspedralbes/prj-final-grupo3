@@ -127,11 +127,9 @@ export function useResult() {
       }
 
       await aiGeminiStore.setResponse(newResponseText);
-      // await aiGeminiStore.setResponse(JSON.stringify(newResponseText));
 
       router.push({
         path: "/result",
-        // query: { response: JSON.stringify(data) },
       });
 
       showConfirmation.value = false;
