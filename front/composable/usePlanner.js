@@ -2,7 +2,7 @@ import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '~/store/authUser';
 import { useAlert } from './useAlert';
-import { getCountries, getTypes, getMovilities, postTravel } from '@/services/communicationManager';
+import { getCountries, getTypes, getMovilities, postTravel, getTravelGemini } from '@/services/communicationManager';
 import { useAIGeminiStore } from '~/store/aiGeminiStore';
 
 
@@ -287,39 +287,13 @@ export function usePlanner() {
 
         router.push({ name: "loading" });
 
-        const key = config.public.apiKey;
-        const text = JSON.stringify(requestText);
-
-        const response = await fetch(`http://localhost:3006/api/gemini/response`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            text
-          })
-        });
-
-        if (!response.ok) throw new Error("Error al cridar la IA de Gemini");
-
-        const result = await response.json();
-
-        // let responseText = null
-
-        // if (
-        //   result &&
-        //   result.candidates &&
-        //   result.candidates[0]?.content?.parts[0]?.text
-        // ) {
-        //   console.log('json', result.candidates[0].content.parts[0].text);
-        //   responseText = result.candidates[0].content.parts[0].text;
-        // }
+        const result = await getTravelGemini(requestText);
 
         await aiGeminiStore.setResponse(result);
 
-        console.log('Persistencia en pinia', aiGeminiStore.responseText); // Accede directamente al store
+        console.log('Persistencia en pinia', aiGeminiStore.responseText);
 
-        router.push({ name: "result", });
+        router.push({ name: "result" });
       }
     } catch (error) {
       console.error("Error al enviar el formulari:", error);

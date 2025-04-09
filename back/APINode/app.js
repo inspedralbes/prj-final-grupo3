@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
   res.send("Hello from Node.js!");
 });
 
-app.use("/api/gemini", cors(corsOptions), geminiRoutes);
+app.use("/api/gemini", geminiRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto ${PORT}`);

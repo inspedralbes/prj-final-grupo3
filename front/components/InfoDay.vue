@@ -11,5 +11,4 @@
 const prop = defineProps({
   act: Object
 })
-console.log("Prop de infoDay", prop.act);
 </script>

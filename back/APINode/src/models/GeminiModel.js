@@ -24,6 +24,7 @@ export class GeminiModel {
         responseText = data.candidates[0].content.parts[0].text;
         console.log('ResponseText:', data.candidates[0].content.parts[0].text);
       }
+
       return responseText;
     } catch (error) {
       console.error(error);
