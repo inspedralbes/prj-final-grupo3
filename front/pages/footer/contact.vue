@@ -24,11 +24,15 @@
           <span>Barcelona, Catalunya</span>
         </div>
   
-        <div class="flex items-center space-x-2">
+        <div class="flex items-center gap-2">
           <span class="font-semibold">🌐 Xarxes socials:</span>
-          <div class="flex space-x-4">
-            <a href="https://www.instagram.com/triplan__/" target="_blank" class="text-blue-600 hover:underline">Instagram</a>
-            <a href="https://x.com/Triplan__" target="_blank" class="text-blue-600 hover:underline">X</a>
+          <div class="flex gap-2">
+            <a href="https://www.instagram.com/triplan__/" target="_blank" class="text-blue-600 hover:underline">
+              <img src="../../assets/images/instagram.svg" alt="" class="size-9" title="Instagram">
+            </a>
+            <a href="https://x.com/Triplan__" target="_blank" class="text-blue-600 hover:underline">
+              <img src="../../assets/images/twitter.svg" alt="" class="size-9" title="Twitter">
+            </a>
           </div>
         </div>
       </div>
