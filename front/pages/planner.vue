@@ -12,21 +12,25 @@
           <el-row :gutter="20">
             <!-- Country -->
             <el-col :span="12">
-              <el-form-item label="País*" class="mb-6">
-                <div class="relative">
-                  <el-select v-model="planner.searchQuery.value" filterable placeholder="On viatges?" class="w-full"
-                    clearable @change="planner.selectCountry">
-                    <el-option v-for="country in planner.filteredCountries.value" :key="country.id"
-                      :label="country.name" :value="country" />
-                  </el-select>
-                </div>
+              <el-form-item class="mb-6">
+                <template #label>
+                  <span>País <span class="text-red-500">*</span></span>
+                </template>
+                <el-select v-model="planner.searchQuery.value" filterable placeholder="On viatges?" class="w-full"
+                  clearable @change="planner.selectCountry">
+                  <el-option v-for="country in planner.filteredCountries.value" :key="country.id" :label="country.name"
+                    :value="country" />
+                </el-select>
               </el-form-item>
             </el-col>
 
             <!-- Type of trip -->
             <el-col :span="12">
               <div class="flex flex-col sm:flex-row gap-4">
-                <el-form-item label="Amb qui viatges?*">
+                <el-form-item class="w-full">
+                  <template #label>
+                    <span>Amb qui viatges? <span class="text-red-500">*</span></span>
+                  </template>
                   <el-select v-model="planner.formData.value.type" placeholder="Selecciona" class="flex-1">
                     <el-option v-for="type in planner.types.value" :key="type.id"
                       :label="type.id === 1 ? 'Sol/a' : type.id === 2 ? 'Família' : type.id === 3 ? 'Amics' : 'Parella'"
@@ -34,8 +38,10 @@
                   </el-select>
                 </el-form-item>
 
-                <el-form-item v-if="planner.formData.value.type === 2 || planner.formData.value.type === 3"
-                  label="Quant. de persones*">
+                <el-form-item v-if="planner.formData.value.type === 2 || planner.formData.value.type === 3">
+                  <template #label>
+                    <span>Quant. de persones <span class="text-red-500">*</span></span>
+                  </template>
                   <el-input-number v-model="planner.formData.value.travelers" :min="1" :max="20"
                     controls-position="right" class="flex-1" />
                 </el-form-item>
@@ -46,7 +52,10 @@
           <el-row :gutter="20">
             <!-- Dates -->
             <el-col :span="12">
-              <el-form-item label="Selecciona les dates*">
+              <el-form-item>
+                <template #label>
+                  <span>Selecciona les dates <span class="text-red-500">*</span></span>
+                </template>
                 <el-date-picker v-model="planner.dateRange.value" type="daterange" range-separator="a"
                   start-placeholder="Data inici" end-placeholder="Data fi" :min-date="new Date()"
                   :disabled-date="(time) => time.getTime() < Date.now() - 8.64e7" class="w-full" />
@@ -56,7 +65,10 @@
             <!-- Vehicle -->
             <el-col :span="12">
               <div class="flex flex-col sm:flex-row gap-4">
-                <el-form-item label="Lloguer de vehicle*">
+                <el-form-item class="w-full">
+                  <template #label>
+                    <span>Lloguer de vehicle <span class="text-red-500">*</span></span>
+                  </template>
                   <el-select v-model="planner.formData.value.vehicle" placeholder="Selecciona" class="w-full">
                     <el-option label="Si" value="yes" />
                     <el-option v-for="movility in planner.movilities.value.filter(m => m.id === 4)" :key="movility.id"
@@ -64,7 +76,10 @@
                   </el-select>
                 </el-form-item>
 
-                <el-form-item v-if="planner.formData.value.vehicle === 'yes'" label="Tipus de vehicle*">
+                <el-form-item v-if="planner.formData.value.vehicle === 'yes'" class="w-full">
+                  <template #label>
+                    <span>Tipus de vehicle <span class="text-red-500">*</span></span>
+                  </template>
                   <el-select v-model="planner.formData.value.vehicletype" placeholder="Selecciona" class="w-full">
                     <el-option v-for="movility in planner.movilities.value.filter(m => m.id !== 4)" :key="movility.id"
                       :label="movility.id === 1 ? 'Bicicleta' : movility.id === 2 ? 'Cotxe' : 'Moto'"
@@ -75,19 +90,22 @@
             </el-col>
           </el-row>
 
-          <el-form-item label="Pressupost del viatge (€)*">
+          <el-form-item>
+            <template #label>
+              <span>Pressupost del viatge (€) <span class="text-red-500">*</span></span>
+            </template>
             <div class="w-full">
               <!-- Inputs -->
               <div class="flex items-center justify-between gap-4 mb-2">
                 <div class="flex items-center gap-2">
                   <label class="text-sm text-gray-600 font-medium">Mín</label>
-                  <el-input-number v-model="planner.budgetRange.value[0]" :min="0" :max="planner.budgetRange.value[1]"
+                  <el-input-number v-model="planner.budgetRange.value[0]" :min="0" :max="planner.budgetRange.value[1]" :value="planner.budgetRange.value[0]"
                     :step="100" controls-position="right" class="w-28" />
                 </div>
                 <span class="text-gray-400">-</span>
                 <div class="flex items-center gap-2">
                   <label class="text-sm text-gray-600 font-medium">Max</label>
-                  <el-input-number v-model="planner.budgetRange.value[1]" :min="planner.budgetRange.value[0]"
+                  <el-input-number v-model="planner.budgetRange.value[1]" :min="planner.budgetRange.value[0]" :value="planner.budgetRange.value[1]"
                     :max="10000" :step="100" controls-position="right" class="w-28" />
                 </div>
               </div>
@@ -101,9 +119,12 @@
 
 
           <!-- Interests -->
-          <el-form-item label="Interessos*">
+          <el-form-item>
+            <template #label>
+              <span>Interessos <span class="text-red-500">*</span></span>
+            </template>
             <el-input v-model="planner.formData.value.interests" type="textarea" :rows="3"
-              placeholder="Que t'interessa? (e.x., cultura, aventura, relax)" class="w-full"/>
+              placeholder="Que t'interessa? (e.x., cultura, aventura, relax)" class="w-full" />
           </el-form-item>
 
           <el-button type="primary" native-type="submit" class="w-full mt-8 h-12 text-lg font-medium">
