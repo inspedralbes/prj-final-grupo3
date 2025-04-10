@@ -95,7 +95,7 @@ export function useResult() {
 
       const newTripMessage = `
       Fes un nou vaitge basan-te en aquestes dades, intenta que sigui un viatge diferent, però sigui coherent amb aquestes dades y seguint la mateixa estrucutra del json que et dono:
-        ${aiGeminiStore.responseText}.
+        ${aiGeminiStore.initialResponse}.
          Sense cap bloc de codi (res de \`\`\`json), i sense formatació markdown. Retorna només l'objecte JSON pur.
          Retorna la resposta sempre en el mateix format.
           {
@@ -139,7 +139,6 @@ export function useResult() {
       const newTripMessageWithSystemPrompt = `${systemPrompt}\n\n${newTripMessage}`;
 
       console.log(newTripMessageWithSystemPrompt);
-
 
       const data = await getTravelGemini(newTripMessageWithSystemPrompt);
 

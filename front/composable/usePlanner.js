@@ -289,9 +289,11 @@ export function usePlanner() {
 
         const result = await getTravelGemini(requestText);
 
-        await aiGeminiStore.setResponse(result);
+        await aiGeminiStore.setInitialResponse(result);
 
-        console.log('Persistencia en pinia', aiGeminiStore.responseText);
+        await aiGeminiStore.setResponse(aiGeminiStore.initialResponse);
+
+        console.log('Persistencia en pinia', aiGeminiStore.initialResponse);
 
         router.push({ name: "result" });
       }
