@@ -42,9 +42,6 @@ export function useRegisterAuth() {
 
   const registerUser = async () => {
 
-    console.log(registerData);
-
-
     loading.value = true;
     success.value = false;
 
@@ -54,6 +51,8 @@ export function useRegisterAuth() {
     }
 
     try {
+      console.log(registerData.gender);
+      
       const response = await com.register(registerData);
       // Here pass the info to a store
       if (response.status === 'error') {

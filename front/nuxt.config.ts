@@ -19,7 +19,8 @@ export default defineNuxtConfig({
     public: {
       apiUrl: process.env.NUXT_API_URL,
       appName: process.env.NUXT_APP_NAME,
-      apiKey: process.env.NUXT_GEMINI_API_KEY
+      apiKey: process.env.NUXT_GEMINI_API_KEY,
+      apiUrlNode: process.env.NUXT_APP_URL_NODE
     },
   }
 })

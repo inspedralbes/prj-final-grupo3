@@ -61,6 +61,7 @@
                     <option value="" disabled selected>{{ old('gender', $user->gender) }}</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
+                    <option value="other">Prefereixo no dir-ho</option>
                 </select>
 
                 <div class="flex justify-end">

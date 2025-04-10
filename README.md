@@ -21,3 +21,5 @@
 
 ## Estat
 - 
+## Logo
+![favicon-96x96](https://github.com/user-attachments/assets/f5ef9263-b3cc-463c-b600-3c474d4ad8b5)

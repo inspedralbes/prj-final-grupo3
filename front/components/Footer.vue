@@ -6,16 +6,20 @@
         <div class="flex items-center space-x-2">
           <!-- <img src="/logo.png" alt="Triplan Logo" class="h-8 w-auto" /> -->
           <p class="text-gray-600 text-sm">
-            © {{ new Date().getFullYear() }} Triplan. All rights reserved.
+            © {{ new Date().getFullYear() }} Triplan. Tots els drets reservats.
           </p>
         </div>
 
         <!-- Links -->
         <div class="flex space-x-6">
-          <a href="#" class="text-gray-600 hover:text-blue-600 text-sm">About Us</a>
-          <a href="#" class="text-gray-600 hover:text-blue-600 text-sm">Privacy Policy</a>
-          <a href="#" class="text-gray-600 hover:text-blue-600 text-sm">Terms of Service</a>
-          <a href="#" class="text-gray-600 hover:text-blue-600 text-sm">Contact</a>
+          <button @click="navigateToPage('/about-us')" class="text-gray-600 hover:text-blue-600 text-sm">Sobre
+            nosaltres</button>
+          <button @click="navigateToPage('/privacy-policy')" class="text-gray-600 hover:text-blue-600 text-sm">Política
+            de privacitat</button>
+          <button @click="navigateToPage('/terms-of-service')"
+            class="text-gray-600 hover:text-blue-600 text-sm">Condicions del servei</button>
+          <button @click="navigateToPage('/contact')" class="text-gray-600 hover:text-blue-600 text-sm">Contacta amb
+            nosaltres</button>
         </div>
       </div>
     </div>
@@ -23,5 +27,7 @@
 </template>
 
 <script setup>
-// No additional setup needed for now
+import { useFooter } from '~/composable/useFooter';
+
+const { navigateToPage } = useFooter();
 </script>

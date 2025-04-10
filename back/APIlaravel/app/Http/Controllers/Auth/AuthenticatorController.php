@@ -84,7 +84,9 @@ class AuthenticatorController extends Controller
             // Asignar avatar por defecto según el género
             if ($data['gender'] == 'male') {
                 $user->avatar = '/default_avatar_male.png';
-            } else {
+            } else if ($data['gender'] == 'other') {
+                $user->avatar = '/default_avatar_other.png';
+            }else{
                 $user->avatar = '/default_avatar_female.png';
             }
     
