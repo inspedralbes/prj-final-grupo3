@@ -11,11 +11,14 @@ export function useSettings() {
   const currentUser = ref({});
   const avatar = ref()
   const isEditing = ref(false);
+  const newAvatarFile = ref(null);
 
 
   const getCurrentUser = async () => {
 
     const response = await com.getCurrentUser(authStore.token);
+    const baseURL = config.public.appName;
+    avatar.value = `${baseURL}/${response.avatar}`	
     // console.log(response);
     if (response.status === 'error') {
       customAlert(response.message, 'negative', 'error', 'top', 1500);
@@ -37,7 +40,10 @@ export function useSettings() {
       ...currentUser.value
     })
 
-    // Logic to confirm changes
+    if (newAvatarFile.value) {
+      newDataUser.avatarFile = newAvatarFile.value;
+    }
+
     const response = await com.changeInfoUser(authStore.token, newDataUser);
     const dataUser = await com.getCurrentUser(authStore.token);
 
@@ -48,7 +54,6 @@ export function useSettings() {
       currentUser.value = dataUser;
       customAlert(response.message, 'success', 'success', 'top', 2000);
     }
-
     toggleEdit();
   };
 
@@ -57,10 +62,22 @@ export function useSettings() {
     // Logic to cancel changes
   };
 
+  const handleAvatarChange = (uploadFile) => {
+    newAvatarFile.value = uploadFile;
+
+    //previsualize
+    const reader = new FileReader();
+    reader.onload = () => {
+      avatar.value = reader.result;
+    };
+    reader.readAsDataURL(uploadFile.raw);
+  }
+
   onMounted(async () => {
-    getCurrentUser();
+    await getCurrentUser();
     const baseURL = config.public.appName
-    const avatarUrl = `${baseURL}/${authStore.user.avatar}`;
+    // const avatarUrl = `${baseURL}/${authStore.user.avatar}`;
+    const avatarUrl = `${baseURL}/${currentUser.value.avatar}`;	
     avatar.value = avatarUrl;
   })
 
@@ -70,6 +87,7 @@ export function useSettings() {
     isEditing,
     toggleEdit,
     confirmEdit,
-    cancelEdit
+    cancelEdit,
+    handleAvatarChange    
   }
 }

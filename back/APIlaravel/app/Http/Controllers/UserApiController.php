@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+
 
 class UserApiController extends Controller
 {
@@ -59,12 +61,22 @@ class UserApiController extends Controller
       // Validation input data
       $validated = $request->validate([
         'name' => 'nullable|string|max:255',
+        'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         'surname' => 'nullable|string|max:255',
         'email' => 'nullable|string|email|max:255|unique:users,email,' . $id,
         'email_alternative' => 'nullable|string|email|max:255|unique:users,email_alternative,' . $id,
         'birth_date' => 'nullable|date',
         'phone_number' => 'nullable|digits:9',
       ]);
+
+      if ($request->hasFile('avatar')) {
+        $file = $request->file('avatar');
+        $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+        $file->storeAs('public/avatars', $filename);
+        
+        $user->avatar = 'storage/avatars/' . $filename; 
+      }
+      
 
       $user->update([
         'name' => $validated['name'] ?? $user->name,
