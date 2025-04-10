@@ -10,7 +10,8 @@
           <TargetDay :vista="result.modeVista.value" :dia="result.diaActual.value" />
 
           <div class="flex flex-col justify-center items-center gap-2 mt-6 ">
-            <p class="text-sm text-gray-500">{{ result.diaActualIndex.value + 1 }} de {{ result.diesViatge.value.length }}</p>
+            <p class="text-sm text-gray-500">{{ result.diaActualIndex.value + 1 }} de {{ result.diesViatge.value.length
+            }}</p>
             <div class="flex justify-center gap-4">
               <button @click="result.mostrarDiaAnterior" class="">
                 <!-- No m'agrada -->
@@ -23,7 +24,7 @@
             </div>
             <button
               class="border-b border-blue-600/50 text-blue-600/50 hover:text-blue-600 transition duration-200 hover:border-blue-600 mt-4"
-              @click="result.modeVista.value = 'resum'">Ver resum</button>
+              @click="result.modeVista.value = 'resum'">Veure resum</button>
           </div>
         </div>
 
@@ -51,7 +52,7 @@
           <!--download pdf-->
           <div v-if="result.modeVista.value === 'resum'" class="flex">
             <button @click="result.downloadPDF"
-              class="text-green-600 hover:text-white border-b-2 border-green-600 py-2 px-4 rounded-t-lg hover:bg-green-700 transition duration-200 text-lg font-semibold">
+              class="text-green-600 hover:text-white border-b-2 border-green-600 py-2 px-4 rounded-t-lg hover:bg-green-700 transition duration-500 text-lg font-semibold">
               📄 Descarregar PDF
             </button>
           </div>
