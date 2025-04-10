@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { login } from "~/services/communicationManager";
 
 export const useAuthStore = defineStore('auth', {
 
@@ -15,9 +14,6 @@ export const useAuthStore = defineStore('auth', {
   },
   actions: {
     login(userData, userToken) {
-      console.log('User logged in:', userData);
-      console.log('User token:', userToken);
-
       this.isAuthenticated = true;
       this.user = userData;
       this.token = userToken;

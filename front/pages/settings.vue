@@ -38,6 +38,9 @@ const fullName = `${authStore.user?.name} ${authStore.user?.surname}`
           <el-avatar :size="100" :src="settings.avatar.value" :alt="`${fullName || 'User'}'s avatar`"
             class="bg-white border border-gray-200" />
         </div>
+        <el-upload v-if="settings.isEditing.value" class="upload-demo" action="" :auto-upload="false" :show-file-list="false" :on-change="settings.handleAvatarChange" accept="image/*">
+          <el-button type="primary">Carregar imatge</el-button>
+        </el-upload>
 
         <!-- Form -->
         <el-form label-position="top">

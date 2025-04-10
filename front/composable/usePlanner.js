@@ -1,22 +1,27 @@
 import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '~/store/authUser';
-import { getCountries, getTypes, getMovilities } from '@/services/communicationManager';
+import { useAlert } from './useAlert';
+import { getCountries, getTypes, getMovilities, postTravel, getTravelGemini } from '@/services/communicationManager';
+import { useAIGeminiStore } from '~/store/aiGeminiStore';
+
 
 export function usePlanner() {
   const config = useRuntimeConfig();
   const router = useRouter();
   const authStore = useAuthStore();
+  const aiGeminiStore = useAIGeminiStore();
+  const { customAlert } = useAlert();
 
   const formData = ref({
     country: "",
     datesinit: "",
     datesfinal: "",
-    travelers: "",
+    travelers: 1,
     interests: "",
     type: "",
-    budgetmin: "",
-    budgetmax: "",
+    budgetmin: 250,
+    budgetmax: 3500,
     vehicle: "",
     vehicletype: "",
   });
@@ -29,6 +34,7 @@ export function usePlanner() {
   const showDropdown = ref(false);
   const budgetMax = ref(7500);
   const budgetMin = ref(250);
+  const budgetRange = ref([budgetMin.value, budgetMax.value])
   const types = ref([]);
   const movilities = ref([]);
 
@@ -38,16 +44,14 @@ export function usePlanner() {
       const [countryList, movilityList, typeList] = await Promise.all([
         getCountries(),
         getMovilities(),
-        getTypes()
+        getTypes(),
       ]);
-
 
       countries.value = countryList;
       filteredCountries.value = countryList;
       movilities.value = movilityList;
       filteredMovilities.value = movilityList;
       types.value = typeList;
-      console.log(types.value);
     } catch (error) {
       console.error("Error carregant dades:", error);
     }
@@ -82,6 +86,13 @@ export function usePlanner() {
   const selectedType = computed(() => formData.value.type);
   const vehicle = computed(() => formData.value.vehicle);
 
+  const onSliderChange = ([min, max]) => {
+    budgetMin.value = min
+    budgetMax.value = max
+    formData.value.budgetmin = min
+    formData.value.budgetmax = max
+  }
+
   // Watch for date changes
   watch(dateRange, (newValue) => {
     if (newValue.length === 2) {
@@ -90,15 +101,7 @@ export function usePlanner() {
     }
   });
 
-  // Watch for budget changes
-  watch(budgetMin, (newValue) => {
-    formData.value.budgetmin = newValue;
-  });
-
-  watch(budgetMax, (newValue) => {
-    formData.value.budgetmax = newValue;
-  });
-
+  //Watch for vehicle
   watch(() => formData.value.vehicle, (newVal) => {
     if (newVal !== "yes") {
       formData.value.vehicletype = 4;
@@ -107,14 +110,81 @@ export function usePlanner() {
     }
   });
 
+  //Watch for budget
+  watch([budgetMin, budgetMax], ([min, max]) => {
+    budgetRange.value = [min, max]
+    formData.value.budgetmin = min
+    formData.value.budgetmax = max
+  })
+
+  watch(budgetRange, ([min, max]) => {
+    budgetMin.value = min
+    budgetMax.value = max
+    formData.value.budgetmin = min
+    formData.value.budgetmax = max
+  })
+
   const validateForm = () => {
     if (budgetMin.value >= budgetMax.value) {
-      alert("El pressupost mínim ha de ser inferior al màxim.");
+      customAlert("El pressupost mínim ha de ser inferior al màxim.",
+        'negative',
+        'error',
+        'top',
+        3500);
       return false;
     }
 
     if (!dateRange.value || dateRange.value.length !== 2) {
-      alert("Selecciona una data inicial i final per al viatge.");
+      customAlert("Selecciona una data d'inici i una data final.",
+        'negative',
+        'error',
+        'top',
+        3500);
+      return false;
+    }
+
+    if (!formData.value.country) {
+      customAlert("Selecciona un país.",
+        'negative',
+        'error',
+        'top',
+        3500);
+      return false;
+    }
+
+    if (!formData.value.type) {
+      customAlert("Selecciona amb qui viatges.",
+        'negative',
+        'error',
+        'top',
+        3500);
+      return false;
+    }
+
+    if (!formData.value.vehicle) {
+      customAlert("Selecciona el lloguer de vehicle",
+        'negative',
+        'error',
+        'top',
+        3500);
+      return false;
+    }
+
+    if (!formData.value.vehicletype) {
+      customAlert("Selecciona el tipus de vehicle.",
+        'negative',
+        'error',
+        'top',
+        3500);
+      return false;
+    }
+
+    if (!formData.value.interests) {
+      customAlert("Selecciona alguns interessos.",
+        'negative',
+        'error',
+        'top',
+        3500);
       return false;
     }
 
@@ -127,29 +197,30 @@ export function usePlanner() {
     endDate.setHours(0, 0, 0, 0);
 
     if (startDate < today) {
-      alert("La data d'inici no pot ser anterior a la data actual.");
+      customAlert("La data d'inici no pot ser anterior a la data actual.",
+        'negative',
+        'error',
+        'top',
+        3500);
       return false;
     }
 
     if (endDate <= startDate) {
-      alert("La data de tornada ha de ser posterior a la d'anada.");
+      customAlert("La data de tornada ha de ser posterior a la d'anada.",
+        'negative',
+        'error',
+        'top',
+        3500);
       return false;
     }
-
     return true;
-  };
-
-  const syncWithBudget = () => {
-    if (budgetMin.value > budgetMax.value) {
-      budgetMin.value = budgetMax.value - 100;
-    }
-    if (budgetMax.value < budgetMin.value) {
-      budgetMax.value = budgetMin.value + 100;
-    }
   };
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
+
+    // formData.value.budgetmin = budgetMin.value
+    // formData.value.budgetmax = budgetMax.value
 
     try {
       const travelData = {
@@ -164,63 +235,77 @@ export function usePlanner() {
         description: formData.value.interests,
       };
 
-      const HOST = config.public.apiUrl;
-      const dbResponse = await fetch(`${HOST}/travels`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify(travelData),
-      });
+      const dbResponse = await postTravel(travelData, authStore.token);
+      const currentCountry = countries.value.find(country => country.id === formData.value.country);
+      console.log('currentCountry', currentCountry.name)
+      if (dbResponse.code === 201) {
+        const vehicleTypes = {
+          1: "Bicicleta",
+          2: "Moto",
+          3: "Cotxe",
+          4: "No vehicle"
+        };
 
-      if (!dbResponse.ok) {
-        throw new Error("Error al guardar el viatge en la base de dades");
+        const requestText = `
+          Planifica un viatge per a ${formData.value.travelers} persones ${formData.value.type === 1 ? "sol" : `amb ${formData.value.type}`}.
+          Destí: ${currentCountry.name}.
+          Dates: del ${formData.value.datesinit} al ${formData.value.datesfinal}.
+          Pressupost: entre ${formData.value.budgetmin}€ i ${formData.value.budgetmax}€.
+          Interessos: ${formData.value.interests}.
+          Vehicle: ${formData.value.vehicletype}.
+          Tipus de vehicle: ${vehicleTypes[formData.value.vehicletype] || "No especificat"}.
+          Cada dia ha d'incloure tos els seus detalls.
+          El nombre de dies ha de coincidir amb els dies que t'he indicat abans.Gràcies.   
+          Bastant detallat i a més que el resultat ha d'estar estructurat com un objecte que contingui un array anomenat dies, on cada element representa un dia del viatge.
+          📌 **Important:** la resposta ha de ser **només un JSON vàlid**, **sense text introductori**, sense cap bloc de codi (res de \`\`\`json), i sense formatació markdown. Retorna només l'objecte JSON pur.
+          Exemple esperat:
+          Retorna la resposta sempre en el mateix format.
+          {
+            "viatge": {
+              "titol": "...",
+              "dies": [
+                {
+                  "dia": Data del dia,
+                  "allotjament": "...",
+                  "activitats": [
+                    {
+                      "nom": "...",
+                      "descripcio": "...",
+                      "preu": "...",
+                      "horari": "..."
+                    },
+                    ...
+                  ]
+                }
+              ],
+              preuTotal: "...",
+            }
+          }
+          Tota la informació ha d'estar en català.
+          Gràcies!
+         `;
+
+        router.push({ name: "loading" });
+
+        const result = await getTravelGemini(requestText);
+
+        await aiGeminiStore.setInitialResponse(result);
+
+        await aiGeminiStore.setResponse(aiGeminiStore.initialResponse);
+
+        console.log('Persistencia en pinia', aiGeminiStore.initialResponse);
+
+        router.push({ name: "result" });
       }
-
-      const vehicleTypes = {
-        1: "Bicicleta",
-        2: "Moto",
-        3: "Cotxe",
-        4: "No vehicle"
-      };
-
-      const requestText = `
-        Planifica un viatge per a ${formData.value.travelers} persones ${formData.value.type === "alone" ? "sol" : `amb ${formData.value.type}`}.
-        Destí: ${formData.value.country}.
-        Dates: del ${formData.value.datesinit} al ${formData.value.datesfinal}.
-        Pressupost: entre ${formData.value.budgetmin}€ i ${formData.value.budgetmax}€.
-        Interessos: ${formData.value.interests}.
-        Vehicle: ${formData.value.vehicletype}.
-        Tipus de vehicle: ${vehicleTypes[formData.value.vehicletype] || "No especificat"}.
-      `;
-
-      router.push({ name: "loading" });
-
-      const key = config.public.apiKey;
-      const text = JSON.stringify(requestText);
-
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text }] }]
-        })
-      });
-
-      if (!response.ok) throw new Error("Error al cridar la IA de Gemini");
-
-      const result = await response.json();
-
-      router.push({
-        name: "result",
-        query: { response: JSON.stringify(result) },
-      });
     } catch (error) {
       console.error("Error al enviar el formulari:", error);
-      alert("S'ha produït un error en processar la sol·licitud");
+      customAlert({
+        title: 'Error',
+        message: 'S\'ha produït un error en processar la sol·licitud. Si el problema persisteix, siusplau, contacta amb el nostre equip de suport.',
+        type: 'error',
+        showCancelButton: false,
+        confirmButtonText: 'Tancar'
+      })
     }
   };
 
@@ -238,10 +323,12 @@ export function usePlanner() {
     filterMovilities,
     selectCountry,
     hideDropdown,
-    syncWithBudget,
+    // syncWithBudget,
     handleSubmit,
     loadInitialData,
     selectedType,
-    vehicle
+    vehicle,
+    budgetRange,
+    onSliderChange,
   };
 }

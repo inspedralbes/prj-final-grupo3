@@ -1,33 +1,32 @@
-import { useRoute, useRouter } from 'vue-router';
-import { computed, ref, watch } from 'vue';
-import { marked } from 'marked';
+import { useRoute, useRouter } from "vue-router";
+import { computed, ref } from "vue";
+import { marked } from "marked";
 import { jsPDF } from "jspdf";
+import { getTravelGemini } from '@/services/communicationManager';
+import { useAIGeminiStore } from "~/store/aiGeminiStore";
 
 export function useResult() {
-  const route = useRoute();
+  const aiGeminiStore = useAIGeminiStore();
+  const response = ref(null);
   const router = useRouter();
-  const response = ref(route.query.response ? JSON.parse(route.query.response) : null);
   const showConfirmation = ref(false);
-
-  watch(
-    () => route.query.response,
-    (newResponse) => {
-      response.value = newResponse ? JSON.parse(newResponse) : null;
-    }
-  );
+  const diaActualIndex = ref(0);
+  const diaActual = computed(() => diesViatge.value[diaActualIndex.value] || null);
+  const modeVista = ref("pas-a-pas");
 
   const responseText = computed(() => {
-    if (response.value && response.value.candidates && response.value.candidates[0]?.content?.parts[0]?.text) {
-      return response.value.candidates[0].content.parts[0].text;
+    if (aiGeminiStore.responseText) {
+      const json = JSON.parse(aiGeminiStore.responseText);
+      console.log("JSON RESPONSE:", json);
+      return json;
     }
-    return null;
   });
 
   const formattedResponseText = computed(() => {
     if (responseText.value) {
       return marked(responseText.value);
     }
-    return '';
+    return "";
   });
 
   const showCancelOptions = () => {
@@ -36,11 +35,13 @@ export function useResult() {
 
   const handleAccept = () => {
     alert("Planning del viatge guardat correctament");
+    aiGeminiStore.responseText = null;
     router.push("/");
   };
 
   const handleCancel = () => {
     alert("El viatge s'ha cancel·lat.");
+    aiGeminiStore.responseText = null;
     router.push("/");
   };
 
@@ -76,7 +77,7 @@ export function useResult() {
     const lineHeight = 7;
     let y = topMargin + 20 + titleGap;
 
-    lines.forEach(line => {
+    lines.forEach((line) => {
       if (y + lineHeight > pageHeight - bottomMargin) {
         doc.addPage();
         y = topMargin;
@@ -90,39 +91,109 @@ export function useResult() {
 
   const generateNewTrip = async () => {
     try {
-      const previousDataText = responseText.value;
-      router.push({ name: 'loading' });
-      
+      router.push({ name: "loading" });
+
       const newTripMessage = `
-        Hazme un nuevo viaje basándote en estos datos:
-        ${previousDataText}
+      Fes un nou vaitge basan-te en aquestes dades, intenta que sigui un viatge diferent, però sigui coherent amb aquestes dades y seguint la mateixa estrucutra del json que et dono:
+        ${aiGeminiStore.initialResponse}.
+         Sense cap bloc de codi (res de \`\`\`json), i sense formatació markdown. Retorna només l'objecte JSON pur.
+         Retorna la resposta sempre en el mateix format.
+          {
+            "viatge": {
+              "titol": "...",
+              "dies": [
+                {
+                  "dia": número de dia y dia de la setmana,
+                  "allotjament": "...",
+                  "activitats": [
+                    {
+                      "nom": "...",
+                      "descripcio": "...",
+                      "preu": "...",
+                      "horari": "..."
+                    },
+                    ...
+                  ]
+                }
+              ],
+              preuTotal: "...",
+            }
+          }
+          Recorda mantenir els mateixos dies que ha seleccionat l'usuari, però intenta que sigui un viatge diferent.
+          Tota la informació ha d'estar en català.
       `;
 
-      const response = await fetch('/api/gemini', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text: newTripMessage
-        }),
-      });
+      const systemPrompt = `
+        Por favor, formatea todas las fechas en catalán siguiendo este formato exacto:
+        - Día del mes en número sin ceros a la izquierda
+        - Día de la semana en catalán, primera letra en mayúscula
+        - Mes en minúsculas en catalán
+        - 'de' como separador
+        - 'd'' como separador
+        - Año completo en números
 
-      if (!response.ok) {
-        throw new Error('Error en la respuesta del servidor');
-      }
+        Ejemplo: "Dimecres 9 d'abril de 2025"
+        Asegúrate de usar siempre este formato para cualquier fecha que aparezca en la respuesta.
+        `;
 
-      const data = await response.json();
-      
-      router.push({
-        path: '/result',
-        query: { response: JSON.stringify(data) }
-      });
+      const newTripMessageWithSystemPrompt = `${systemPrompt}\n\n${newTripMessage}`;
+
+      console.log(newTripMessageWithSystemPrompt);
+
+      const data = await getTravelGemini(newTripMessageWithSystemPrompt);
+
+      console.log("Nou viatge generat:", data);
+
+      await aiGeminiStore.setResponse(data);
+
+      router.push({ path: "/result" });
 
       showConfirmation.value = false;
-
     } catch (error) {
-      console.error('Error al generar un nuevo viaje:', error);
+      console.error("Error al generar un nuevo viaje:", error);
+    }
+  };
+
+  const diesViatge = computed(() => {
+    return responseText.value.viatge?.dies || [];
+  });
+
+  const titol = computed(() => {
+    return responseText.value.viatge?.titol || "";
+  });
+
+
+  const preuTotal = computed(() => {
+    return responseText.value.viatge?.preuTotal || 0;
+  })
+
+  // const mostrarSeguentDia = () => {
+  //   if (diaActualIndex.value < diesViatge.value.length - 1) {
+  //     console.log('avanço');
+  //     diaActualIndex.value++;
+  //   } else {
+  //     console.log('no avanço, ja que @click no m"magrada');
+  //     modeVista.value = "resum";
+  //   }
+  // };
+
+  const mostrarDiaAnterior = () => {
+    if (diaActualIndex.value > 0) {
+      console.log('torno');
+      diaActualIndex.value--;
+    } else {
+      console.log('no avanço, ja estic al primer dia');
+      // modeVista.value = "resum";
+    }
+  };
+
+  const mostrarDiaSeguent = () => {
+    if (diaActualIndex.value < diesViatge.value.length - 1) {
+      console.log('avanço');
+      diaActualIndex.value++;
+    } else {
+      console.log('no avanço, ja estic al ultim dia');
+      // modeVista.value = "resum";
     }
   };
 
@@ -135,6 +206,15 @@ export function useResult() {
     handleAccept,
     handleCancel,
     generateNewTrip,
-    downloadPDF
+    downloadPDF,
+    diesViatge,
+    diaActual,
+    mostrarDiaAnterior,
+    mostrarDiaSeguent,
+    diaActualIndex,
+    // mostrarSeguentDia,
+    modeVista,
+    preuTotal,
+    titol,
   };
 }

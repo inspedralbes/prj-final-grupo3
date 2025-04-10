@@ -1,9 +1,10 @@
 const config = useRuntimeConfig();
 
 const HOST = config.public.apiUrl;
+const HOSTNODE = config.public.apiUrlNode;
 
 export async function getTypes() {
-  const URL = `${HOST}/types`
+  const URL = `${HOST}/types`;
 
   try {
     const response = await fetch(URL, {
@@ -25,7 +26,7 @@ export async function getTypes() {
   }
 }
 export async function getMovilities() {
-  const URL = `${HOST}/movilities`
+  const URL = `${HOST}/movilities`;
 
   try {
     const response = await fetch(URL, {
@@ -48,7 +49,7 @@ export async function getMovilities() {
 }
 
 export async function getCountries() {
-  const URL = `${HOST}/countries`
+  const URL = `${HOST}/countries`;
 
   try {
     const response = await fetch(URL, {
@@ -71,7 +72,7 @@ export async function getCountries() {
 }
 
 export const register = async (userData) => {
-  const URL = `${HOST}/auth/register`
+  const URL = `${HOST}/auth/register`;
 
   console.log(userData);
 
@@ -89,7 +90,7 @@ export const register = async (userData) => {
 };
 
 export const login = async (userData) => {
-  const URL = `${HOST}/auth/login`
+  const URL = `${HOST}/auth/login`;
 
   const response = await fetch(URL, {
     method: "POST",
@@ -106,7 +107,7 @@ export const login = async (userData) => {
 };
 
 export async function logout() {
-  const URL = `${HOST}/auth/logout`
+  const URL = `${HOST}/auth/logout`;
 
   const response = await fetch(URL);
 
@@ -118,7 +119,7 @@ export async function logout() {
 }
 
 export async function getCurrentUser(currentUserToken) {
-  const URL = `${HOST}/currentUser`
+  const URL = `${HOST}/currentUser`;
 
   try {
     const response = await fetch(URL, {
@@ -167,57 +168,132 @@ export async function getCurrentUser(currentUserToken) {
 }
 
 export async function changeInfoUser(currentUserToken, userData) {
-
-  const URL = `${HOST}/changeInfoProfile`
+  const URL = `${HOST}/changeInfoProfile`;
 
   try {
+    const formData = new FormData();
+
+    formData.append("_method", "PATCH"); // Laravel PATCH workaround
+
+    for (const key in userData) {
+      if (["avatarFile", "avatar"].includes(key)) continue;
+      formData.append(key, userData[key]);
+    }
+
+    if (userData.avatarFile?.raw) {
+      formData.append("avatar", userData.avatarFile.raw);
+    }
+
+    console.log("Dades que senvien:");
+
+    for (const [key, val] of formData.entries()) {
+      if (val instanceof File) {
+        console.log(
+          `${key}: [Fitxer] nom=${val.name}, tipus=${val.type}, mida=${val.size}B`
+        );
+      } else {
+        console.log(`${key}:`, val);
+      }
+    }
+
     const response = await fetch(URL, {
-      method: "PATCH",
+      method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${currentUserToken}`,
       },
-      body: JSON.stringify({ ...userData }),
+      body: formData,
     });
 
     if (!response.ok) {
-      throw new Error(`Error en la solicitud: ${response.statusText}`);
+      const err = await response.json();
+      throw new Error(JSON.stringify(err?.error || err));
     }
 
-    const json = await response.json();
-    console.log("Respuesta del servidor:", json);
-    return json;
+    return await response.json();
   } catch (error) {
-    console.error("Error al cambiar la información del usuario:", error);
+    console.error("Error al canviar la informació del perfil:", error);
     return {
       status: "error",
-      message: "Error al cambiar la información del usuario.",
+      message: error.message || "Error al canviar la informació del perfil.",
     };
   }
 }
 
 export async function getUserTravelHistory(userId, currentUserToken) {
-  const URL = `${HOST}/trip-details/${userId}`
+  const URL = `${HOST}/trip-details/${userId}`;
 
   try {
     const response = await fetch(URL, {
-      method: 'GET',
-      credentials: 'include',
+      method: "GET",
+      credentials: "include",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${currentUserToken}`,
-      }
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentUserToken}`,
+      },
     });
 
     if (!response.ok) {
-      throw new Error(`Error al obtener el historial de viajes para el usuario ${userId}: ${response.statusText}`);
+      throw new Error(
+        `Error al obtener el historial de viajes para el usuario ${userId}: ${response.statusText}`
+      );
     }
 
     const travelHistory = await response.json();
-    console.log('Respuesta del servidor:', travelHistory);
+    console.log("Respuesta del servidor:", travelHistory);
     return travelHistory;
   } catch (error) {
-    console.error(`Error al obtener el historial de viajes del usuario ${userId}:`, error);
+    console.error(
+      `Error al obtener el historial de viajes del usuario ${userId}:`,
+      error
+    );
     throw error;
+  }
+}
+
+export async function postTravel(travelData, currentUserToken) {
+  console.log(travelData);
+
+  const response = await fetch(`${HOST}/travels`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${currentUserToken}`,
+    },
+    body: JSON.stringify(travelData),
+  });
+
+  const json = await response.json();
+  console.log("Respuesta desde el communication manager", json);
+
+  return json;
+}
+export async function getTravelGemini(text) {
+  if (!text) {
+    throw new Error("Text parameter is required");
+  }
+
+  try {
+    const response = await fetch(`${HOSTNODE}/api/gemini/response`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text })
+    });
+
+    // if (!response.ok) {
+    //   throw new Error(`Error in Gemini API request: ${response.statusText}`);
+    // }
+
+    const json = await response.json();
+
+    if (!json) {
+      throw new Error("Invalid response from Gemini API");
+    }
+
+    return json;
+  } catch (error) {
+    console.error("Error in getTravelGemini:", error);
+    throw new Error(`Failed to get travel plan: ${error.message}`);
   }
 }

@@ -104,7 +104,7 @@
             "email_alternative": "javi.r.alt@example.com",
             "password": "hashed_password_9",
             "phone_number": 600998877,
-            "gender": "Male",
+            "gender": "Other",
             "remember_token": "randomtoken106",
             "avatar": "https://example.com/avatars/john_doe.jpg"
         },
