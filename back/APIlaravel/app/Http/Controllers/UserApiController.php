@@ -72,9 +72,9 @@ class UserApiController extends Controller
       if ($request->hasFile('avatar')) {
         $file = $request->file('avatar');
         $filename = uniqid() . '.' . $file->getClientOriginalExtension();
-        $file->storeAs('public/avatars', $filename);
+        $file->move(public_path('avatars'), $filename);
         
-        $user->avatar = 'storage/avatars/' . $filename; 
+        $user->avatar = 'avatars/' . $filename; 
       }
       
 

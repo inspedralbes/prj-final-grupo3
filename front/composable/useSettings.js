@@ -52,6 +52,7 @@ export function useSettings() {
       return;
     } else {
       currentUser.value = dataUser;
+      authStore.user = dataUser; 
       customAlert(response.message, 'success', 'success', 'top', 2000);
     }
     toggleEdit();
