@@ -2,6 +2,7 @@ import { useRoute, useRouter } from "vue-router";
 import { computed, ref } from "vue";
 import { marked } from "marked";
 import { jsPDF } from "jspdf";
+import { getTravelGemini } from '@/services/communicationManager';
 import { useAIGeminiStore } from "~/store/aiGeminiStore";
 
 export function useResult() {
@@ -90,49 +91,62 @@ export function useResult() {
 
   const generateNewTrip = async () => {
     try {
-      // const previousDataText = responseText.value;
       router.push({ name: "loading" });
 
       const newTripMessage = `
-      Fes un nou vaitge basan-te en aquestes dades, intenta que sigui un viatge diferent, però sigui coherent amb aquestes dades i dintre de un preu raonable:
-        ${aiGeminiStore.responseText}.
+      Fes un nou vaitge basan-te en aquestes dades, intenta que sigui un viatge diferent, però sigui coherent amb aquestes dades y seguint la mateixa estrucutra del json que et dono:
+        ${aiGeminiStore.initialResponse}.
          Sense cap bloc de codi (res de \`\`\`json), i sense formatació markdown. Retorna només l'objecte JSON pur.
+         Retorna la resposta sempre en el mateix format.
+          {
+            "viatge": {
+              "titol": "...",
+              "dies": [
+                {
+                  "dia": número de dia y dia de la setmana,
+                  "allotjament": "...",
+                  "activitats": [
+                    {
+                      "nom": "...",
+                      "descripcio": "...",
+                      "preu": "...",
+                      "horari": "..."
+                    },
+                    ...
+                  ]
+                }
+              ],
+              preuTotal: "...",
+            }
+          }
+          Recorda mantenir els mateixos dies que ha seleccionat l'usuari, però intenta que sigui un viatge diferent.
+          Tota la informació ha d'estar en català.
       `;
 
-      const response = await fetch("/api/gemini", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          text: newTripMessage,
-        }),
-      });
+      const systemPrompt = `
+        Por favor, formatea todas las fechas en catalán siguiendo este formato exacto:
+        - Día del mes en número sin ceros a la izquierda
+        - Día de la semana en catalán, primera letra en mayúscula
+        - Mes en minúsculas en catalán
+        - 'de' como separador
+        - 'd'' como separador
+        - Año completo en números
 
-      if (!response.ok) {
-        throw new Error("Error en la respuesta del servidor");
-      }
+        Ejemplo: "Dimecres 9 d'abril de 2025"
+        Asegúrate de usar siempre este formato para cualquier fecha que aparezca en la respuesta.
+        `;
 
-      const data = await response.json();
+      const newTripMessageWithSystemPrompt = `${systemPrompt}\n\n${newTripMessage}`;
 
-      let newResponseText = null
+      console.log(newTripMessageWithSystemPrompt);
 
-      if (
-        data &&
-        data.candidates &&
-        data.candidates[0]?.content?.parts[0]?.text
-      ) {
-        console.log('json', data.candidates[0].content.parts[0].text);
-        newResponseText = data.candidates[0].content.parts[0].text;
-      }
+      const data = await getTravelGemini(newTripMessageWithSystemPrompt);
 
-      await aiGeminiStore.setResponse(newResponseText);
-      // await aiGeminiStore.setResponse(JSON.stringify(newResponseText));
+      console.log("Nou viatge generat:", data);
 
-      router.push({
-        path: "/result",
-        // query: { response: JSON.stringify(data) },
-      });
+      await aiGeminiStore.setResponse(data);
+
+      router.push({ path: "/result" });
 
       showConfirmation.value = false;
     } catch (error) {

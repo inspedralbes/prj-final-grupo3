@@ -1,6 +1,7 @@
 const config = useRuntimeConfig();
 
 const HOST = config.public.apiUrl;
+const HOSTNODE = config.public.apiUrlNode;
 
 export async function getTypes() {
   const URL = `${HOST}/types`
@@ -239,4 +240,35 @@ export async function postTravel(travelData, currentUserToken) {
   console.log("Respuesta desde el communication manager", json);
 
   return json;
+}
+
+export async function getTravelGemini(text) {
+  if (!text) {
+    throw new Error("Text parameter is required");
+  }
+
+  try {
+    const response = await fetch(`${HOSTNODE}/api/gemini/response`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text })
+    });
+
+    // if (!response.ok) {
+    //   throw new Error(`Error in Gemini API request: ${response.statusText}`);
+    // }
+
+    const json = await response.json();
+
+    if (!json) {
+      throw new Error("Invalid response from Gemini API");
+    }
+
+    return json;
+  } catch (error) {
+    console.error("Error in getTravelGemini:", error);
+    throw new Error(`Failed to get travel plan: ${error.message}`);
+  }
 }
