@@ -18,6 +18,7 @@ export function useNavBar() {
       const baseURL = config.public.appName;
       const avatarUrl = `${baseURL}/${newUser.avatar}`;
       avatar.value = avatarUrl;
+
     }
   }, { immediate: true });
 
@@ -49,6 +50,17 @@ export function useNavBar() {
     if (process.client) {
       await authStore.initialize();
       const response = await com.getCurrentUser(authStore.token);
+      console.log('🖼️ authStore.user.avatar =', response.avatar);
+
+
+      if (response && response.status !== 'error') {
+        authStore.user = response; // 🔁 actualitza l'usuari a l'store
+      
+        const baseURL = config.public.appName;
+        avatar.value = `${baseURL}/${response.avatar}`; // 🔁 actualitza l'avatar immediatament
+        console.log('🧠 avatar.value =', avatar.value);
+      }
+      
 
       if (!authStore.token && response.status === 'error') {
         authStore.logout();
