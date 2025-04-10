@@ -20,7 +20,4 @@ const prop = defineProps({
   dia: Object,
   vista: String
 });
-
-console.log("Muestra el dia actual", prop.dia);
-
 </script>
