@@ -44,9 +44,10 @@ export function useResult() {
     router.push("/");
   };
 
-  const downloadPDF = () => {
+  const downloadPDF = async () => {
+    const logoBase64 = await getImageBase64("/apple-icon.png");
+      
     const doc = new jsPDF("p", "mm", "a4");
-  
     const viatge = responseText.value?.viatge;
     if (!viatge) return;
   
@@ -56,17 +57,22 @@ export function useResult() {
     const topMargin = 25;
     const lineHeight = 7;
   
-    // Funció per afegir marca d'aigua
+    const totalPages = viatge.dies.length + 1;
+  
     const addWatermark = () => {
-      doc.setTextColor(200);
-      doc.setFontSize(50);
-      doc.setFont("times", "bold");
-      doc.text("TRIPLAN", pageWidth / 2, pageHeight / 2, {
-        align: "center",
-        angle: 45,
-      });
-      doc.setTextColor(0); // Tornar al negre
+      const imgWidth = 40;
+      const imgHeight = 40;
+      doc.addImage(logoBase64, "PNG", pageWidth - imgWidth - 10, pageHeight - imgHeight - 10, imgWidth, imgHeight);
     };
+  
+    const addPageNumber = (pageNum) => {
+      doc.setFontSize(10);
+      doc.setTextColor(150);
+      doc.text(`Pàgina ${pageNum} de ${totalPages}`, pageWidth / 2, pageHeight - 10, { align: "center" });
+    };
+  
+    // ... resto del código del PDF (como te mostré antes) ...
+  
   
     // Portada
     doc.setFont("times", "bold");
@@ -179,6 +185,24 @@ export function useResult() {
     } catch (error) {
       console.error("Error al generar un nuevo viaje:", error);
     }
+  };
+
+  const getImageBase64 = (url) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous"; // Si necesitas CORS
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        const dataURL = canvas.toDataURL("image/png");
+        resolve(dataURL);
+      };
+      img.onerror = () => reject(new Error("No es pot carregar la imatge."));
+      img.src = url;
+    });
   };
 
   const diesViatge = computed(() => {
