@@ -45,46 +45,87 @@ export function useResult() {
   };
 
   const downloadPDF = () => {
-    const element = document.querySelector(".custom-prose");
-    if (!element) return;
-
     const doc = new jsPDF("p", "mm", "a4");
+  
+    const viatge = responseText.value?.viatge;
+    if (!viatge) return;
+  
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
-
-    // Definir márgenes y espacio
-    const leftMargin = 15;
-    const rightMargin = 15;
-    const topMargin = 15;
-    const bottomMargin = 15;
-    const titleGap = 10;
-
-    // Añadir título centrado
-    const title = "PLANIFICACIÓ DEL VIATGE";
+    const leftMargin = 20;
+    const topMargin = 25;
+    const lineHeight = 7;
+  
+    // Funció per afegir marca d'aigua
+    const addWatermark = () => {
+      doc.setTextColor(200);
+      doc.setFontSize(50);
+      doc.setFont("times", "bold");
+      doc.text("TRIPLAN", pageWidth / 2, pageHeight / 2, {
+        align: "center",
+        angle: 45,
+      });
+      doc.setTextColor(0); // Tornar al negre
+    };
+  
+    // Portada
     doc.setFont("times", "bold");
     doc.setFontSize(20);
-    const titleX = (pageWidth - doc.getTextWidth(title)) / 2;
-    doc.text(title, titleX, topMargin);
-
-    // Configurar el estilo para el cuerpo del texto
+    doc.text(viatge.titol || "Planificació del viatge", pageWidth / 2, pageHeight / 2 - 10, { align: "center" });
+  
+    doc.setFontSize(12);
     doc.setFont("times", "normal");
-    doc.setFontSize(10);
-
-    const text = element.innerText;
-    const availableWidth = pageWidth - leftMargin - rightMargin;
-    const lines = doc.splitTextToSize(text, availableWidth);
-    const lineHeight = 7;
-    let y = topMargin + 20 + titleGap;
-
-    lines.forEach((line) => {
-      if (y + lineHeight > pageHeight - bottomMargin) {
-        doc.addPage();
-        y = topMargin;
+    doc.text(`Preu total estimat: ${viatge.preuTotal || "No disponible"}`, pageWidth / 2, pageHeight / 2 + 10, { align: "center" });
+  
+    addWatermark();
+  
+    // Dies del viatge
+    viatge.dies.forEach((dia, index) => {
+      doc.addPage();
+      let y = topMargin;
+  
+      addWatermark();
+  
+      // Títol del dia
+      doc.setFont("times", "bold");
+      doc.setFontSize(16);
+      doc.text(`Dia ${index + 1}`, leftMargin, y);
+      y += lineHeight * 2;
+  
+      if (Array.isArray(dia.activitats)) {
+        dia.activitats.forEach((act) => {
+          if (typeof act === 'object') {
+            const horari = act.horari || "Sense horari";
+            const nom = act.nom || "Activitat";
+            const descripcio = act.descripcio || "";
+            const preu = act.preu || "Preu no disponible";
+  
+            const bloc = `${horari} | ${nom}\nDescripció: ${descripcio}\nPreu: ${preu}\n`;
+            const lines = doc.splitTextToSize(bloc, pageWidth - 2 * leftMargin);
+  
+            doc.setFont("times", "normal");
+            doc.setFontSize(11);
+            lines.forEach((line) => {
+              if (y + lineHeight > pageHeight - 20) {
+                doc.addPage();
+                y = topMargin;
+                addWatermark();
+              }
+              doc.text(line, leftMargin, y);
+              y += lineHeight;
+            });
+  
+            y += 2; // petit espai entre activitats
+          }
+        });
+      } else {
+        doc.setFont("times", "italic");
+        doc.setFontSize(11);
+        doc.text("No hi ha activitats definides per aquest dia.", leftMargin, y);
       }
-      doc.text(line, leftMargin, y);
-      y += lineHeight;
     });
-
+  
+    // Guarda
     doc.save("planificacio_viatge.pdf");
   };
 
@@ -153,6 +194,10 @@ export function useResult() {
     return responseText.value.viatge?.preuTotal || 0;
   })
 
+  const totsElsDiesMostrats = computed(() => {
+    return modeVista.value === 'resum';
+  });
+
   const mostrarSeguentDia = () => {
     if (diaActualIndex.value < diesViatge.value.length - 1) {
       console.log('avanço');
@@ -179,5 +224,6 @@ export function useResult() {
     modeVista,
     preuTotal,
     titol,
+    totsElsDiesMostrats,
   };
 }

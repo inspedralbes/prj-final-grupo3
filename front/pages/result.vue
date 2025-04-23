@@ -38,7 +38,7 @@
         <!-- Si no hi ha dies -->
 
         <!--download pdf-->
-        <div v-if="result.responseText.value" class="flex justify-center mt-6">
+        <div v-if="result.responseText.value && result.modeVista.value === 'resum'" class="flex justify-center mt-6">
           <button @click="result.downloadPDF"
             class="bg-green-600 text-white py-4 px-5 rounded-lg hover:bg-green-700 transition duration-200 text-lg font-semibold">
             📄 Descarregar PDF
