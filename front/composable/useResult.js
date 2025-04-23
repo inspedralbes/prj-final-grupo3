@@ -46,7 +46,7 @@ export function useResult() {
 
   const downloadPDF = async () => {
     const logoBase64 = await getImageBase64("/apple-icon.png");
-      
+
     const doc = new jsPDF("p", "mm", "a4");
     const viatge = responseText.value?.viatge;
     if (!viatge) return;
@@ -71,10 +71,7 @@ export function useResult() {
       doc.text(`Pàgina ${pageNum} de ${totalPages}`, pageWidth / 2, pageHeight - 10, { align: "center" });
     };
   
-    // ... resto del código del PDF (como te mostré antes) ...
-  
-  
-    // Portada
+    // First Page
     doc.setFont("times", "bold");
     doc.setFontSize(20);
     doc.text(viatge.titol || "Planificació del viatge", pageWidth / 2, pageHeight / 2 - 10, { align: "center" });
@@ -85,14 +82,14 @@ export function useResult() {
   
     addWatermark();
   
-    // Dies del viatge
+    // Travel days
     viatge.dies.forEach((dia, index) => {
       doc.addPage();
       let y = topMargin;
   
       addWatermark();
   
-      // Títol del dia
+      // Title
       doc.setFont("times", "bold");
       doc.setFontSize(16);
       doc.text(`Dia ${index + 1}`, leftMargin, y);
@@ -121,7 +118,7 @@ export function useResult() {
               y += lineHeight;
             });
   
-            y += 2; // petit espai entre activitats
+            y += 2; // Space between activities
           }
         });
       } else {
@@ -131,7 +128,7 @@ export function useResult() {
       }
     });
   
-    // Guarda
+    // Save
     doc.save("planificacio_viatge.pdf");
   };
 
@@ -190,7 +187,7 @@ export function useResult() {
   const getImageBase64 = (url) => {
     return new Promise((resolve, reject) => {
       const img = new Image();
-      img.crossOrigin = "anonymous"; // Si necesitas CORS
+      img.crossOrigin = "anonymous"; // CORS
       img.onload = () => {
         const canvas = document.createElement("canvas");
         canvas.width = img.width;
