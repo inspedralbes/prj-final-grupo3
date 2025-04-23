@@ -266,6 +266,7 @@ export function usePlanner() {
               "dies": [
                 {
                   "dia": Data del dia,
+                  "resumenDia": "(resum detallada del plan del dia)",
                   "allotjament": "...",
                   "activitats": [
                     {
