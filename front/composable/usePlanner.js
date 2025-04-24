@@ -237,7 +237,7 @@ export function usePlanner() {
 
       const dbResponse = await postTravel(travelData, authStore.token);
       const currentCountry = countries.value.find(country => country.id === formData.value.country);
-      console.log('currentCountry', currentCountry.name)
+
       if (dbResponse.code === 201) {
         const vehicleTypes = {
           1: "Bicicleta",
@@ -257,7 +257,6 @@ export function usePlanner() {
           Cada dia ha d'incloure tos els seus detalls.
           El nombre de dies ha de coincidir amb els dies que t'he indicat abans.Gràcies.   
           Bastant detallat i a més que el resultat ha d'estar estructurat com un objecte que contingui un array anomenat dies, on cada element representa un dia del viatge.
-          📌 **Important:** la resposta ha de ser **només un JSON vàlid**, **sense text introductori**, sense cap bloc de codi (res de \`\`\`json), i sense formatació markdown. Retorna només l'objecte JSON pur.
           Exemple esperat:
           Retorna la resposta sempre en el mateix format.
           {
@@ -282,6 +281,7 @@ export function usePlanner() {
             }
           }
           Tota la informació ha d'estar en català.
+          📌 **Important:** la resposta ha de ser **només un JSON vàlid**, **sense text introductori**, sense cap bloc de codi (res de \`\`\`json), i sense formatació markdown. Retorna només l'objecte JSON pur.
           Gràcies!
          `;
 

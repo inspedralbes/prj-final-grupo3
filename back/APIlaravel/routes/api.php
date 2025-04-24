@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\AuthenticatorController;
 use App\Http\Controllers\SendMail;
 use App\Http\Controllers\UserApiController;
 use App\Http\Controllers\TravelsController;
+use App\Http\Controllers\TravelPlanController;
 use App\Http\Controllers\MovilityController;
 use App\Http\Controllers\TravelTypeController;
 
@@ -34,5 +35,6 @@ Route::get('/countries', action: [CountriesApiController::class, 'index']);
 Route::get('/movilities', action: [MovilityController::class, 'indexApi']);
 Route::get('/types', action: [TravelTypeController::class, 'typesApi']);
 
-// Route::post('/travels', [TravelsController::class, 'store']);
 Route::post('/travels', [TravelsController::class, 'storetravel']);
+
+Route::post('/travel-plans', [TravelPlanController::class, 'storeTravelPlan']);
