@@ -1,7 +1,7 @@
 <script setup>
 import { useSettings } from '~/composable/useSettings';
 import { useAuthStore } from '~/store/authUser';
-import { Edit, Check, Close } from '@element-plus/icons-vue'
+import { Edit, Check, Close } from '@element-plus/icons-vue';
 
 const authStore = useAuthStore();
 const settings = useSettings();
@@ -37,10 +37,40 @@ const fullName = `${authStore.user?.name} ${authStore.user?.surname}`
         <div class="flex justify-center">
           <el-avatar :size="100" :src="settings.avatar.value" :alt="`${fullName || 'User'}'s avatar`"
             class="bg-white border border-gray-200" />
+        </div v-if="settings.isEditing.value">
+
+        <div class="flex gap-2 justify-center" v-if="settings.isEditing.value">
+          <!-- Change avatar -->
+          <el-upload class="upload-demo" action="" :auto-upload="false" :show-file-list="false"
+            :on-change="settings.handleAvatarChange" accept="image/*">
+            <el-button type="primary">Canviar foto de perfil</el-button>
+          </el-upload>
+
+          <!-- Change password -->
+          <el-button type="primary" @click="settings.showPasswordDialog = true">
+            Canviar contrasenya
+          </el-button>
         </div>
-        <el-upload v-if="settings.isEditing.value" class="upload-demo" action="" :auto-upload="false" :show-file-list="false" :on-change="settings.handleAvatarChange" accept="image/*">
-          <el-button type="primary">Carregar imatge</el-button>
-        </el-upload>
+
+        <!-- Change password dialog -->
+        <el-dialog v-model="settings.showPasswordDialog" title="Canviar contrasenya" width="500px" :before-close="() => { settings.showPasswordDialog = false }">
+          <el-form label-position="top">
+            <el-form-item label="Contrasenya actual">
+              <el-input v-model="settings.passwordForm.currentPassword" type="password" />
+            </el-form-item>
+            <el-form-item label="Nova contrasenya">
+              <el-input v-model="settings.passwordForm.newPassword" type="password" />
+            </el-form-item>
+            <el-form-item label="Confirmar nova contrasenya">
+              <el-input v-model="settings.passwordForm.confirmPassword" type="password" />
+            </el-form-item>
+          </el-form>
+
+          <template #footer>
+            <el-button @click="settings.showPasswordDialog = false">Cancel·la</el-button>
+            <el-button type="primary" @click="settings.changePassword">Desa</el-button>
+          </template>
+        </el-dialog>
 
         <!-- Form -->
         <el-form label-position="top">
@@ -88,6 +118,6 @@ const fullName = `${authStore.user?.name} ${authStore.user?.surname}`
           </el-row>
         </el-form>
       </div>
-    </el-card>
+    </el-card> 
   </div>
 </template>

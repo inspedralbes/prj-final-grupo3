@@ -1,6 +1,9 @@
 import * as com from '../services/communicationManager';
 import { useAuthStore } from '../store/authUser';
 import { useAlert } from './useAlert';
+import { ref } from 'vue';
+import { ElMessage } from 'element-plus';
+import { watch } from 'vue';
 
 export function useSettings() {
 
@@ -12,6 +15,27 @@ export function useSettings() {
   const avatar = ref()
   const isEditing = ref(false);
   const newAvatarFile = ref(null);
+
+  const showPasswordDialog = ref(false);
+  const passwordForm = ref({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
+
+  const changePassword = async () => {
+    if (passwordForm.value.newPassword !== passwordForm.value.confirmPassword) {
+      ElMessage.error('Les contrasenyes no coincideixen.');
+      return;
+    }
+    try{
+      await authStore.changePassword(passwordForm.value);
+      ElMessage.success('Contrasenya actualitzada correctament!');
+      showPasswordDialog.value = false;
+    } catch (error){
+      ElMessage.error('Error al canviar la contrasenya.');
+    }
+  }
 
 
   const getCurrentUser = async () => {
@@ -74,10 +98,20 @@ export function useSettings() {
     reader.readAsDataURL(uploadFile.raw);
   }
 
+  watch(showPasswordDialog, (visible) => {
+    if (visible) {
+      passwordForm.value = {
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+      };
+    }
+  });
+
   onMounted(async () => {
+    useSettings.showPasswordDialog = false;
     await getCurrentUser();
-    const baseURL = config.public.appName
-    // const avatarUrl = `${baseURL}/${authStore.user.avatar}`;
+    const baseURL = config.public.appName;
     const avatarUrl = `${baseURL}/${currentUser.value.avatar}`;	
     avatar.value = avatarUrl;
   })
@@ -89,6 +123,9 @@ export function useSettings() {
     toggleEdit,
     confirmEdit,
     cancelEdit,
-    handleAvatarChange    
+    handleAvatarChange,
+    showPasswordDialog,
+    passwordForm,
+    changePassword,   
   }
 }
