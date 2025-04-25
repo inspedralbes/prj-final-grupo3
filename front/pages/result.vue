@@ -1,7 +1,7 @@
 <template>
   <title>Triplan</title>
   <main class="min-h-screen container flex items-center justify-center mx-auto p-4 py-8">
-    <div class="w-[70%] bg-white rounded-lg shadow-lg p-6">
+    <div class="w-full md:w-[70%] bg-white rounded-lg shadow-lg p-6">
       <h2 class="text-3xl font-bold text-center mb-2.5">Planificació del teu viatge</h2>
       <h2 class="text-xl font-bold text-center text-gray-700 mb-8">{{ result.titol.value }}</h2>
 
@@ -45,13 +45,13 @@
       <!-- Si no hi ha dies -->
 
       <!--buttons accept or decline-->
-      <div v-if="!result.showConfirmation.value" class="flex justify-between mt-8">
+      <div v-if="!result.showConfirmation.value" class="flex flex-col md:flex-row md:justify-between mt-8 gap-2 md-gap-0">
         <!--download pdf-->
         <button @click="result.downloadPDF"
           class="text-green-600 hover:text-white border-2 border-green-600 py-2 px-4 rounded-lg hover:bg-green-700 transition duration-500 text-md font-semibold">
           📄 Descarregar PDF
         </button>
-        <div class="flex justify-end gap-2 ml-auto">
+        <div class="flex flex-col md:flex-row md:justify-end gap-2">
           <button @click="result.handleAccept"
             class="text-blue-600 py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200 text-md font-semibold border-2 border-blue-600 hover:text-white">
             Acceptar
@@ -67,13 +67,13 @@
       <!--button for new trip if the user wants to do it-->
       <div v-if="result.showConfirmation.value" class="mt-8 text-center">
         <p class="text-lg font-semibold text-gray-700 mb-4">Estàs segur que vols cancel·lar?</p>
-        <div class="flex justify-center gap-x-6">
+        <div class="flex flex-col md:flex-row justify-between gap-2 md:gap-4">
           <button @click="result.handleCancel"
-            class="bg-red-600 text-white py-4 px-8 rounded-lg hover:bg-red-700 transition duration-200 text-lg font-semibold">
+            class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition duration-200 text-md font-semibold">
             Sí, cancel·lar
           </button>
           <button @click="result.generateNewTrip"
-            class="bg-blue-600 text-white py-4 px-8 rounded-lg hover:bg-blue-700 transition duration-200 text-lg font-semibold">
+            class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200 text-md font-semibold">
             No, generar un nou viatge
           </button>
         </div>
