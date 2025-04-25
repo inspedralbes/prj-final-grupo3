@@ -297,3 +297,21 @@ export async function getTravelGemini(text) {
     throw new Error(`Failed to get travel plan: ${error.message}`);
   }
 }
+
+export async function savePlaning(travelPlanData, currentUserToken) {
+
+  console.log(travelPlanData);
+
+  const response = await fetch(`${HOST}/travel-plans`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${currentUserToken}`,
+    },
+    body: JSON.stringify(travelPlanData),
+  });
+
+  const json = await response.json(); // return status code 
+
+  return json;
+}
