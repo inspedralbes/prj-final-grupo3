@@ -38,3 +38,5 @@ Route::get('/types', action: [TravelTypeController::class, 'typesApi']);
 Route::post('/travels', [TravelsController::class, 'storetravel']);
 
 Route::post('/travel-plans', [TravelPlanController::class, 'storeTravelPlan']);
+
+Route::get('/travel-plan/{id}', [TravelsController::class, 'getByTravelId']);

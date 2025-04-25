@@ -7,6 +7,7 @@ use App\Models\Budget;
 use App\Models\Travel;
 use App\Models\Country;
 use App\Models\Movility;
+use App\Models\TravelPlan;
 use App\Models\TravelType;
 use Illuminate\Http\Request;
 
@@ -39,96 +40,28 @@ class TravelsController extends Controller
 
     // return view('admin.travels-register', compact('users', 'countries', 'types', 'budgets', 'movilities'));
   }
+
   /**
    * Store a newly created resource in storage.
    */
-  public function store(Request $request)
-  {
-    $request->validate([
-      'id_user' => 'required|exists:users,id',
-      'id_country' => 'required|exists:countries,id',
-      'id_type' => 'required|exists:type,id',
-      // 'id_budget' => 'required|exists:budget,id',
-      'id_budget_min' => 'required|numeric',
-      'id_budget_max' => 'required|numeric',
-      // 'id_budget_final' => 'required|numeric',
-      'id_movility' => 'required|exists:movilities,id',
-      'date_init' => 'required|date',
-      'date_end' => 'required|date|after_or_equal:date_init',
-      'description' => 'required|string|max:1000',
-    ]);
-
-    // Guardar en la tabla budget
-    $budget = Budget::create([
-      'min_budget' => $request->input('id_budget_min'),
-      'max_budget' => $request->input('id_budget_max'),
-      // 'final_price' => $request->input('id_budget_final'),
-    ]);
-
-    // Guardar en la base de datos
-    Travel::create([
-      'id_user' => $request->input('id_user'),
-      'id_country' => $request->input('id_country'),
-      'id_type' => $request->input('id_type'),
-      'id_budget' => $budget->id,
-      'id_movility' => $request->input('id_movility'),
-      'date_init' => $request->input('date_init'),
-      'date_end' => $request->input('date_end'),
-      'description' => $request->input('description'),
-    ]);
-    return redirect()->route('travels')->with('success', 'Viaje creado correctamente.');
-  }
-
-  public function storetravel(Request $request)
+  public function getByTravelId(string $id)
   {
     try {
-      $request->validate([
-        'id_user' => 'required|exists:users,id',
-        'id_country' => 'required|exists:countries,id',
-        'id_type' => 'required|exists:type,id',
-        'id_budget_min' => 'required|numeric',
-        'id_budget_max' => 'required|numeric',
-        'id_movility' => 'required|exists:movilities,id',
-        'date_init' => 'required|date',
-        'date_end' => 'required|date|after_or_equal:date_init',
-        'description' => 'required|string|max:1000',
-      ]);
+      $travelPlan = TravelPlan::where('travel_id', $id)
+        ->with('days.activities')
+        ->get();
 
-      $budget = Budget::create([
-        'min_budget' => $request->input('id_budget_min'),
-        'max_budget' => $request->input('id_budget_max'),
-      ]);
+      if ($travelPlan->isEmpty()) {
+        return response()->json([
+          'message' => 'Travel plan not found'
+        ], 404);
+      }
 
-      Travel::create([
-        'id_user' => $request->input('id_user'),
-        'id_country' => $request->input('id_country'),
-        'id_type' => $request->input('id_type'),
-        'id_budget' => $budget->id,
-        'id_movility' => $request->input('id_movility'),
-        'date_init' => $request->input('date_init'),
-        'date_end' => $request->input('date_end'),
-        'description' => $request->input('description'),
-      ]);
-
-      return response()->json([
-        'status' => 'success',
-        'message' => 'Travel created successfully',
-        'code' => 201,
-      ], 201);
-
-    } catch (\Illuminate\Validation\ValidationException $e) {
-      return response()->json([
-        'status' => 'error',
-        'message' => 'Error en la validació',
-        'errors' => $e->errors(),
-        'code' => 422,
-      ], 422);
+      return response()->json($travelPlan, status: 200);
     } catch (\Exception $e) {
       return response()->json([
-        'status' => 'error',
-        'message' => "No s'ha pogut crear el viatge",
-        'error' => $e->getMessage(),
-        'code' => 500,
+        'message' => 'An error occurred while fetching the travel plan',
+        'error' => $e->getMessage()
       ], 500);
     }
   }
