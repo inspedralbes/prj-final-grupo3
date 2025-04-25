@@ -1,7 +1,7 @@
 <template>
   <title>Triplan</title>
   <main class="min-h-screen container flex items-center justify-center mx-auto p-4 py-8">
-    <div class="max-w-4xl bg-white rounded-lg shadow-lg p-6">
+    <div class="w-[70%] bg-white rounded-lg shadow-lg p-6">
       <h2 class="text-3xl font-bold text-center mb-2.5">Planificació del teu viatge</h2>
       <h2 class="text-xl font-bold text-center text-gray-700 mb-8">{{ result.titol.value }}</h2>
 
@@ -16,11 +16,11 @@
             <p class="font-semibold">Preu total:</p>
             <p class="text-xs">{{ result.preuTotal.value }}</p>
           </div>
-          <div class="flex justify-end">
+          <!-- <div class="flex justify-end">
             <button
               class="border-2 border-blue-600/50 p-1 text-blue-600/50 hover:text-blue-600 transition duration-200 hover:border-blue-600 rounded-lg"
               @click="result.modeVista.value = 'resum'">Veure resum</button>
-          </div>
+          </div> -->
         </div>
       </div>
 
