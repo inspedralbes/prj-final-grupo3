@@ -237,7 +237,7 @@ export function usePlanner() {
 
       const dbResponse = await postTravel(travelData, authStore.token);
       const currentCountry = countries.value.find(country => country.id === formData.value.country);
-      console.log('currentCountry', currentCountry.name)
+
       if (dbResponse.code === 201) {
         const vehicleTypes = {
           1: "Bicicleta",
@@ -282,6 +282,7 @@ export function usePlanner() {
             }
           }
           Tota la informació ha d'estar en català.
+          📌 **Important:** la resposta ha de ser **només un JSON vàlid**, **sense text introductori**, sense cap bloc de codi (res de \`\`\`json), i sense formatació markdown. Retorna només l'objecte JSON pur.
           Gràcies!
           `;
 
