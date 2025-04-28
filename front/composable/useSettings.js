@@ -1,59 +1,29 @@
 import * as com from '../services/communicationManager';
 import { useAuthStore } from '../store/authUser';
 import { useAlert } from './useAlert';
-import { ref } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
-import { watch } from 'vue';
 
 export function useSettings() {
-
   const authStore = useAuthStore();
-  const config = useRuntimeConfig()
+  const config = useRuntimeConfig();
   const customAlert = useAlert().customAlert;
 
   const currentUser = ref({});
-  const avatar = ref()
+  const avatar = ref();
   const isEditing = ref(false);
   const newAvatarFile = ref(null);
 
-  const showPasswordDialog = ref(false);
-  const passwordForm = ref({
+  const showPasswordForm = ref(false);
+  const passwordForm = reactive({
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
   });
 
-  const changePassword = async () => {
-    if (passwordForm.value.newPassword !== passwordForm.value.confirmPassword) {
-      ElMessage.error('Les contrasenyes no coincideixen.');
-      return;
-    }
-    try{
-      await authStore.changePassword(passwordForm.value);
-      ElMessage.success('Contrasenya actualitzada correctament!');
-      showPasswordDialog.value = false;
-    } catch (error){
-      ElMessage.error('Error al canviar la contrasenya.');
-    }
-  }
-
-
-  const getCurrentUser = async () => {
-
-    const response = await com.getCurrentUser(authStore.token);
-    const baseURL = config.public.appName;
-    avatar.value = `${baseURL}/${response.avatar}`	
-    // console.log(response);
-    if (response.status === 'error') {
-      customAlert(response.message, 'negative', 'error', 'top', 1500);
-      authStore.logout();
-    } else {
-      customAlert('Informació carregada', 'success', 'success', 'top', 1500);
-      const birth = response.birth_date.split(' ');
-      response.birth_date = birth[0];
-      currentUser.value = response
-    }
-  }
+  const togglePasswordForm = () => {
+    showPasswordForm.value = !showPasswordForm.value;
+  };
 
   const toggleEdit = () => {
     isEditing.value = !isEditing.value;
@@ -62,7 +32,7 @@ export function useSettings() {
   const confirmEdit = async () => {
     const newDataUser = reactive({
       ...currentUser.value
-    })
+    });
 
     if (newAvatarFile.value) {
       newDataUser.avatarFile = newAvatarFile.value;
@@ -76,7 +46,7 @@ export function useSettings() {
       return;
     } else {
       currentUser.value = dataUser;
-      authStore.user = dataUser; 
+      authStore.user = dataUser;
       customAlert(response.message, 'success', 'success', 'top', 2000);
     }
     toggleEdit();
@@ -84,37 +54,52 @@ export function useSettings() {
 
   const cancelEdit = () => {
     isEditing.value = false;
-    // Logic to cancel changes
+    showPasswordForm.value = false;
   };
 
   const handleAvatarChange = (uploadFile) => {
     newAvatarFile.value = uploadFile;
 
-    //previsualize
     const reader = new FileReader();
     reader.onload = () => {
       avatar.value = reader.result;
     };
     reader.readAsDataURL(uploadFile.raw);
-  }
+  };
 
-  watch(showPasswordDialog, (visible) => {
-    if (visible) {
-      passwordForm.value = {
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: '',
-      };
+  const getCurrentUser = async () => {
+    const response = await com.getCurrentUser(authStore.token);
+    const baseURL = config.public.appName;
+    avatar.value = `${baseURL}/${response.avatar}`;
+    
+    if (response.status === 'error') {
+      customAlert(response.message, 'negative', 'error', 'top', 1500);
+      authStore.logout();
+    } else {
+      customAlert('Informació carregada', 'success', 'success', 'top', 1500);
+      const birth = response.birth_date.split(' ');
+      response.birth_date = birth[0];
+      currentUser.value = response;
     }
-  });
+  };
+
+  const changePassword = async () => {
+    if (passwordForm.value.newPassword !== passwordForm.value.confirmPassword) {
+      ElMessage.error('Les contrasenyes no coincideixen.');
+      return;
+    }
+    try {
+      await authStore.changePassword(passwordForm.value);
+      ElMessage.success('Contrasenya actualitzada correctament!');
+      showPasswordForm.value = false;
+    } catch (error) {
+      ElMessage.error('Error al canviar la contrasenya.');
+    }
+  };
 
   onMounted(async () => {
-    useSettings.showPasswordDialog = false;
     await getCurrentUser();
-    const baseURL = config.public.appName;
-    const avatarUrl = `${baseURL}/${currentUser.value.avatar}`;	
-    avatar.value = avatarUrl;
-  })
+  });
 
   return {
     currentUser,
@@ -124,8 +109,9 @@ export function useSettings() {
     confirmEdit,
     cancelEdit,
     handleAvatarChange,
-    showPasswordDialog,
+    showPasswordForm,
+    togglePasswordForm,
     passwordForm,
-    changePassword,   
-  }
+    changePassword
+  };
 }
