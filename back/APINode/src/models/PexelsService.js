@@ -15,7 +15,10 @@ export class PexelsService {
       const data = await response.json();
       
       if (data.photos && data.photos.length > 0) {
+        console.log("Imagen encontrada para la query:", query);
         return data.photos[0].src.medium;
+      } else {
+        console.error("No hay imagenes encontradas para el país:", query);
       }
       
       return null;

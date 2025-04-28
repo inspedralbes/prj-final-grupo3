@@ -36,7 +36,8 @@ export class GeminiModel {
           if (tripData.viatge && tripData.viatge.dies && Array.isArray(tripData.viatge.dies)) {
             for (const dia of tripData.viatge.dies) {
 
-              const searchQuery = dia.paraulaClau || dia.resumDia || dia.nom || dia.activitats[1]?.nom;
+              const searchQuery = dia.paraulaClau;
+              console.log("Buscando imagen para la query:", searchQuery);
               const imageUrl = await PexelsService.getImageByQuery(searchQuery);
 
               if (imageUrl) {
