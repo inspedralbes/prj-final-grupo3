@@ -99,14 +99,15 @@
               <div class="flex items-center justify-between gap-4 mb-2">
                 <div class="flex items-center gap-2">
                   <label class="text-sm text-gray-600 font-medium">Mín</label>
-                  <el-input-number v-model="planner.budgetRange.value[0]" :min="0" :max="planner.budgetRange.value[1]" :value="planner.budgetRange.value[0]"
-                    :step="100" controls-position="right" class="w-28" />
+                  <el-input-number v-model="planner.budgetRange.value[0]" :min="0" :max="planner.budgetRange.value[1]"
+                    :value="planner.budgetRange.value[0]" :step="100" controls-position="right" class="w-28" />
                 </div>
                 <span class="text-gray-400">-</span>
                 <div class="flex items-center gap-2">
                   <label class="text-sm text-gray-600 font-medium">Max</label>
-                  <el-input-number v-model="planner.budgetRange.value[1]" :min="planner.budgetRange.value[0]" :value="planner.budgetRange.value[1]"
-                    :max="10000" :step="100" controls-position="right" class="w-28" />
+                  <el-input-number v-model="planner.budgetRange.value[1]" :min="planner.budgetRange.value[0]"
+                    :value="planner.budgetRange.value[1]" :max="10000" :step="100" controls-position="right"
+                    class="w-28" />
                 </div>
               </div>
 
@@ -115,8 +116,6 @@
                 class="w-full" :format-tooltip="(val) => `${val} €`" />
             </div>
           </el-form-item>
-
-
 
           <!-- Interests -->
           <el-form-item>
@@ -133,10 +132,50 @@
         </el-form>
       </el-card>
     </main>
+
+    <button
+      class="fixed bottom-4 right-4 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-shadow duration-200"
+      @click="planner.openFloatingWindow">
+      <ChatBubbleOvalLeftIcon class="w-8 h-8 text-[#3f9eff]" />
+    </button>
+
+    <FloatingWindowChatBot :isOpen="planner.isWindowOpen.value == true" @close="() => planner.isWindowOpen.value"
+      title="Asistent de planificació">
+      <form @submit.prevent="planner.handleSubmitChat" class="flex flex-col h-full">
+        <div class="flex-1 overflow-y-auto mb-4 space-y-4 p-4">
+          <div v-for="(message, index) in planner.chatMessages.value" :key="index"
+            :class="['flex', message.isAI ? 'justify-start' : 'justify-end']">
+            <div :class="['max-w-[80%] p-3 rounded-lg', message.isAI ? 'bg-gray-100' : 'bg-[#3f9eff] text-white']">
+              <p class="text-sm">{{ message.text }}</p>
+            </div>
+          </div>
+          <div v-if="planner.isTyping" class="flex justify-start">
+            <div class="bg-gray-100 p-3 rounded-lg">
+              <div class="flex space-x-1">
+                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex gap-2 p-4 border-t border-gray-200">
+          <input v-model="planner.formDataChat.value.interests" type="text" placeholder="Escriu el teu missatge..."
+            class="flex-1 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary"
+            :disabled="planner.isTyping" />
+          <button type="submit"
+            class="bg-[#3f9eff] text-white px-4 py-2 rounded-md hover:bg-[#2d8aed] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            :disabled="planner.isTyping || !planner.formDataChat.value.interests.trim()">
+            Enviar
+          </button>
+        </div>
+      </form>
+    </FloatingWindowChatBot>
   </div>
 </template>
 
 <script setup>
+import { ChatBubbleOvalLeftIcon } from '@heroicons/vue/24/solid'
 import { onMounted } from 'vue';
 import "@vuepic/vue-datepicker/dist/main.css";
 import { usePlanner } from '~/composable/usePlanner';
@@ -145,8 +184,8 @@ const planner = usePlanner();
 
 onMounted(() => {
   planner.loadInitialData();
+  console.log(planner.isWindowOpen.value);
 });
-
 </script>
 
 <style>

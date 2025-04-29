@@ -4,6 +4,7 @@ import { useAuthStore } from '~/store/authUser';
 import { useAlert } from './useAlert';
 import { getCountries, getTypes, getMovilities, postTravel, getTravelGemini } from '@/services/communicationManager';
 import { useAIGeminiStore } from '~/store/aiGeminiStore';
+import { gemini } from '~/mocks/mock-ai-response';
 
 
 export function usePlanner() {
@@ -26,6 +27,15 @@ export function usePlanner() {
     vehicletype: "",
   });
 
+  const formDataChat = ref({
+    name: "",
+    interests: "",
+  });
+
+  const chatMessages = ref([]);
+  const isTyping = ref(false);
+  const isFirstMessage = ref(true);
+
   const dateRange = ref([]);
   const countries = ref([]);
   const filteredCountries = ref([]);
@@ -37,6 +47,7 @@ export function usePlanner() {
   const budgetRange = ref([budgetMin.value, budgetMax.value])
   const types = ref([]);
   const movilities = ref([]);
+  const isWindowOpen = ref(false)
 
   // Load initial data
   const loadInitialData = async () => {
@@ -56,6 +67,8 @@ export function usePlanner() {
       console.error("Error carregant dades:", error);
     }
   };
+
+  const responseGemini = ref(gemini.getResponse(formDataChat.value.interests));
 
   const filterCountries = () => {
     const query = searchQuery.value.toLowerCase();
@@ -311,6 +324,108 @@ export function usePlanner() {
     }
   };
 
+  const simulateTyping = async (message) => {
+    isTyping.value = true;
+    // Add a temporary typing message
+    chatMessages.value.push({
+      text: '...',
+      isAI: true,
+      isTyping: true
+    });
+
+    // Simulate typing delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Remove typing message
+    chatMessages.value = chatMessages.value.filter(msg => !msg.isTyping);
+
+    // Add actual AI message
+    chatMessages.value.push({
+      text: message,
+      isAI: true
+    });
+
+    isTyping.value = false;
+  };
+
+  const handleSubmitChat = async () => {
+    if (!formDataChat.value.interests.trim()) return;
+
+    // Add user message
+    chatMessages.value.push({
+      text: formDataChat.value.interests,
+      isAI: false
+    });
+
+    // Clear input
+    const userMessage = formDataChat.value.interests;
+    formDataChat.value.interests = "";
+
+    // Show typing indicator only after first message
+    if (!isFirstMessage.value) {
+      isTyping.value = true;
+      chatMessages.value.push({
+        text: '...',
+        isAI: true,
+        isTyping: true
+      });
+    }
+
+    try {
+      isTyping.value = true;
+      // Get actual AI response
+      const response = await getTravelGemini(userMessage);
+
+      isTyping.value = false;
+
+      console.log(response);
+
+      // Remove typing message if it exists
+      if (!isFirstMessage.value) {
+        chatMessages.value = chatMessages.value.filter(msg => !msg.isTyping);
+      }
+
+      // Add AI response
+      chatMessages.value.push({
+        text: response,
+        isAI: true
+      });
+
+      // Mark that first message has been sent
+      isFirstMessage.value = false;
+    } catch (error) {
+      // Remove typing message if it exists
+      if (!isFirstMessage.value) {
+        chatMessages.value = chatMessages.value.filter(msg => !msg.isTyping);
+      }
+
+      // Add error message
+      chatMessages.value.push({
+        text: "Ho sento, hi ha hagut un error processant la teva petició. Si us plau, torna-ho a intentar.",
+        isAI: true
+      });
+    } finally {
+      isTyping.value = false;
+    }
+  };
+
+  const openFloatingWindow = () => {
+    isWindowOpen.value = true;
+    // Reset first message state when opening window
+    isFirstMessage.value = true;
+    // Add welcome message when opening the window
+    if (chatMessages.value.length === 0) {
+      chatMessages.value.push({
+        text: "Hola! Sóc el teu assistent de viatges. Com puc ajudar-te avui?",
+        isAI: true
+      });
+    }
+  };
+
+  const closeWindow = () => {
+    isWindowOpen.value = false;
+  };
+
   return {
     formData,
     dateRange,
@@ -332,5 +447,15 @@ export function usePlanner() {
     vehicle,
     budgetRange,
     onSliderChange,
+    isWindowOpen,
+    openFloatingWindow,
+    closeWindow,
+    formDataChat,
+    handleSubmitChat,
+    responseGemini,
+    gemini,
+    chatMessages,
+    isTyping,
+    isFirstMessage
   };
 }
