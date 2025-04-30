@@ -147,5 +147,56 @@ class TravelsController extends Controller
     return response()->json(['success' => 'Viatge eliminat correctament.']);
   }
 
+  public function storetravel(Request $request)
+  {
+    try {
+      $request->validate([
+        'id_user' => 'required|exists:users,id',
+        'id_country' => 'required|exists:countries,id',
+        'id_type' => 'required|exists:type,id',
+        'id_budget_min' => 'required|numeric',
+        'id_budget_max' => 'required|numeric',
+        'id_movility' => 'required|exists:movilities,id',
+        'date_init' => 'required|date',
+        'date_end' => 'required|date|after_or_equal:date_init',
+        'description' => 'required|string|max:1000',
+      ]);
 
+      $budget = Budget::create([
+        'min_budget' => $request->input('id_budget_min'),
+        'max_budget' => $request->input('id_budget_max'),
+      ]);
+
+      Travel::create([
+        'id_user' => $request->input('id_user'),
+        'id_country' => $request->input('id_country'),
+        'id_type' => $request->input('id_type'),
+        'id_budget' => $budget->id,
+        'id_movility' => $request->input('id_movility'),
+        'date_init' => $request->input('date_init'),
+        'date_end' => $request->input('date_end'),
+        'description' => $request->input('description'),
+      ]);
+
+      return response()->json([
+        'status' => 'success',
+        'message' => 'Travel created successfully',
+        'code' => 201,
+      ], 201);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+      return response()->json([
+        'status' => 'error',
+        'message' => 'Error en la validació',
+        'errors' => $e->errors(),
+        'code' => 422,
+      ], 422);
+    } catch (\Exception $e) {
+      return response()->json([
+        'status' => 'error',
+        'message' => "No s'ha pogut crear el viatge",
+        'error' => $e->getMessage(),
+        'code' => 500,
+      ], 500);
+    }
+  }
 }

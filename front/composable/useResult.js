@@ -36,10 +36,10 @@ export function useResult() {
   const handleAccept = async () => {
     const response = savePlaning(responseText.value, aiGeminiStore.currentUserToken);
     console.log(response);
-    // alert("Planning del viatge guardat correctament");
+    alert("Planning del viatge guardat correctament");
     showConfirmation.value = false;
-    // aiGeminiStore.responseText = null;
-    // router.push("/");
+    aiGeminiStore.responseText = null;
+    router.push("/");
   };
 
   const handleCancel = () => {

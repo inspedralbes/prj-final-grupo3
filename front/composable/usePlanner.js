@@ -282,7 +282,7 @@ export function usePlanner() {
             }
           }
           Tota la informació ha d'estar en català.
-          📌 **Important:** la resposta ha de ser **només un JSON vàlid**, **sense text introductori**, sense cap bloc de codi (res de \`\`\`json), i sense formatació markdown. Retorna només l'objecte JSON pur.
+          📌 **Important:** la resposta ha de ser **només un JSON vàlid**, **sense text introductori**, sense cap bloc de codi (res de \`\`\`json), i sense formatació markdown. Retorna només l'objecte JSON pur. Sense non-whitespace.
           Gràcies!
           `;
 
