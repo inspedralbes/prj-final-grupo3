@@ -49,9 +49,6 @@ export const gemini = {
   getResponse(userInput) {
     const input = userInput.toLowerCase().trim();
 
-    console.log(input);
-
-
     // Check for exact matches first
     if (this.responses[input]) {
       return this.responses[input];

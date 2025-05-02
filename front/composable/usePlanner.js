@@ -8,7 +8,6 @@ import { gemini } from '~/mocks/mock-ai-response';
 
 
 export function usePlanner() {
-  const config = useRuntimeConfig();
   const router = useRouter();
   const authStore = useAuthStore();
   const aiGeminiStore = useAIGeminiStore();
@@ -27,10 +26,7 @@ export function usePlanner() {
     vehicletype: "",
   });
 
-  const formDataChat = ref({
-    name: "",
-    interests: "",
-  });
+  const formDataChat = ref({ interests: "" });
 
   const chatMessages = ref([]);
   const isTyping = ref(false);
@@ -327,11 +323,6 @@ export function usePlanner() {
   const simulateTyping = async (message) => {
     isTyping.value = true;
     // Add a temporary typing message
-    chatMessages.value.push({
-      text: '...',
-      isAI: true,
-      isTyping: true
-    });
 
     // Simulate typing delay
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -351,80 +342,64 @@ export function usePlanner() {
   const handleSubmitChat = async () => {
     if (!formDataChat.value.interests.trim()) return;
 
-    // Add user message
     chatMessages.value.push({
       text: formDataChat.value.interests,
       isAI: false
     });
 
-    // Clear input
-    const userMessage = formDataChat.value.interests;
+    const userMessage = `Actúa como un asistente especializado EXCLUSIVAMENTE en viajes y turismo. Tu única función es proporcionar información, consejos y asistencia relacionados con viajes, destinos, alojamientos, transportes, actividades turísticas, cultura e historia de destinos, equipaje, documentación de viaje, y temas similares.
+
+    Si el usuario hace una pregunta o solicitud que NO está relacionada con viajes o turismo, responde exactamente con, pero ATENCION, tiene que ser con el idioma el cual es se este comunicando contigo: "Em sap greu, només puc mantenir converses relacionades amb viatges i turisme. Hi ha res sobre destinacions, planificació de viatges o activitats turístiques en allò que et pugui ajudar?"
+
+    Instrucciones importantes:
+    1. No uses formato markdown en tus respuestas, solo texto plano.
+    2. Responde siempre en el mismo idioma que utilice el usuario. Si te hablan en catalán, responde en catalán. Si te hablan en inglés, responde en inglés, etc.
+    3. Mantén tus respuestas informativas pero concisas.
+    4. No proporciones información sobre temas no relacionados con viajes bajo ninguna circunstancia.
+    5. No reformules preguntas no relacionadas con viajes para intentar responderlas.
+
+    Solo debes actuar como un asistente de viajes, nada más.
+    
+    Esta es la peticion del usuario unicamente ${formDataChat.value.interests}
+    `;
+    console.log(userMessage);
+
     formDataChat.value.interests = "";
 
-    // Show typing indicator only after first message
-    if (!isFirstMessage.value) {
-      isTyping.value = true;
-      chatMessages.value.push({
-        text: '...',
-        isAI: true,
-        isTyping: true
-      });
-    }
-
     try {
-      isTyping.value = true;
-      // Get actual AI response
       const response = await getTravelGemini(userMessage);
-
-      isTyping.value = false;
-
-      console.log(response);
-
-      // Remove typing message if it exists
-      if (!isFirstMessage.value) {
-        chatMessages.value = chatMessages.value.filter(msg => !msg.isTyping);
-      }
-
-      // Add AI response
-      chatMessages.value.push({
-        text: response,
-        isAI: true
-      });
-
-      // Mark that first message has been sent
+      await simulateTyping(response);
       isFirstMessage.value = false;
     } catch (error) {
-      // Remove typing message if it exists
+      console.log(error);
+
       if (!isFirstMessage.value) {
         chatMessages.value = chatMessages.value.filter(msg => !msg.isTyping);
       }
-
-      // Add error message
-      chatMessages.value.push({
-        text: "Ho sento, hi ha hagut un error processant la teva petició. Si us plau, torna-ho a intentar.",
-        isAI: true
-      });
+      await simulateTyping("Ho sento, hi ha hagut un error processant la teva petició. Si us plau, torna-ho a intentar.");
     } finally {
       isTyping.value = false;
     }
   };
 
-  const openFloatingWindow = () => {
-    isWindowOpen.value = true;
+  const openChat = () => {
+    isWindowOpen.value = !isWindowOpen.value;
+    console.log('is window open: ', isWindowOpen.value);
+    firstMessage()
+  };
+
+  const firstMessage = () => {
     // Reset first message state when opening window
     isFirstMessage.value = true;
     // Add welcome message when opening the window
+    isTyping.value = false;
     if (chatMessages.value.length === 0) {
       chatMessages.value.push({
-        text: "Hola! Sóc el teu assistent de viatges. Com puc ajudar-te avui?",
+        text: `Hola <strong>${authStore.user.name}</strong>! Sóc el teu assistent de viatges. Com puc ajudar-te avui?`,
         isAI: true
       });
     }
-  };
-
-  const closeWindow = () => {
-    isWindowOpen.value = false;
-  };
+  }
 
   return {
     formData,
@@ -448,8 +423,7 @@ export function usePlanner() {
     budgetRange,
     onSliderChange,
     isWindowOpen,
-    openFloatingWindow,
-    closeWindow,
+    openChat,
     formDataChat,
     handleSubmitChat,
     responseGemini,
