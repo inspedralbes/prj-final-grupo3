@@ -237,7 +237,7 @@ export function usePlanner() {
 
       const dbResponse = await postTravel(travelData, authStore.token);
       const currentCountry = countries.value.find(country => country.id === formData.value.country);
-      console.log('currentCountry', currentCountry.name)
+
       if (dbResponse.code === 201) {
         const vehicleTypes = {
           1: "Bicicleta",
@@ -254,18 +254,19 @@ export function usePlanner() {
           Interessos: ${formData.value.interests}.
           Vehicle: ${formData.value.vehicletype}.
           Tipus de vehicle: ${vehicleTypes[formData.value.vehicletype] || "No especificat"}.
-          Cada dia ha d'incloure tos els seus detalls.
-          El nombre de dies ha de coincidir amb els dies que t'he indicat abans.Gràcies.   
+          Cada dia ha d'incloure tots els seus detalls.
+          El nombre de dies ha de coincidir amb els dies que t'he indicat abans. Gràcies.
           Bastant detallat i a més que el resultat ha d'estar estructurat com un objecte que contingui un array anomenat dies, on cada element representa un dia del viatge.
-          📌 **Important:** la resposta ha de ser **només un JSON vàlid**, **sense text introductori**, sense cap bloc de codi (res de \`\`\`json), i sense formatació markdown. Retorna només l'objecte JSON pur.
+          📌 **Important:** la resposta ha de ser **només un JSON vàlid**, sense text introductori, sense cap bloc de codi (res de '\`\`\`json'), i sense formatació markdown. Retorna només l'objecte JSON pur.
           Exemple esperat:
-          Retorna la resposta sempre en el mateix format.
           {
             "viatge": {
               "titol": "...",
               "dies": [
                 {
-                  "dia": Data del dia,
+                  "dia": "Data del dia",
+                  "resumDia": "(resum detallada del plan del dia)",
+                  "paraulaClau": "(Una paraula o 3 paraules clau que facin referència al pla de cada dia mes especific, com ara el nom del lloc més important del dia en anglès o el nom del país)",
                   "allotjament": "...",
                   "activitats": [
                     {
@@ -273,17 +274,17 @@ export function usePlanner() {
                       "descripcio": "...",
                       "preu": "...",
                       "horari": "..."
-                    },
-                    ...
+                    }
                   ]
                 }
               ],
-              preuTotal: "...",
+              "preuTotal": "..."
             }
           }
           Tota la informació ha d'estar en català.
+          📌 **Important:** la resposta ha de ser **només un JSON vàlid**, **sense text introductori**, sense cap bloc de codi (res de \`\`\`json), i sense formatació markdown. Retorna només l'objecte JSON pur.
           Gràcies!
-         `;
+          `;
 
         router.push({ name: "loading" });
 
@@ -293,7 +294,7 @@ export function usePlanner() {
 
         await aiGeminiStore.setResponse(aiGeminiStore.initialResponse);
 
-        console.log('Persistencia en pinia', aiGeminiStore.initialResponse);
+        console.log('Persistencia en pinia: ', aiGeminiStore.initialResponse);
 
         router.push({ name: "result" });
       }

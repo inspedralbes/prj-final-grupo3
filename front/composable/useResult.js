@@ -2,7 +2,7 @@ import { useRoute, useRouter } from "vue-router";
 import { computed, ref } from "vue";
 import { marked } from "marked";
 import { jsPDF } from "jspdf";
-import { getTravelGemini } from '@/services/communicationManager';
+import { getTravelGemini, savePlaning } from '@/services/communicationManager';
 import { useAIGeminiStore } from "~/store/aiGeminiStore";
 
 export function useResult() {
@@ -33,15 +33,18 @@ export function useResult() {
     showConfirmation.value = true;
   };
 
-  const handleAccept = () => {
-    alert("Planning del viatge guardat correctament");
-    aiGeminiStore.responseText = null;
-    router.push("/");
+  const handleAccept = async () => {
+    const response = savePlaning(responseText.value, aiGeminiStore.currentUserToken);
+    console.log(response);
+    // alert("Planning del viatge guardat correctament");
+    showConfirmation.value = false;
+    // aiGeminiStore.responseText = null;
+    // router.push("/");
   };
 
   const handleCancel = () => {
     alert("El viatge s'ha cancel·lat.");
-    aiGeminiStore.responseText = null;
+    // aiGeminiStore.responseText = null;
     router.push("/");
   };
 
@@ -138,11 +141,7 @@ export function useResult() {
 
       const newTripMessageWithSystemPrompt = `${systemPrompt}\n\n${newTripMessage}`;
 
-      console.log(newTripMessageWithSystemPrompt);
-
       const data = await getTravelGemini(newTripMessageWithSystemPrompt);
-
-      console.log("Nou viatge generat:", data);
 
       await aiGeminiStore.setResponse(data);
 
