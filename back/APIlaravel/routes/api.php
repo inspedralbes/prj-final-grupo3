@@ -9,6 +9,8 @@ use App\Http\Controllers\UserApiController;
 use App\Http\Controllers\TravelsController;
 use App\Http\Controllers\MovilityController;
 use App\Http\Controllers\TravelTypeController;
+use App\Http\Controllers\TravelMailController;
+
 
 Route::post('/sendEmail', [SendMail::class, 'sendEmail']);
 
@@ -36,3 +38,4 @@ Route::get('/types', action: [TravelTypeController::class, 'typesApi']);
 
 // Route::post('/travels', [TravelsController::class, 'store']);
 Route::post('/travels', [TravelsController::class, 'storetravel']);
+Route::middleware('auth:sanctum')->post('/travel/{id}/send-email', [TravelMailController::class, 'send']);

@@ -32,11 +32,36 @@ export function useResult() {
     showConfirmation.value = true;
   };
 
-  const handleAccept = () => {
-    alert("Planning del viatge guardat correctament");
-    aiGeminiStore.responseText = null;
-    router.push("/");
+  const handleAccept = async () => {
+    try {
+      alert("Planning del viatge guardat correctament");
+  
+      const travelId = aiGeminiStore.lastTravelId; // 👈 Ajusta esta línea según dónde lo guardes
+      const token = localStorage.getItem("token"); // o como accedas al token
+  
+      if (!travelId || !token) {
+        console.error("Falta l'ID del viatge o el token de l'usuari.");
+        return;
+      }
+  
+      console.log("Enviant correu per al viatge amb ID:", travelId);
+  
+      const res = await $fetch(`/api/travel/${travelId}/send-email`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      console.log("Resposta del backend:", res);
+  
+      aiGeminiStore.responseText = null;
+      router.push("/");
+    } catch (error) {
+      console.error("Error en enviar el correu:", error);
+    }
   };
+  
 
   const handleCancel = () => {
     alert("El viatge s'ha cancel·lat.");
