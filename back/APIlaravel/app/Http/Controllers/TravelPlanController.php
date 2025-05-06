@@ -25,6 +25,12 @@ class TravelPlanController extends Controller
   public function storeTravelPlan(Request $request)
   {
     try {
+      $request->validate([
+        'travel_id' => 'required',
+        'viatge.titol' => 'required|string',
+        'viatge.preuTotal' => 'required|numeric',
+        'viatge.dies' => 'required|array'
+      ]);
 
       // 1. Create a TravelPlan
       $travelPlan = TravelPlan::create([
@@ -58,7 +64,6 @@ class TravelPlanController extends Controller
       }
 
       return response()->json(['message' => 'Plan created successfully', 'plan' => $travelPlan->load('days.activities')]);
-
     } catch (\Exception $e) {
       return response()->json(['error' => $e->getMessage()], 500);
     }
@@ -103,9 +108,14 @@ class TravelPlanController extends Controller
 
   private function parseTimeRange(string $timeRange): array
   {
-    // Convert "14:00 - 15:00" a ["14:00", "15:00"]
-    $times = explode(' - ', $timeRange);
-    return [$times[0], $times[1]];
+    // Verificar si existe el formato esperado con un guion
+    if (strpos($timeRange, ' - ') !== false) {
+      $times = explode(' - ', $timeRange);
+      return [$times[0], $times[1] ?? null]; // Usar null como valor predeterminado
+    }
+
+    // Si no tiene el formato esperado, devolver valores nulos
+    return [null, null];
   }
 
   private function extractPrice(string $priceString): ?float

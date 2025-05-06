@@ -4,9 +4,11 @@ import { marked } from "marked";
 import { jsPDF } from "jspdf";
 import { getTravelGemini, savePlaning } from '@/services/communicationManager';
 import { useAIGeminiStore } from "~/store/aiGeminiStore";
+import { useAuthStore } from "~/store/authUser";
 
 export function useResult() {
   const aiGeminiStore = useAIGeminiStore();
+  const userStore = useAuthStore();
   const response = ref(null);
   const router = useRouter();
   const showConfirmation = ref(false);
@@ -34,36 +36,41 @@ export function useResult() {
   };
 
   const handleAccept = async () => {
+    const response = savePlaning(responseText.value, aiGeminiStore.currentUserToken, aiGeminiStore.lastTravelId);
+    console.log(response);
     try {
-      alert("Planning del viatge guardat correctament");
-  
-      console.log("ID del viatge:", travelId);
-      const token = localStorage.getItem("token"); // o como accedas al token
-  
-      if (!travelId) {
-        console.error("Falta l'ID del viatge o el token de l'usuari.");
-        return;
+      if (response) {
+        alert("Planning del viatge guardat correctament");
+
+        console.log("ID del viatge:", aiGeminiStore.lastTravelId);
+        console.log("ID de l'usuari:", userStore.user.id);
+        const token = localStorage.getItem("token");
+
+        if (!aiGeminiStore.lastTravelId || !userStore.user.id) {
+          console.error("Falta l'ID del viatge o l'id de l'usuari.");
+          return;
+        }
+
+        console.log("Enviant correu per al viatge amb ID:", aiGeminiStore.lastTravelId, "al usuario amb ID:", userStore.user.id);
+
+        const res = await $fetch(`/api/travel/${userStore.user.id}/send-email`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        console.log("Resposta del backend:", res);
+
+        aiGeminiStore.responseText = null;
+        console.log("button clicked");
+        router.push("/");
       }
-  
-      console.log("Enviant correu per al viatge amb ID:", travelId);
-  
-      const res = await $fetch(`/api/travel/${travelId}/send-email`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-  
-      console.log("Resposta del backend:", res);
-  
-      aiGeminiStore.responseText = null;
-      console.log("button clicked");
-      router.push("/");
     } catch (error) {
       console.error("Error en enviar el correu:", error);
     }
   };
-  
+
 
   const handleCancel = () => {
     alert("El viatge s'ha cancel·lat.");
@@ -77,51 +84,51 @@ export function useResult() {
     const doc = new jsPDF("p", "mm", "a4");
     const viatge = responseText.value?.viatge;
     if (!viatge) return;
-  
+
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     const leftMargin = 20;
     const topMargin = 25;
     const lineHeight = 7;
-  
+
     const totalPages = viatge.dies.length + 1;
-  
+
     const addWatermark = () => {
       const imgWidth = 40;
       const imgHeight = 40;
       doc.addImage(logoBase64, "PNG", pageWidth - imgWidth - 10, pageHeight - imgHeight - 10, imgWidth, imgHeight);
     };
-  
+
     const addPageNumber = (pageNum) => {
       doc.setFontSize(10);
       doc.setTextColor(150);
       doc.text(`Pàgina ${pageNum} de ${totalPages}`, pageWidth / 2, pageHeight - 10, { align: "center" });
     };
-  
+
     // First Page
     doc.setFont("times", "bold");
     doc.setFontSize(20);
     doc.text(viatge.titol || "Planificació del viatge", pageWidth / 2, pageHeight / 2 - 10, { align: "center" });
-  
+
     doc.setFontSize(12);
     doc.setFont("times", "normal");
     doc.text(`Preu total estimat: ${viatge.preuTotal || "No disponible"}`, pageWidth / 2, pageHeight / 2 + 10, { align: "center" });
-  
+
     addWatermark();
-  
+
     // Travel days
     viatge.dies.forEach((dia, index) => {
       doc.addPage();
       let y = topMargin;
-  
+
       addWatermark();
-  
+
       // Title
       doc.setFont("times", "bold");
       doc.setFontSize(16);
       doc.text(`Dia ${index + 1}`, leftMargin, y);
       y += lineHeight * 2;
-  
+
       if (Array.isArray(dia.activitats)) {
         dia.activitats.forEach((act) => {
           if (typeof act === 'object') {
@@ -129,10 +136,10 @@ export function useResult() {
             const nom = act.nom || "Activitat";
             const descripcio = act.descripcio || "";
             const preu = act.preu || "Preu no disponible";
-  
+
             const bloc = `${horari} | ${nom}\nDescripció: ${descripcio}\nPreu: ${preu}\n`;
             const lines = doc.splitTextToSize(bloc, pageWidth - 2 * leftMargin);
-  
+
             doc.setFont("times", "normal");
             doc.setFontSize(11);
             lines.forEach((line) => {
@@ -144,7 +151,7 @@ export function useResult() {
               doc.text(line, leftMargin, y);
               y += lineHeight;
             });
-  
+
             y += 2; // Space between activities
           }
         });
@@ -154,7 +161,7 @@ export function useResult() {
         doc.text("No hi ha activitats definides per aquest dia.", leftMargin, y);
       }
     });
-  
+
     // Save
     doc.save("planificacio_viatge.pdf");
   };
@@ -186,7 +193,8 @@ export function useResult() {
                   ]
                 }
               ],
-              preuTotal: "...",
+              "preuTotal": "ha de ser un integer, sense text, i ha de ser un preu total aproximat del viatge, incloent allotjament i activitats.",
+              "comentaris": "comentari/s curt sobre el preu total del viatge, com ara si és un pressupost ajustat o si es poden fer ajustos per reduir costos.",
             }
           }
           Recorda mantenir els mateixos dies que ha seleccionat l'usuari, però intenta que sigui un viatge diferent.
@@ -251,6 +259,10 @@ export function useResult() {
     return responseText.value.viatge?.preuTotal || 0;
   })
 
+  const comentaris = computed(() => {
+    return responseText.value.viatge?.comentaris || "";
+  })
+
   const totsElsDiesMostrats = computed(() => {
     return modeVista.value === 'resum';
   });
@@ -303,6 +315,7 @@ export function useResult() {
     // mostrarSeguentDia,
     modeVista,
     preuTotal,
+    comentaris,
     titol,
     totsElsDiesMostrats,
   };

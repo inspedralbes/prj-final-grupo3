@@ -278,7 +278,8 @@ export function usePlanner() {
                   ]
                 }
               ],
-              "preuTotal": "..."
+              "preuTotal": "ha de ser un integer, sense text, i ha de ser un preu total aproximat del viatge, incloent allotjament i activitats.",
+              "comentaris": "comentari/s curt sobre el preu total del viatge, com ara si és un pressupost ajustat o si es poden fer ajustos per reduir costos.",
             }
           }
           Tota la informació ha d'estar en català.

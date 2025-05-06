@@ -13,8 +13,9 @@
 
         <div class="p-1 text-sm text-gray-400 text-end flex flex-col gap-2">
           <div>
-            <p class="font-semibold">Preu total:</p>
-            <p class="text-xs">{{ result.preuTotal.value }}</p>
+            <p class="text-md font-bold">Preu total:</p>
+            <p class="text-xs">{{ result.preuTotal.value }} €</p>
+            <p class="text-xs">{{ result.comentaris.value }}</p>
           </div>
           <!-- <div class="flex justify-end">
             <button
@@ -23,26 +24,6 @@
           </div> -->
         </div>
       </div>
-
-      <!-- Vista resum -->
-      <div v-if="result.modeVista.value === 'resum'" class="flex flex-col gap-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <TargetDay v-for="(dia, i) in result.diesViatge.value" :key="i" :vista="result.modeVista.value" :dia="dia" />
-        </div>
-
-        <div class="p-1 text-sm text-gray-400 text-end flex flex-col gap-2">
-          <div>
-            <p class="font-semibold">Preu total:</p>
-            <p class="text-xs">{{ result.preuTotal.value }}</p>
-          </div>
-          <div class="flex justify-end">
-            <button
-              class="border-2 border-blue-600/50 p-1 text-blue-600/50 hover:text-blue-600 transition duration-200 hover:border-blue-600 rounded-lg"
-              @click="result.modeVista.value = 'mesDetalls'">Veure mes detalls</button>
-          </div>
-        </div>
-      </div>
-      <!-- Si no hi ha dies -->
 
       <!--buttons accept or decline-->
       <div v-if="!result.showConfirmation.value" class="flex flex-col md:flex-row md:justify-between mt-8 gap-2 md-gap-0">
