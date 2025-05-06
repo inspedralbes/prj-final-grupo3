@@ -34,13 +34,36 @@ export function useResult() {
   };
 
   const handleAccept = async () => {
-    const response = savePlaning(responseText.value, aiGeminiStore.currentUserToken);
-    console.log(response);
-    // alert("Planning del viatge guardat correctament");
-    showConfirmation.value = false;
-    // aiGeminiStore.responseText = null;
-    // router.push("/");
+    try {
+      alert("Planning del viatge guardat correctament");
+  
+      console.log("ID del viatge:", travelId);
+      const token = localStorage.getItem("token"); // o como accedas al token
+  
+      if (!travelId) {
+        console.error("Falta l'ID del viatge o el token de l'usuari.");
+        return;
+      }
+  
+      console.log("Enviant correu per al viatge amb ID:", travelId);
+  
+      const res = await $fetch(`/api/travel/${travelId}/send-email`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      console.log("Resposta del backend:", res);
+  
+      aiGeminiStore.responseText = null;
+      console.log("button clicked");
+      router.push("/");
+    } catch (error) {
+      console.error("Error en enviar el correu:", error);
+    }
   };
+  
 
   const handleCancel = () => {
     alert("El viatge s'ha cancel·lat.");
@@ -48,47 +71,91 @@ export function useResult() {
     router.push("/");
   };
 
-  const downloadPDF = () => {
-    const element = document.querySelector(".custom-prose");
-    if (!element) return;
+  const downloadPDF = async () => {
+    const logoBase64 = await getImageBase64("/apple-icon.png");
 
     const doc = new jsPDF("p", "mm", "a4");
+    const viatge = responseText.value?.viatge;
+    if (!viatge) return;
+  
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
-
-    // Definir márgenes y espacio
-    const leftMargin = 15;
-    const rightMargin = 15;
-    const topMargin = 15;
-    const bottomMargin = 15;
-    const titleGap = 10;
-
-    // Añadir título centrado
-    const title = "PLANIFICACIÓ DEL VIATGE";
+    const leftMargin = 20;
+    const topMargin = 25;
+    const lineHeight = 7;
+  
+    const totalPages = viatge.dies.length + 1;
+  
+    const addWatermark = () => {
+      const imgWidth = 40;
+      const imgHeight = 40;
+      doc.addImage(logoBase64, "PNG", pageWidth - imgWidth - 10, pageHeight - imgHeight - 10, imgWidth, imgHeight);
+    };
+  
+    const addPageNumber = (pageNum) => {
+      doc.setFontSize(10);
+      doc.setTextColor(150);
+      doc.text(`Pàgina ${pageNum} de ${totalPages}`, pageWidth / 2, pageHeight - 10, { align: "center" });
+    };
+  
+    // First Page
     doc.setFont("times", "bold");
     doc.setFontSize(20);
-    const titleX = (pageWidth - doc.getTextWidth(title)) / 2;
-    doc.text(title, titleX, topMargin);
-
-    // Configurar el estilo para el cuerpo del texto
+    doc.text(viatge.titol || "Planificació del viatge", pageWidth / 2, pageHeight / 2 - 10, { align: "center" });
+  
+    doc.setFontSize(12);
     doc.setFont("times", "normal");
-    doc.setFontSize(10);
-
-    const text = element.innerText;
-    const availableWidth = pageWidth - leftMargin - rightMargin;
-    const lines = doc.splitTextToSize(text, availableWidth);
-    const lineHeight = 7;
-    let y = topMargin + 20 + titleGap;
-
-    lines.forEach((line) => {
-      if (y + lineHeight > pageHeight - bottomMargin) {
-        doc.addPage();
-        y = topMargin;
+    doc.text(`Preu total estimat: ${viatge.preuTotal || "No disponible"}`, pageWidth / 2, pageHeight / 2 + 10, { align: "center" });
+  
+    addWatermark();
+  
+    // Travel days
+    viatge.dies.forEach((dia, index) => {
+      doc.addPage();
+      let y = topMargin;
+  
+      addWatermark();
+  
+      // Title
+      doc.setFont("times", "bold");
+      doc.setFontSize(16);
+      doc.text(`Dia ${index + 1}`, leftMargin, y);
+      y += lineHeight * 2;
+  
+      if (Array.isArray(dia.activitats)) {
+        dia.activitats.forEach((act) => {
+          if (typeof act === 'object') {
+            const horari = act.horari || "Sense horari";
+            const nom = act.nom || "Activitat";
+            const descripcio = act.descripcio || "";
+            const preu = act.preu || "Preu no disponible";
+  
+            const bloc = `${horari} | ${nom}\nDescripció: ${descripcio}\nPreu: ${preu}\n`;
+            const lines = doc.splitTextToSize(bloc, pageWidth - 2 * leftMargin);
+  
+            doc.setFont("times", "normal");
+            doc.setFontSize(11);
+            lines.forEach((line) => {
+              if (y + lineHeight > pageHeight - 20) {
+                doc.addPage();
+                y = topMargin;
+                addWatermark();
+              }
+              doc.text(line, leftMargin, y);
+              y += lineHeight;
+            });
+  
+            y += 2; // Space between activities
+          }
+        });
+      } else {
+        doc.setFont("times", "italic");
+        doc.setFontSize(11);
+        doc.text("No hi ha activitats definides per aquest dia.", leftMargin, y);
       }
-      doc.text(line, leftMargin, y);
-      y += lineHeight;
     });
-
+  
+    // Save
     doc.save("planificacio_viatge.pdf");
   };
 
@@ -153,6 +220,24 @@ export function useResult() {
     }
   };
 
+  const getImageBase64 = (url) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous"; // CORS
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        const dataURL = canvas.toDataURL("image/png");
+        resolve(dataURL);
+      };
+      img.onerror = () => reject(new Error("No es pot carregar la imatge."));
+      img.src = url;
+    });
+  };
+
   const diesViatge = computed(() => {
     return responseText.value.viatge?.dies || [];
   });
@@ -165,6 +250,10 @@ export function useResult() {
   const preuTotal = computed(() => {
     return responseText.value.viatge?.preuTotal || 0;
   })
+
+  const totsElsDiesMostrats = computed(() => {
+    return modeVista.value === 'resum';
+  });
 
   // const mostrarSeguentDia = () => {
   //   if (diaActualIndex.value < diesViatge.value.length - 1) {
@@ -215,5 +304,6 @@ export function useResult() {
     modeVista,
     preuTotal,
     titol,
+    totsElsDiesMostrats,
   };
 }

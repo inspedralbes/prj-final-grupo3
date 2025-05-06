@@ -294,6 +294,8 @@ export function usePlanner() {
 
         await aiGeminiStore.setResponse(aiGeminiStore.initialResponse);
 
+        await aiGeminiStore.setLatestTravelId(dbResponse.travel_id);
+
         console.log('Persistencia en pinia: ', aiGeminiStore.initialResponse);
 
         router.push({ name: "result" });
