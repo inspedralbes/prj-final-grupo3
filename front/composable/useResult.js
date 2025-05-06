@@ -44,6 +44,7 @@ export function useResult() {
 
         console.log("ID del viatge:", aiGeminiStore.lastTravelId);
         console.log("ID de l'usuari:", userStore.user.id);
+        console.log("Token:", userStore.token);
         const token = localStorage.getItem("token");
 
         if (!aiGeminiStore.lastTravelId || !userStore.user.id) {
@@ -56,7 +57,7 @@ export function useResult() {
         const res = await $fetch(`/api/travel/${userStore.user.id}/send-email`, {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${userStore.token}`,
           },
         });
 
@@ -254,9 +255,12 @@ export function useResult() {
     return responseText.value.viatge?.titol || "";
   });
 
-
   const preuTotal = computed(() => {
     return responseText.value.viatge?.preuTotal || 0;
+  })
+
+  const tokenUser = computed(() => {
+    return userStore.token;
   })
 
   const comentaris = computed(() => {
@@ -316,6 +320,7 @@ export function useResult() {
     modeVista,
     preuTotal,
     comentaris,
+    tokenUser,
     titol,
     totsElsDiesMostrats,
   };
