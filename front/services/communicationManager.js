@@ -298,9 +298,11 @@ export async function getTravelGemini(text) {
   }
 }
 
-export async function savePlaning(travelPlanData, currentUserToken) {
+export async function savePlaning(travelPlanData, currentUserToken, travelId) {
 
-  console.log(travelPlanData);
+  travelPlanData.travel_id = travelId;
+
+  console.log("Travel plan data:", travelPlanData);
 
   const response = await fetch(`${HOST}/travel-plans`, {
     method: "POST",
