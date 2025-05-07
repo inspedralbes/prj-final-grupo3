@@ -1,6 +1,6 @@
 import { ref, computed, onMounted } from 'vue';
 import { useAuthStore } from '~/store/authUser';
-import { getUserTravelHistory } from '@/services/communicationManager';
+import { getUserTravelHistory, deleteTravelTicket } from '@/services/communicationManager';
 
 export function useTripDetails() {
   const authStore = useAuthStore();
@@ -40,11 +40,32 @@ export function useTripDetails() {
     });
   });
 
+  const deleteTravel = async (travelId) => {
+    if (confirm('Vols eliminar aquest viatge?')) {
+      console.log('Deleting travel with ID:', travelId);
+
+      navigateTo('/loading');
+
+      try {
+        const data = await deleteTravelTicket(authStore.user.id, travelId, authStore.token);
+
+        if (data) {
+          console.log('Viatge eliminat correctament:', data);
+          navigateTo('/trip-details');
+        }
+      } catch (error) {
+        console.error('Error eliminant el viatge:', error);
+        navigateTo('/');
+      }
+    }
+  }
+
   onMounted(loadTravelHistory);
 
   return {
     searchQuery,
     filteredTrips,
-    loadTravelHistory
+    deleteTravel,
+    loadTravelHistory,
   };
 }

@@ -19,12 +19,17 @@
         </p>
 
         <div class="relative" v-for="travel in tripDetails.filteredTrips.value" :key="travel.id">
+          <div class="flex justify-end py-2">
+            <img src="../assets/images/delete.svg" alt="" class="size-8 cursor-pointer hover:rotate-180 transition duration-300"
+              @click="tripDetails.deleteTravel(travel.id)" />
+          </div>
           <div class="w-[70vw] h-[40vh] bg-[#ffb300] rounded-md shadow-lg border-t border-b border-[#e89f3d] relative">
             <div class="absolute top-[0.5vh] left-2.5 right-2.5 flex justify-between text-white px-2.5">
               <p class="flex text-2xl font-bold font-['Arial'] text-blue-950">TRIPLAN</p>
               <p class="flex text-xl font-['Arial'] text-gray-100">Informació del viatge</p>
               <p class="flex text-sm font-bold font-['Arial'] text-blue-950">VIATGE #00{{ travel.id }}</p>
             </div>
+
 
             <div class="absolute top-10 w-full h-[17vh] bg-gray-200">
               <div
@@ -119,6 +124,9 @@
 import { useTripDetails } from '~/composable/useTripDetails';
 
 const tripDetails = useTripDetails();
+
+
+
 </script>
 
 <style>

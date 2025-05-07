@@ -239,11 +239,41 @@ export async function getUserTravelHistory(userId, currentUserToken) {
     }
 
     const travelHistory = await response.json();
-    console.log("Respuesta del servidor:", travelHistory);
+    // console.log("Respuesta del servidor:", travelHistory);
     return travelHistory;
   } catch (error) {
     console.error(
       `Error al obtener el historial de viajes del usuario ${userId}:`,
+      error
+    );
+    throw error;
+  }
+}
+
+export async function deleteTravelTicket(userId, travelId, currentUserToken) {
+  const URL = `${HOST}/trip-details/${userId}/${travelId}`;
+
+  try {
+    const response = await fetch(URL, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${currentUserToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Error al eliminar el ticket de viaje ${travelId} para el usuario ${userId}: ${response.statusText}`
+      );
+    }
+
+    const travelHistory = await response.json();
+    console.log("Respuesta del servidor:", travelHistory);
+    return travelHistory;
+  } catch (error) {
+    console.error(
+      `Error al eliminar el ticket de viaje ${travelId} del usuario ${userId}:`,
       error
     );
     throw error;

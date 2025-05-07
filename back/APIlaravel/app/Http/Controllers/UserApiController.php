@@ -129,4 +129,23 @@ class UserApiController extends Controller
     $user = User::with(['travels.country', 'travels.type', 'travels.movility', 'travels.budget', 'travels.user'])->where('id', $id)->first();
     return response()->json($user);
   }
+  
+  /**
+   * Delete travel
+   */
+  public function deleteTravel($userId, $tripId)
+  {
+    $user = User::find($userId);
+    if (!$user) {
+      return response()->json(['message' => 'Usuari no trobat'], 404);
+    }
+
+    $travel = $user->travels()->find($tripId);
+    if (!$travel) {
+      return response()->json(['message' => 'Viaje no trobat'], 404);
+    }
+
+    $travel->delete();
+    return response()->json(['message' => 'Viatge eliminat correctament'], 200);
+  }
 }

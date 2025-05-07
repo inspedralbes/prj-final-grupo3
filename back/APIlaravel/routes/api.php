@@ -26,6 +26,7 @@ Route::prefix('auth')->group(function () {
 
 Route::middleware(['auth:sanctum'])->group(function () {
   Route::get('/trip-details/{id}', [UserApiController::class, 'travelHistory']);
+  Route::delete('/trip-details/{userId}/{tripId}', [UserApiController::class, 'deleteTravel']);
   Route::get('/currentUser', [AuthenticatorController::class, 'currentUser']);
   Route::post('/auth/logout', [AuthenticatorController::class, 'logout']);
   Route::patch('/changeInfoProfile', [UserApiController::class, 'update']);
@@ -44,8 +45,5 @@ Route::post('/travel-plans', [TravelPlanController::class, 'storeTravelPlan']);
 Route::post('/travel/{id}/send-mail', [TravelMailController::class, 'send']);
 
 // Route::middleware('auth:sanctum')->post('/travel/{id}/send-email', [TravelMailController::class, 'send']);
-//Route::middleware('auth:sanctum')->post('/travel/{id}/send-email', [TravelMailController::class, 'send']);
-
-//Route::post('/travel/{id}/send-email', [TravelMailController::class, 'send']);
 
 Route::get('/travel-plan/{id}', [TravelsController::class, 'getByTravelId']);
