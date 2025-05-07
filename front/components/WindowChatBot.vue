@@ -1,8 +1,9 @@
 <template>
   <div v-if="isOpen"
-    class="fixed bottom-4 right-4 bg-white rounded-lg shadow-2xl w-[400px] max-w-[90%] max-h-[60vh] overflow-auto"
-    :class="[isOpen == false ? 'bottom-10 right-10 bg-white rounded-lg shadow-2xl w-[400px] max-w-[90%] max-h-[60vh] overflow-auto' : '']">
-    <div class="flex justify-between items-center p-4 border-b border-gray-200 select-none">
+    class="fixed bottom-4 right-4 bg-white rounded-lg shadow-2xl w-[400px] max-w-[90%] max-h-[60vh] overflow-hidden"
+    :class="[isOpen == false ? 'bottom-10 right-10 bg-white rounded-lg shadow-2xl w-[400px] max-w-[90%] max-h-[60vh] overflow-hidden' : '']">
+    <!-- Header - Fixed -->
+    <div class="flex justify-between items-center p-4 border-b border-gray-200 select-none bg-white sticky top-0 z-10">
       <slot name="header">
         <h3 class="text-lg font-semibold text-gray-800">{{ title }}</h3>
       </slot>
@@ -12,7 +13,8 @@
         ×
       </button>
     </div>
-    <div class="p-4">
+    <!-- Content - Scrollable -->
+    <div class="p-4 overflow-y-auto h-[calc(60vh-4rem)]">
       <slot></slot>
     </div>
   </div>

@@ -142,6 +142,7 @@
     <Transition enter-active-class="transition-transform duration-300 ease-out"
       enter-from-class="translate-x-full opacity-0" enter-to-class="translate-x-0 opacity-100"
       leave-active-class="animate-bounce-out-down" leave-from-class="translate-x-0 opacity-100" leave-to-class="">
+
       <WindowChatBot v-if="planner.isWindowOpen.value" v-model:isOpen="planner.isWindowOpen.value"
         title="Asistent de planificació">
         <form @submit.prevent="planner.handleSubmitChat" class="flex flex-col h-full">
@@ -163,9 +164,18 @@
             </div>
           </div>
           <div class="flex gap-2 p-4 border-t border-gray-200">
-            <input v-model="planner.formDataChat.value.interests" type="text" placeholder="Escriu el teu missatge..."
-              class="flex-1 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary"
-              :disabled="planner.isTyping.value" />
+            <textarea v-model="planner.formDataChat.value.interests" placeholder="Escriu el teu missatge..."
+              class="flex-1 border border-gray-300 text-sm rounded-md py-2 px-1 focus:outline-none focus:ring-2 focus:ring-primary resize-none overflow-hidden"
+              :disabled="planner.isTyping.value" rows="1"
+              @input="$event.target.style.height = ''; $event.target.style.height = $event.target.scrollHeight + 'px'"
+              @keydown.enter.prevent="
+                () => {
+                  if (!planner.isTyping.value && planner.formDataChat.value.interests.trim()) {
+                    planner.handleSubmitChat();
+                    $event.target.style.height = 'auto';
+                  }
+                }
+              "></textarea>
             <button type="submit"
               class="bg-[#3f9eff] text-white px-4 py-2 rounded-md hover:bg-[#2d8aed] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               :disabled="planner.isTyping.value || !planner.formDataChat.value.interests.trim()">
