@@ -34,18 +34,20 @@ class TravelMailController extends Controller
 
         try {
             // Generar el PDF
-            $pdf = Pdf::loadView('pdf.planning', ['planning' => $planning]);
+            // $pdf = Pdf::loadView('pdf.planning', ['planning' => $planning]);
 
-            // Enviar el correu
-            Mail::send('sendemail', ['user' => $user, 'planning' => $planning], function ($message) use ($user, $pdf) {
-                $message->to($user->email)
-                    ->subject('El teu pla de viatge')
-                    ->attachData($pdf->output(), 'planificacio_viatge.pdf', [
-                        'mime' => 'application/pdf',
-                    ]);
-            });
+            // // Enviar el correu
+            // Mail::send('sendemail', ['user' => $user, 'planning' => $planning], function ($message) use ($user, $pdf) {
+            //     $message->to($user->email)
+            //         ->subject('El teu pla de viatge')
+            //         ->attachData($pdf->output(), 'planificacio_viatge.pdf', [
+            //             'mime' => 'application/pdf',
+            //         ]);
+            // });
+            // $pdf = Pdf::loadView('pdf.planning', ['planning' => $planning]);
 
-            Log::info("Correu enviat correctament a {$user->email}");
+
+            // Log::info("Correu enviat correctament a {$user->email}");
 
             return response()->json([
                 'status' => 'ok',

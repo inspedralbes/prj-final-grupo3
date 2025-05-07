@@ -62,7 +62,7 @@ export function useResult() {
           },
           body: JSON.stringify(userStore.user),
         });
-
+        
         console.log("Resposta del backend:", res);
 
         aiGeminiStore.responseText = null;
