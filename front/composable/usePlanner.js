@@ -366,7 +366,6 @@ export function usePlanner() {
     
     Esta es la peticion del usuario unicamente: ${formDataChat.value.interests}
     `;
-    console.log(userMessage);
 
     formDataChat.value.interests = "";
 
@@ -385,6 +384,10 @@ export function usePlanner() {
       isTyping.value = false;
     }
   };
+
+  const resetTextAreaHeight = (event) => {
+    event.target.style.height = '36px'
+  }
 
   const openChat = () => {
     isWindowOpen.value = !isWindowOpen.value;
@@ -434,6 +437,7 @@ export function usePlanner() {
     gemini,
     chatMessages,
     isTyping,
-    isFirstMessage
+    isFirstMessage,
+    resetTextAreaHeight,
   };
 }

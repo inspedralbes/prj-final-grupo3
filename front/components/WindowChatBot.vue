@@ -1,6 +1,6 @@
 <template>
   <div v-if="isOpen"
-    class="fixed bottom-4 right-4 bg-white rounded-lg shadow-2xl w-[400px] max-w-[90%] max-h-[60vh] overflow-hidden"
+    class="fixed bottom-4 right-4 bg-white z-[50] rounded-lg shadow-2xl w-[400px] max-w-[90%] max-h-[60vh] overflow-hidden"
     :class="[isOpen == false ? 'bottom-10 right-10 bg-white rounded-lg shadow-2xl w-[400px] max-w-[90%] max-h-[60vh] overflow-hidden' : '']">
     <!-- Header - Fixed -->
     <div class="flex justify-between items-center p-4 border-b border-gray-200 select-none bg-white sticky top-0 z-10">

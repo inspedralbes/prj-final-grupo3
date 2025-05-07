@@ -146,7 +146,8 @@
       <WindowChatBot v-if="planner.isWindowOpen.value" v-model:isOpen="planner.isWindowOpen.value"
         title="Asistent de planificació">
         <form @submit.prevent="planner.handleSubmitChat" class="flex flex-col h-full">
-          <div class="flex-1 overflow-y-auto mb-4 space-y-4 p-4">
+          <div class="flex-1 overflow-y-auto mb-4 space-y-4 p-4" ref="chatContainer"
+            :class="[chatContainer ? 'flex-1 overflow-y-auto mb-4 space-y-4 p-4 scroll-smooth transition-all duration-300 ease-in-out' : '']">
             <div v-for="(message, index) in planner.chatMessages.value" :key="index"
               :class="['flex', message.isAI ? 'justify-start' : 'justify-end']">
               <div :class="['max-w-[80%] p-3 rounded-lg', message.isAI ? 'bg-gray-100' : 'bg-[#3f9eff] text-white']">
@@ -169,18 +170,17 @@
               :disabled="planner.isTyping.value" rows="1"
               @input="$event.target.style.height = ''; $event.target.style.height = $event.target.scrollHeight + 'px'"
               @keydown.enter.prevent="
-                () => {
-                  if (!planner.isTyping.value && planner.formDataChat.value.interests.trim()) {
-                    planner.handleSubmitChat();
-                    $event.target.style.height = 'auto';
-                  }
-                }
+                planner.resetTextAreaHeight($event);
+              if (!planner.isTyping.value && planner.formDataChat.value.interests.trim()) {
+                planner.handleSubmitChat();
+              }
+
               "></textarea>
-            <button type="submit"
+            <!-- <button type="submit"
               class="bg-[#3f9eff] text-white px-4 py-2 rounded-md hover:bg-[#2d8aed] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               :disabled="planner.isTyping.value || !planner.formDataChat.value.interests.trim()">
               Enviar
-            </button>
+            </button> -->
           </div>
         </form>
       </WindowChatBot>
@@ -199,6 +199,18 @@ const planner = usePlanner();
 onMounted(() => {
   planner.loadInitialData();
 });
+
+const chatContainer = ref(null);
+
+// Watch for changes in chat messages
+watch(() => planner.chatMessages.value, () => {
+  // Wait for DOM update
+  setTimeout(() => {
+    if (chatContainer.value) {
+      chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
+    }
+  }, 0);
+}, { deep: true });
 </script>
 
 <style>
