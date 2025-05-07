@@ -297,3 +297,22 @@ export async function getTravelGemini(text) {
     throw new Error(`Failed to get travel plan: ${error.message}`);
   }
 }
+
+export async function changeUserPassword(currentUserToken, passwordData) {
+  const URL = `${HOST}/changePassword`;
+
+  const response = await fetch(URL, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${currentUserToken}`,
+    },
+    body: JSON.stringify({
+      currentPassword: passwordData.currentPassword,
+      newPassword: passwordData.newPassword,
+      newPassword_confirmation: passwordData.confirmPassword,
+    }),
+  });
+
+  return await response.json();
+}

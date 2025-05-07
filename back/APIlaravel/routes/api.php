@@ -9,6 +9,7 @@ use App\Http\Controllers\UserApiController;
 use App\Http\Controllers\TravelsController;
 use App\Http\Controllers\MovilityController;
 use App\Http\Controllers\TravelTypeController;
+use Illuminate\Container\Attributes\Auth;
 
 Route::post('/sendEmail', [SendMail::class, 'sendEmail']);
 
@@ -26,6 +27,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
   Route::get('/currentUser', [AuthenticatorController::class, 'currentUser']);
   Route::post('/auth/logout', [AuthenticatorController::class, 'logout']);
   Route::patch('/changeInfoProfile', [UserApiController::class, 'update']);
+  Route::patch('/changePassword', [AuthenticatorController::class, 'changePassword']);
 });
 
 
@@ -36,3 +38,6 @@ Route::get('/types', action: [TravelTypeController::class, 'typesApi']);
 
 // Route::post('/travels', [TravelsController::class, 'store']);
 Route::post('/travels', [TravelsController::class, 'storetravel']);
+
+//changepassword
+// Route::patch('/changePassword', [AuthenticatorController::class, 'changePassword'])->middleware('auth:sanctum');

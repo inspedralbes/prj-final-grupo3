@@ -30,27 +30,56 @@ export function useSettings() {
   };
 
   const confirmEdit = async () => {
-    const newDataUser = reactive({
-      ...currentUser.value
-    });
+    console.log('[confirmEdit] inici');
+  
+    const volCanviarContrasenya =
+      showPasswordForm.value &&
+      passwordForm.currentPassword.trim() !== '' &&
+      passwordForm.newPassword.trim() !== '' &&
+      passwordForm.confirmPassword.trim() !== '';
+    console.log('[confirmEdit] Vol canviar contrasenya?', volCanviarContrasenya);
 
+
+  
+    if (volCanviarContrasenya) {
+      console.log('[confirmEdit] Intentant canviar contrasenya...');
+      const passwordOk = await changePassword();
+      if (!passwordOk) {
+        console.warn('[confirmEdit] Canvi de contrasenya fallit. Cancel·lant confirmació.');
+        return; // Evita desar altres canvis si la contrasenya falla
+      }
+    }
+  
+    const newDataUser = reactive({
+      ...currentUser.value,
+    });
+  
     if (newAvatarFile.value) {
       newDataUser.avatarFile = newAvatarFile.value;
     }
-
-    const response = await com.changeInfoUser(authStore.token, newDataUser);
-    const dataUser = await com.getCurrentUser(authStore.token);
-
-    if (response.status === 'error') {
-      customAlert(response.message, 'negative', 'error', 'top', 2000);
-      return;
-    } else {
+  
+    try {
+      const response = await com.changeInfoUser(authStore.token, newDataUser);
+      const dataUser = await com.getCurrentUser(authStore.token);
+  
+      if (response.status === 'error') {
+        customAlert(response.message, 'negative', 'error', 'top', 2000);
+        console.error('[confirmEdit] Error canvi perfil:', response.message);
+        return;
+      }
+  
       currentUser.value = dataUser;
       authStore.user = dataUser;
       customAlert(response.message, 'success', 'success', 'top', 2000);
+      console.log('[confirmEdit] Informació de perfil actualitzada correctament.');
+    } catch (error) {
+      console.error('[confirmEdit] Excepció inesperada:', error);
+      ElMessage.error('Error inesperat durant el canvi de dades.');
     }
+  
     toggleEdit();
   };
+  
 
   const cancelEdit = () => {
     isEditing.value = false;
@@ -84,18 +113,34 @@ export function useSettings() {
   };
 
   const changePassword = async () => {
-    if (passwordForm.value.newPassword !== passwordForm.value.confirmPassword) {
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
       ElMessage.error('Les contrasenyes no coincideixen.');
-      return;
+      return false;
     }
+  
     try {
-      await authStore.changePassword(passwordForm.value);
-      ElMessage.success('Contrasenya actualitzada correctament!');
-      showPasswordForm.value = false;
+      const response = await com.changeUserPassword(authStore.token, passwordForm);
+  
+      if (response.status === 'success') {
+        ElMessage.success(response.message || 'Contrasenya canviada.');
+        console.log('[changePassword] Contrasenya canviada correctament');
+        showPasswordForm.value = false;
+        passwordForm.currentPassword = '';
+        passwordForm.newPassword = '';
+        passwordForm.confirmPassword = '';
+        return true;
+      } else {
+        ElMessage.error(response.message || 'Error al canviar la contrasenya.');
+        console.error('[changePassword] Error resposta:', response);
+        return false;
+      }
     } catch (error) {
-      ElMessage.error('Error al canviar la contrasenya.');
+      console.error('[changePassword] Excepció:', error);
+      ElMessage.error('Error inesperat al canviar la contrasenya.');
+      return false;
     }
-  };
+  }; 
+    
 
   onMounted(async () => {
     await getCurrentUser();

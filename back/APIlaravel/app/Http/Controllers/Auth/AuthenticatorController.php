@@ -202,5 +202,22 @@ class AuthenticatorController extends Controller
             ], 401);
         }
     }
-}
 
+    public function changePassword(Request $request) {
+        $request->validate([
+            'currentPassword' => 'required|string',
+            'newPassword' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = $request->user();
+
+        if (!Hash::check($request->currentPassword, $user->password)) {
+            return response()->json(['status' => 'error', 'message' => 'Contrasenya actual incorrecta.'], 403);
+        }
+
+        $user->password = Hash::make($request->newPassword);
+        $user->save();
+
+        return response()->json(['status' => 'success', 'message' => 'Contrasenya actualitzada correctament.']);
+    }
+}
