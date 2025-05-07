@@ -308,7 +308,7 @@ export async function savePlaning(travelPlanData, currentUserToken, travelId) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${currentUserToken}`,
+      // Authorization: `Bearer ${currentUserToken}`,
     },
     body: JSON.stringify(travelPlanData),
   });
