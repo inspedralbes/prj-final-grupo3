@@ -139,38 +139,42 @@
       <ChatBubbleOvalLeftIcon class="w-8 h-8 text-[#3f9eff]" />
     </button>
 
-    <WindowChatBot v-if="planner.isWindowOpen.value" v-model:isOpen="planner.isWindowOpen.value"
-      title="Asistent de planificació">
-      <form @submit.prevent="planner.handleSubmitChat" class="flex flex-col h-full">
-        <div class="flex-1 overflow-y-auto mb-4 space-y-4 p-4">
-          <div v-for="(message, index) in planner.chatMessages.value" :key="index"
-            :class="['flex', message.isAI ? 'justify-start' : 'justify-end']">
-            <div :class="['max-w-[80%] p-3 rounded-lg', message.isAI ? 'bg-gray-100' : 'bg-[#3f9eff] text-white']">
-              <p class="text-sm" v-html="message.text"></p>
+    <Transition enter-active-class="transition-transform duration-300 ease-out"
+      enter-from-class="translate-x-full opacity-0" enter-to-class="translate-x-0 opacity-100"
+      leave-active-class="animate-bounce-out-down" leave-from-class="translate-x-0 opacity-100" leave-to-class="">
+      <WindowChatBot v-if="planner.isWindowOpen.value" v-model:isOpen="planner.isWindowOpen.value"
+        title="Asistent de planificació">
+        <form @submit.prevent="planner.handleSubmitChat" class="flex flex-col h-full">
+          <div class="flex-1 overflow-y-auto mb-4 space-y-4 p-4">
+            <div v-for="(message, index) in planner.chatMessages.value" :key="index"
+              :class="['flex', message.isAI ? 'justify-start' : 'justify-end']">
+              <div :class="['max-w-[80%] p-3 rounded-lg', message.isAI ? 'bg-gray-100' : 'bg-[#3f9eff] text-white']">
+                <p class="text-sm" v-html="message.text"></p>
+              </div>
             </div>
-          </div>
-          <div v-if="planner.isTyping.value" class="flex justify-start">
-            <div class="bg-gray-100 p-3 rounded-lg">
-              <div class="flex space-x-1">
-                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
-                <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+            <div v-if="planner.isTyping.value" class="flex justify-start">
+              <div class="bg-gray-100 p-3 rounded-lg">
+                <div class="flex space-x-1">
+                  <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                  <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                  <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="flex gap-2 p-4 border-t border-gray-200">
-          <input v-model="planner.formDataChat.value.interests" type="text" placeholder="Escriu el teu missatge..."
-            class="flex-1 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary"
-            :disabled="planner.isTyping.value" />
-          <button type="submit"
-            class="bg-[#3f9eff] text-white px-4 py-2 rounded-md hover:bg-[#2d8aed] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-            :disabled="planner.isTyping.value || !planner.formDataChat.value.interests.trim()">
-            Enviar
-          </button>
-        </div>
-      </form>
-    </WindowChatBot>
+          <div class="flex gap-2 p-4 border-t border-gray-200">
+            <input v-model="planner.formDataChat.value.interests" type="text" placeholder="Escriu el teu missatge..."
+              class="flex-1 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary"
+              :disabled="planner.isTyping.value" />
+            <button type="submit"
+              class="bg-[#3f9eff] text-white px-4 py-2 rounded-md hover:bg-[#2d8aed] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              :disabled="planner.isTyping.value || !planner.formDataChat.value.interests.trim()">
+              Enviar
+            </button>
+          </div>
+        </form>
+      </WindowChatBot>
+    </Transition>
   </div>
 </template>
 
