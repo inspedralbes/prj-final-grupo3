@@ -13,14 +13,18 @@ class TravelMailController extends Controller
 {
     public function send(Request $request, $id)
     {
+        // dd($request->all());
+
         Log::info("➡️ Enviant email per al viatge amb ID: $id");
+
+        // dd($id);
 
         $user = Auth::user();
         Log::info("Usuari autenticat:", ['id' => $user->id, 'email' => $user->email]);
 
         $travel = Travel::where('id', $id)
-                        ->where('id_user', $user->id)
-                        ->first();
+            ->where('id_user', $user->id)
+            ->first();
 
         if (!$travel) {
             Log::error("No s'ha trobat cap viatge amb ID $id per a l'usuari {$user->id}");
@@ -62,6 +66,8 @@ class TravelMailController extends Controller
                             'mime' => 'application/pdf',
                         ]);
             });
+            $pdf = Pdf::loadView('pdf.planning', ['planning' => $planning]);
+
 
             Log::info("Correu enviat correctament a {$user->email}");
 

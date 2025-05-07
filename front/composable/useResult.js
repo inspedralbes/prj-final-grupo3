@@ -54,13 +54,13 @@ export function useResult() {
 
         console.log("Enviant correu per al viatge amb ID:", aiGeminiStore.lastTravelId, "al usuario amb ID:", userStore.user.id);
 
-        const res = await $fetch(`/api/travel/${userStore.user.id}/send-email`, {
+        const res = await $fetch(`/api/travel/${aiGeminiStore.lastTravelId}/send-email`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${userStore.token}`,
           },
         });
-
+        
         console.log("Resposta del backend:", res);
 
         aiGeminiStore.responseText = null;
