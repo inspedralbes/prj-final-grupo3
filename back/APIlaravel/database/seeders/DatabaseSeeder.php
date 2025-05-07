@@ -6,6 +6,19 @@ use App\Models\Admin;
 use App\Models\Movility;
 use App\Models\Travel;
 use App\Models\User;
+use App\Models\TravelType;
+use App\Models\Budget;
+use App\Models\RecommendedTrip;
+use Database\Seeders\AdminSeeder;
+use Database\Seeders\BudgetSeeder;
+use Database\Seeders\ImportJson;
+use Database\Seeders\MovilitySeeder;
+use Database\Seeders\RecommendedTripsSeeder;
+use Database\Seeders\TravelSeeder;
+use Database\Seeders\TravelTypeSeeder;
+use Database\Seeders\UserSeeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -32,6 +45,7 @@ class DatabaseSeeder extends Seeder
             BudgetSeeder::class,
             MovilitySeeder::class,
             TravelSeeder::class,
+            RecommendedTripsSeeder::class,
         ]);
 
     }

@@ -317,3 +317,27 @@ export async function savePlaning(travelPlanData, currentUserToken, travelId) {
 
   return json;
 }
+
+
+export async function getHighlightedTrips() {
+  const URL = `${HOST}/trips/highlighted`;
+
+  try {
+    const response = await fetch(URL, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error al obtenir viatges destacats: ${response.statusText}`);
+    }
+
+    const trips = await response.json();
+    return trips;
+  } catch (error) {
+    console.error("Error en la petició de viatges destacats:", error);
+    return [];
+  }
+}

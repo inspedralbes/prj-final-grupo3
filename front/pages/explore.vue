@@ -34,19 +34,16 @@
   </template>
   
   <script setup>
-  const trips = ref([])
-  const loading = ref(true)
-  const error = ref(null)
-  
-  try {
-    const { data } = await useFetch('/api/trips/highlighted')
-    trips.value = data.value || []
-  } catch (err) {
-    error.value = 'No s\'han pogut carregar els viatges.'
-  } finally {
-    loading.value = false
-  }
-  </script>
+import { onMounted } from 'vue';
+import { useExplore } from '../composable/useExplore';
+
+const { trips, loading, error, loadHighlightedTrips } = useExplore()
+
+onMounted(() => {
+  loadHighlightedTrips()
+})
+</script>
+
   
   <style scoped>
   /* Per tallar text bonic */
