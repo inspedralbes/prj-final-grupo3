@@ -38,42 +38,45 @@ export function useResult() {
   const handleAccept = async () => {
     const response = savePlaning(responseText.value, aiGeminiStore.currentUserToken, aiGeminiStore.lastTravelId);
     console.log(response);
+  
     try {
       if (response) {
         alert("Planning del viatge guardat correctament");
-
+  
         console.log("ID del viatge:", aiGeminiStore.lastTravelId);
         console.log("ID de l'usuari:", userStore.user.id);
         console.log("Token:", userStore.token);
-        const token = localStorage.getItem("token");
-
+  
         if (!aiGeminiStore.lastTravelId || !userStore.user.id) {
           console.error("Falta l'ID del viatge o l'id de l'usuari.");
           return;
         }
-
-        console.log("Enviant correu per al viatge amb ID:", aiGeminiStore.lastTravelId, "al usuario amb ID:", userStore.user.id);
-
+  
         const res = await $fetch(`/api/travel/${aiGeminiStore.lastTravelId}/send-email`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${userStore.token}`,
-            Accept: "application/json", //esto es lo que faltaba
+            Accept: "application/json",
           },
         });
-        
-        
+  
         console.log("Resposta del backend:", res);
-
-        aiGeminiStore.responseText = null;
-        console.log("button clicked");
+  
+        if (!res || !res.viatge) {
+          throw new Error("Resposta incompleta del backend");
+        }
+  
+        aiGeminiStore.responseText = JSON.stringify({ viatge: res.viatge });
+  
+        // Redirigir després d’assegurar que tenim les dades
         router.push("/");
       }
     } catch (error) {
       console.error("Error en enviar el correu:", error);
+      alert("Hi ha hagut un error en enviar el correu.");
     }
   };
-
+  
 
   const handleCancel = () => {
     alert("El viatge s'ha cancel·lat.");
