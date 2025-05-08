@@ -8,17 +8,23 @@
           <input v-model="tripDetails.searchQuery.value" type="search"
             placeholder="Buscar viatge (quantitat de dies, pres. min, pres. max, destí, data, movilitat ...)"
             class="p-3 border border-gray-300 rounded-lg flex-grow" />
+          <!-- Botón de favoritos -->
+          <button @click="toggleShowFavorites"
+            class="p-3 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white text-bold transition flex items-center gap-2">
+            <img :src="showOnlyFavorites ? favorite : favoritemark" alt="Favoritos" class="size-5" />
+            <span>{{ showOnlyFavorites ? 'Mostrar todos' : 'Solo favoritos' }}</span>
+          </button>
         </div>
       </div>
     </div>
     <div class="min-h-[50vh] max-h-[80vh] w-[80%] rounded-lg shadow-2xl bg-white p-6 flex flex-col overflow-y-auto">
       <div class="flex flex-col gap-6 items-center">
-        <p v-if="tripDetails.filteredTrips.length === 0"
+        <p v-if="filteredTrips.length === 0"
           class="text-center text-lg font-semibold text-gray-300 flex items-center justify-center min-h-[50vh]">
-          No hi ha cap historial de viatges. Has de viatjar més!
+          {{ showOnlyFavorites ? 'No tens viatges favorits' : 'No hi ha cap historial de viatges. Has de viatjar més!' }}
         </p>
 
-        <div class="relative" v-for="travel in tripDetails.filteredTrips.value" :key="travel.id">
+        <div class="relative" v-for="travel in filteredTrips" :key="travel.id">
           <div class="flex justify-end py-2 gap-3 items-center">
             <img
               :src="favorites[travel.id] ? favorite : favoritemark"
@@ -127,7 +133,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useTripDetails } from '~/composable/useTripDetails';
 import { getUserFavorites, toggleFavorite } from '~/services/communicationManager';
 import favoritemark from '../assets/images/favoritemark.svg';
@@ -137,12 +143,24 @@ import { useAuthStore } from '~/store/authUser';
 const authStore = useAuthStore();
 const tripDetails = useTripDetails();
 const favorites = ref({});
+const showOnlyFavorites = ref(false);
+
+// Computed property para filtrar los viajes según búsqueda y favoritos
+const filteredTrips = computed(() => {
+  let trips = tripDetails.filteredTrips.value;
+  
+  if (showOnlyFavorites.value) {
+    trips = trips.filter(trip => favorites.value[trip.id]);
+  }
+  
+  return trips;
+});
 
 async function fetchFavorites() {
   try {
     const favoriteTrips = await getUserFavorites(authStore.token);
     favoriteTrips.forEach((favorite) => {
-      favorites.value[favorite.travel_id] = true; // Marcar como favorito
+      favorites.value[favorite.travel_id] = true;
     });
   } catch (error) {
     console.error('Error al obtener los favoritos:', error.message);
@@ -159,8 +177,12 @@ async function handleToggleFavorite(travelId) {
   }
 }
 
+function toggleShowFavorites() {
+  showOnlyFavorites.value = !showOnlyFavorites.value;
+}
+
 onMounted(() => {
-  fetchFavorites(); // Cargar los favoritos al montar el componente
+  fetchFavorites();
 });
 </script>
 
