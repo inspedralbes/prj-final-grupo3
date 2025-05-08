@@ -30,6 +30,11 @@ const props = defineProps({
   },
   isOpen: {
     type: Boolean,
+  },
+  // Nueva prop para la función save
+  onSave: {
+    type: Function,
+    default: () => { }
   }
 })
 
@@ -37,6 +42,11 @@ const emit = defineEmits(['update:isOpen'])
 
 // Handle close button click
 const handleClose = () => {
+  // Llamar a la función de guardado si existe
+  if (typeof props.onSave === 'function') {
+    props.onSave();
+  }
+
   emit('update:isOpen', false)
 }
 

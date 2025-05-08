@@ -21,7 +21,7 @@ export function usePlanner() {
     interests: "",
     type: "",
     budgetmin: 250,
-    budgetmax: 3500,
+    budgetmax: 7500,
     vehicle: "",
     vehicletype: "",
   });
@@ -44,6 +44,10 @@ export function usePlanner() {
   const types = ref([]);
   const movilities = ref([]);
   const isWindowOpen = ref(false)
+  const geminiMemoryBank = ref('');
+  const isLoading = ref(false);
+
+  const STORAGE_KEY = 'tripplan_chat_memory';
 
   // Load initial data
   const loadInitialData = async () => {
@@ -228,9 +232,6 @@ export function usePlanner() {
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
-    // formData.value.budgetmin = budgetMin.value
-    // formData.value.budgetmax = budgetMax.value
-
     try {
       const travelData = {
         id_user: authStore.user.id,
@@ -320,65 +321,109 @@ export function usePlanner() {
     }
   };
 
-  const simulateTyping = async (message) => {
+  const simulateTyping = async (text) => {
     isTyping.value = true;
-    // Add a temporary typing message
 
-    // Simulate typing delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    const typingMessageIndex = chatMessages.value.push({
+      isAI: true,
+      // isTyping: true
+    }) - 1;
 
-    // Remove typing message
-    chatMessages.value = chatMessages.value.filter(msg => !msg.isTyping);
+    await new Promise(resolve => setTimeout(resolve, 1500));
 
-    // Add actual AI message
-    chatMessages.value.push({
-      text: message,
-      isAI: true
-    });
+    // Replace message with real response
+    chatMessages.value[typingMessageIndex] = {
+      text: text,
+      isAI: true,
+      // isTyping: false
+    };
 
     isTyping.value = false;
   };
 
+  // Load memory bank from local storage 
+  const loadMemoryBank = () => {
+    const savedMemory = localStorage.getItem(STORAGE_KEY);
+    if (savedMemory) {
+      geminiMemoryBank.value = savedMemory;
+
+      // Load after messafes
+      const savedMessages = localStorage.getItem(STORAGE_KEY + '_messages');
+      if (savedMessages) {
+        chatMessages.value = JSON.parse(savedMessages);
+      }
+    }
+  };
+
+  // Safe the memory bank in local storage
+  const saveMemoryBank = () => {
+    localStorage.setItem(STORAGE_KEY, geminiMemoryBank.value);
+    localStorage.setItem(STORAGE_KEY + '_messages', JSON.stringify(chatMessages.value));
+  };
+
+  // Function for adding a message to the memory bank
+  const updateMemoryBank = (role, message) => {
+    // If memory bank is empty, initialize it with the system context
+    if (!geminiMemoryBank.value) {
+      geminiMemoryBank.value = `
+      Historial de conversación entre un asistente de viajes y un usuario:
+      
+      Contexto del viaje:
+      Destino: ${formData.value.country ? countries.value.find(c => c.id === formData.value.country)?.name : "No especificado"}
+      Fechas: ${formData.value.datesinit ? `${formData.value.datesinit} a ${formData.value.datesfinal}` : "No especificadas"}
+      Presupuesto: ${formData.value.budgetmin || 0}€ - ${formData.value.budgetmax || 0}€
+      Intereses: ${formData.value.interests || "No especificados"}
+      Viajeros: ${formData.value.travelers || 1}
+      
+      Instrucciones para el asistente:
+      - Responder siempre en catalán
+      - Proporcionar información precisa sobre viajes y turismo
+      - No usar formato markdown, solo texto plano
+      - Mantener respuestas informativas pero concisas
+    `;
+    }
+
+    // Add new message to the history
+    geminiMemoryBank.value += `\n\n${role}: ${message}`;
+
+    saveMemoryBank();
+
+    return geminiMemoryBank.value;
+  };
+
+  // Handle send chat messages
   const handleSubmitChat = async () => {
     if (!formDataChat.value.interests.trim()) return;
 
+    const userMessage = formDataChat.value.interests;
+
+    // Add message to chat UI user
     chatMessages.value.push({
-      text: formDataChat.value.interests,
+      text: userMessage,
       isAI: false
     });
 
-    const userMessage = `Actúa como un asistente especializado en viajes y turismo. Tu única función es proporcionar información, consejos y asistencia relacionados con viajes, destinos, alojamientos, transportes, actividades turísticas, cultura e historia de destinos, equipaje, documentación de viaje, y temas similares. Si te dicen algo relacionado con el viaje el cual estais conversando debes proporcionar la informacion que te diga.
+    // Add message user to memory bank
+    const prompt = updateMemoryBank('Usuario', userMessage);
 
-    Si el usuario hace una pregunta o solicitud que NO está relacionada con viajes o turismo, responde exactamente con, pero ATENCION, tiene que ser con el idioma el cual es se este comunicando contigo: "Em sap greu, només puc mantenir converses relacionades amb viatges i turisme. Hi ha res sobre destinacions, planificació de viatges o activitats turístiques en allò que et pugui ajudar?"
-
-    Instrucciones importantes:
-    1. No uses formato markdown en tus respuestas, solo texto plano. Nada de **negrita** o *cursiva*. 
-    2. Responde siempre en catalán da igual en el idioma que te hable.
-    3. Mantén tus respuestas informativas pero concisas.
-    4. No proporciones información sobre temas no relacionados con viajes bajo ninguna circunstancia.
-    5. No reformules preguntas no relacionadas con viajes para intentar responderlas.
-
-    Solo debes actuar como un asistente de viajes, nada más.
-
-    Si el usuario tiene alguna falta debes interpretarlo para poder seguir la conversacion.
-
-    Si el usuario pide información sobre un destino, debes proporcionar información detallada y precisa sobre ese destino, incluyendo información sobre alojamiento, transporte, actividades turísticas, cultura e historia de ese destino.
-    
-    Esta es la peticion del usuario unicamente: ${formDataChat.value.interests}
-    `;
-
+    // Clear input
     formDataChat.value.interests = "";
 
     try {
-      const response = await getTravelGemini(userMessage);
-      await simulateTyping(response);
-      isFirstMessage.value = false;
-    } catch (error) {
-      console.log(error);
+      isTyping.value = true;
 
-      if (!isFirstMessage.value) {
-        chatMessages.value = chatMessages.value.filter(msg => !msg.isTyping);
-      }
+      const response = await getTravelGemini(prompt);
+
+      await simulateTyping(response);
+
+      // Add response to memory bank
+      updateMemoryBank('Asistente', response);
+    } catch (error) {
+      console.error("Error al comunicarse con Gemini:", error);
+
+      // Delete message if exists 
+      chatMessages.value = chatMessages.value.filter(msg => !msg.isTyping);
+
       await simulateTyping("Ho sento, hi ha hagut un error processant la teva petició. Si us plau, torna-ho a intentar.");
     } finally {
       isTyping.value = false;
@@ -389,24 +434,115 @@ export function usePlanner() {
     event.target.style.height = '36px'
   }
 
-  const openChat = () => {
-    isWindowOpen.value = !isWindowOpen.value;
-    console.log('is window open: ', isWindowOpen.value);
-    firstMessage()
+  const openChat = async () => {
+    isLoading.value = true;
+
+    // Load memory bank if exists
+    loadMemoryBank();
+
+    // If not previus messages, generate a welcome message
+    if (chatMessages.value.length === 0) {
+      const vehicleTypes = {
+        1: "Bicicleta",
+        2: "Moto",
+        3: "Cotxe",
+        4: "No vehicle"
+      };
+
+      const countreySelected = countries.value.find(country => country.id === formData.value.country);
+      const currentCountry = countreySelected ? countreySelected.name : "de moment sense desti seleccionat per l'usauri";
+
+      let dateTravel = (!formData.value.datesinit && !formData.value.datesfinal)
+        ? "No ha seleccionat cap data"
+        : `del ${formData.value.datesinit} al ${formData.value.datesfinal}`;
+
+      const interesos = formData.value.interests || "No ha seleccionat cap interes";
+      const vehicle = formData.value.vehicle || "No ha seleccionat cap vehicle";
+
+      // Crear prompt inicial con información del formulario
+      const initialPrompt = `
+      Actúa exclusivamente como un asistent especialitzat en viatges i turisme. La teva única funció és proporcionar informació, consells i assistència relacionats amb viatges, destinacions, allotjaments, transports, activitats turístiques, cultura i història de destinacions.
+    
+      Amb aquesta informació has d'assistir a l'usuari per poder planificar el seu viatge a mida:
+      ${formData.value.travelers} persones ${formData.value.type === 1 ? "sol" : `amb ${formData.value.type}`}.
+      Destí: ${currentCountry}.
+      Dates: ${dateTravel}.
+      Pressupost: entre ${formData.value.budgetmin || 0}€ i ${formData.value.budgetmax || 0}€.
+      Interessos: ${interesos}.
+      Vehicle: ${vehicle}.
+      Tipus de vehicle: ${vehicleTypes[formData.value.vehicletype] || "No especificat"}.
+    
+      Instruccions importants:
+      1. Respon sempre en català independentment de l'idioma en què et parli l'usuari.
+      2. No utilitzis format markdown a les teves respostes, només text pla. Res de **negreta** o *cursiva*.
+      3. Mantén les teves respostes informatives però concises.
+      4. No proporcionis informació sobre temes no relacionats amb viatges sota cap circumstància.
+      5. Si l'usuari fa una pregunta o sol·licitud que NO està relacionada amb viatges o turisme, respon exactament amb: "Em sap greu, només puc mantenir converses relacionades amb viatges i turisme. Hi ha res sobre destinacions, planificació de viatges o activitats turístiques en què et pugui ajudar?"
+      6. Estructura bé el text perquè l'usuari l'entengui el millor possible.
+      7. Si l'usuari té alguna falta has d'interpretar-la per poder seguir la conversa.
+    
+      Centra't en donar informació detallada i útil sobre allotjament, transport, activitats, atraccions, gastronomia, pressupost i consells pràctics per al viatge especificat.
+    
+      Recorda que ets NOMÉS un assistent de viatges i no pots proporcionar informació sobre cap altre tema.
+    `;
+
+      // Initialize memory bank and add system instruction
+      geminiMemoryBank.value = '';
+      updateMemoryBank('Sistema', initialPrompt);
+
+      try {
+        isTyping.value = true;
+
+        // Get initial response from Gemini
+        const response = await getTravelGemini(geminiMemoryBank.value);
+
+        // Show response
+        await simulateTyping(response);
+
+        // Add response to memory bank
+        updateMemoryBank('Asistente', response);
+      } catch (error) {
+        console.error("Error al inicializar el chat:", error);
+        await simulateTyping("Ho sento, hi ha hagut un error iniciant la conversa. Si us plau, torna-ho a intentar.");
+      } finally {
+        isTyping.value = false;
+      }
+    }
+
+    isWindowOpen.value = true;
+    isLoading.value = false;
   };
 
-  const firstMessage = () => {
-    // Reset first message state when opening window
-    isFirstMessage.value = true;
-    // Add welcome message when opening the window
-    isTyping.value = false;
-    if (chatMessages.value.length === 0) {
-      chatMessages.value.push({
-        text: `Hola <strong>${authStore.user.name}</strong>! Sóc el teu assistent de viatges. Com puc ajudar-te avui?`,
-        isAI: true
-      });
-    }
-  }
+  // const firstMessage = () => {
+  //   // Reset first message state when opening window
+  //   isFirstMessage.value = true;
+  //   // Add welcome message when opening the window
+  //   isTyping.value = false;
+  //   if (chatMessages.value.length === 0) {
+  //     chatMessages.value.push({
+  //       text: `Hola <strong>${authStore.user.name}</strong>! Sóc el teu assistent de viatges. Com puc ajudar-te avui?`,
+  //       isAI: true
+  //     });
+  //   }
+  // }
+
+  // Clear conversation
+  const clearConversation = () => {
+    chatMessages.value = [];
+    geminiMemoryBank.value = '';
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(STORAGE_KEY + '_messages');
+    customAlert("Conversa esborrada correctament.",
+      'positive',
+      'success',
+      'top-end',
+      3500);
+  };
+
+  // Save when the component is closed
+  onBeforeUnmount(() => {
+    saveMemoryBank();
+  });
 
   return {
     formData,
@@ -439,5 +575,8 @@ export function usePlanner() {
     isTyping,
     isFirstMessage,
     resetTextAreaHeight,
+    saveMemoryBank,
+    clearConversation,
+    isLoading,
   };
 }
