@@ -55,3 +55,5 @@ Route::middleware('auth:sanctum')->post('/travel/{id}/send-email', [TravelMailCo
 Route::get('/travel-plan/{id}', [TravelsController::class, 'getByTravelId']);
 
 Route::get('/trips/highlighted', [RecommendedTripController::class, 'highlighted']);
+
+Route::get('/trips/{id}', [RecommendedTripController::class, 'show']);

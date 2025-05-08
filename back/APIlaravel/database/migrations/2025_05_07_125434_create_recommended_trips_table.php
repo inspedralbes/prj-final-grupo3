@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
+            $table->text('description2')->nullable();
             $table->string('cover_image')->nullable();
             $table->unsignedBigInteger('user_id')->nullable(); // si vols vincular a usuaris
             $table->timestamps();
