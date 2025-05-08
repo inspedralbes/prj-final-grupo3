@@ -399,3 +399,51 @@ export async function getUserFavorites(currentUserToken) {
     throw error;
   }
 }
+
+
+export async function getHighlightedTrips() {
+  const URL = `${HOST}/trips/highlighted`;
+
+  try {
+    const response = await fetch(URL, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error al obtenir viatges destacats: ${response.statusText}`);
+    }
+
+    const trips = await response.json();
+    return trips;
+  } catch (error) {
+    console.error("Error en la petició de viatges destacats:", error);
+    return [];
+  }
+}
+
+
+export async function getTripById(id) {
+  const URL = `${HOST}/trips/${id}`
+
+  try {
+    const response = await fetch(URL, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error(`Error al obtenir viatge: ${response.statusText}`)
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.error('Error en getTripById:', error)
+    throw error
+  }
+}
+

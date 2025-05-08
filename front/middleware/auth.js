@@ -1,15 +1,17 @@
-import { useAuthStore } from "~/store/authUser";
+import { useAuthStore } from '~/store/authUser'
 
 export default defineNuxtRouteMiddleware((to, from) => {
-  const user = useAuthStore()?.user;
+  const user = useAuthStore()?.user
 
-  // If user is not logged in and trying to access a protected route
-  if (!user.value && to.path !== '/login' && to.path !== '/register' && to.path !== '/') {
-    return navigateTo('/login');
+  const publicRoutes = ['/', '/login', '/register', '/explore']
+
+  // if not logged in and trying to go to login or register page
+  if (!user.value && !publicRoutes.includes(to.path)) {
+    return navigateTo('/login')
   }
 
-  // If user is logged in and trying to access login/register pages
-  if (user.value && (to.path === '/login' || to.path === '/register')) {
-    return navigateTo('/');
+  // if user is logged in and trying to go to login or register page
+  if (user.value && ['/login', '/register'].includes(to.path)) {
+    return navigateTo('/')
   }
-});
+})

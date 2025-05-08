@@ -6,8 +6,8 @@
     <div class="relative flex-1 flex items-center justify-center">
       <!-- carrusel background -->
       <div class="absolute inset-0">
-        <Swiper effect="fade" class="h-full" :modules="[Autoplay, Pagination, EffectFade]" :slides-per-view="1" :space-between="0" :loop="true"
-          :autoplay="{ delay: 2500 }" :pagination="true" :speed="1000">
+        <Swiper effect="fade" class="h-full" :modules="[Autoplay, Pagination, EffectFade]" :slides-per-view="1"
+          :space-between="0" :loop="true" :autoplay="{ delay: 2500 }" :pagination="true" :speed="1000">
           <SwiperSlide>
             <img src="~/assets/images/img1.png" alt="Destí 1" class="w-full h-full object-cover" />
           </SwiperSlide>
@@ -33,7 +33,16 @@
         <div class="space-y-4">
           <button @click="index.handlePlanTrip"
             class="px-8 py-4 bg-blue-600 text-white text-lg rounded-lg hover:bg-blue-700 transition duration-200">
-            Fes clic aquí per planificar el teu viatge! </button>
+            Fes clic aquí per planificar el teu viatge! 
+          </button>
+
+          <div class="mt-4">
+            <NuxtLink to="/explore">
+              <button class="px-8 py-4 bg-orange-500 text-white text-lg rounded-lg hover:bg-orange-600 transition duration-200">
+                Descobreix viatges destacats 🔍
+              </button>
+            </NuxtLink>
+          </div>
 
           <div v-if="!authStore.user" class="pt-4">
             <p class="text-gray-600 mb-4">Inicia sessió per planificar el teu viatge.</p>
