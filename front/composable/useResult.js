@@ -58,8 +58,10 @@ export function useResult() {
           method: "POST",
           headers: {
             Authorization: `Bearer ${userStore.token}`,
+            Accept: "application/json", //esto es lo que faltaba
           },
         });
+        
         
         console.log("Resposta del backend:", res);
 

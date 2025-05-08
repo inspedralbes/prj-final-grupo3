@@ -2,63 +2,82 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Travel;
+use App\Models\TravelPlan;
 
 class TravelMailController extends Controller
 {
-    public function send(Request $request, $id)
+    public function send(string $travelId)
     {
-        // dd($request->all());
-
-        Log::info("➡️ Enviant email per al viatge amb ID: $id");
-
-        // dd($id);
+        Log::info("Sol·licitud per enviar el pla de viatge amb ID: $travelId");
 
         $user = Auth::user();
-        Log::info("Usuari autenticat:", ['id' => $user->id, 'email' => $user->email]);
+        Log::info("Usuari autenticat: {$user->id} - {$user->email}");
 
-        $travel = Travel::where('id', $id)
-            ->where('id_user', $user->id)
-            ->first();
+        // Verificar que el viatge existeix i pertany a l'usuari autenticat
+        $travel = Travel::where('id', $travelId)
+                        ->where('id_user', $user->id)
+                        ->first();
 
         if (!$travel) {
-            Log::error("No s'ha trobat cap viatge amb ID $id per a l'usuari {$user->id}");
+            Log::error("Viatge no trobat o no autoritzat. ID: $travelId, Usuari: {$user->id}");
             return response()->json([
                 'status' => 'error',
                 'message' => 'Viatge no trobat o no autoritzat.',
             ], 404);
         }
 
-        if (!$travel->planning_json) {
-            Log::error("El viatge amb ID $id no té JSON de planificació.");
+        // Carregar el TravelPlan i relacions
+        $travelPlan = TravelPlan::with(['days.activities'])
+                        ->where('travel_id', $travelId)
+                        ->first();
+
+        if (!$travelPlan) {
+            Log::error("TravelPlan no trobat per al viatge $travelId");
             return response()->json([
                 'status' => 'error',
-                'message' => 'Aquest viatge no té dades de planificació.',
-            ], 422);
+                'message' => 'No s\'ha trobat cap pla de viatge.',
+            ], 404);
         }
 
-        $planning = json_decode($travel->planning_json, true);
-
-        if (!$planning || !isset($planning['viatge'])) {
-            Log::error("Error al parsejar el planning_json del viatge $id.");
-            return response()->json([
-                'status' => 'error',
-                'message' => 'El JSON del viatge no és vàlid.',
-            ], 500);
+        // Construir array de planificació
+        $planning = [
+            'viatge' => [
+                'titol' => $travelPlan->title,
+                'preuTotal' => $travelPlan->total_price,
+                'dies' => []
+            ]
+        ];
+        
+        foreach ($travelPlan->days as $day) {
+            $planning['viatge']['dies'][] = [
+                'dia' => \Carbon\Carbon::parse($day->date)->isoFormat('dddd D [de] MMMM [de] YYYY'), // traducción de fecha en catalán
+                'resumDia' => null, 
+                'paraulaClau' => null,
+                'allotjament' => $day->accommodation,
+                'activitats' => $day->activities->map(function ($act) {
+                    return [
+                        'nom' => $act->name,
+                        'descripcio' => $act->description,
+                        'preu' => $act->price ?? 'Preu no disponible',
+                        'horari' => $act->start_time . ' - ' . $act->end_time,
+                    ];
+                })->toArray()
+            ];
         }
+        
 
-        Log::info("JSON de planificació carregat correctament.");
+        Log::info("Dades de planificació compilades correctament.");
 
         try {
-            // Generar el PDF
+            // Generar PDF
             $pdf = Pdf::loadView('pdf.planning', ['planning' => $planning]);
 
-            // Enviar el correu
+            // Enviar correu amb el PDF
             Mail::send('sendemail', ['user' => $user, 'planning' => $planning], function ($message) use ($user, $pdf) {
                 $message->to($user->email)
                         ->subject('El teu pla de viatge')
@@ -66,14 +85,13 @@ class TravelMailController extends Controller
                             'mime' => 'application/pdf',
                         ]);
             });
-            $pdf = Pdf::loadView('pdf.planning', ['planning' => $planning]);
-
 
             Log::info("Correu enviat correctament a {$user->email}");
 
             return response()->json([
                 'status' => 'ok',
                 'message' => 'El correu amb el pla de viatge s\'ha enviat correctament.',
+                'viatge' => $planning['viatge'], 
             ]);
         } catch (\Exception $e) {
             Log::error("Error en enviar el correu: " . $e->getMessage());
