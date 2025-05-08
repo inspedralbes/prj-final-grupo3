@@ -70,8 +70,8 @@ class User extends Authenticatable
             $hashedToken = hash('sha256', $plainTextToken); // Hased token
         } while ($this->tokens()->where('token', $hashedToken)->exists()); // Verifi if token exists    
 
-         // Create a token
-         $token = $this->tokens()->create([
+        // Create a token
+        $token = $this->tokens()->create([
             'name' => $name,
             'token' => $hashedToken,
             'abilities' => $abilities,
@@ -87,5 +87,13 @@ class User extends Authenticatable
     public function travels()
     {
         return $this->hasMany(Travel::class, 'id_user');
+    }
+
+    /**
+     * Definir la relacion de los viajes favoritos con el usuario
+     */
+    public function favoriteTravels()
+    {
+        return $this->hasMany(FavoriteTravel::class);
     }
 }

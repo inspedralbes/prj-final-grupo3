@@ -11,6 +11,7 @@ export function useTripDetails() {
     try {
       const data = await getUserTravelHistory(authStore.user.id, authStore.token);
       travelData.value = data.travels;
+      console.log('Historial de viatges carregat:', travelData.value);
     } catch (error) {
       console.error('Error carregant el historial de viatges:', error);
     }

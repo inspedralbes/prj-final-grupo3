@@ -27,6 +27,8 @@ Route::prefix('auth')->group(function () {
 Route::middleware(['auth:sanctum'])->group(function () {
   Route::get('/trip-details/{id}', [UserApiController::class, 'travelHistory']);
   Route::delete('/trip-details/{userId}/{tripId}', [UserApiController::class, 'deleteTravel']);
+  Route::post('/toggle-favorite', [UserApiController::class, 'toggleFavorite']);
+  Route::get('/user-favorites', [UserApiController::class, 'getUserFavorites']);
   Route::get('/currentUser', [AuthenticatorController::class, 'currentUser']);
   Route::post('/auth/logout', [AuthenticatorController::class, 'logout']);
   Route::patch('/changeInfoProfile', [UserApiController::class, 'update']);

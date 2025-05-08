@@ -221,6 +221,7 @@ export async function changeInfoUser(currentUserToken, userData) {
 
 export async function getUserTravelHistory(userId, currentUserToken) {
   const URL = `${HOST}/trip-details/${userId}`;
+  console.log(currentUserToken);
 
   try {
     const response = await fetch(URL, {
@@ -346,4 +347,55 @@ export async function savePlaning(travelPlanData, currentUserToken, travelId) {
   const json = await response.json(); // return status code 
 
   return json;
+}
+
+export async function toggleFavorite(travelId, userId, currentUserToken) {
+  const URL = `${HOST}/toggle-favorite`;
+
+  try {
+    const response = await fetch(URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${currentUserToken}`,
+      },
+      body: JSON.stringify({ travel_id: travelId }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Error al alternar favorito');
+    }
+
+    const result = await response.json();
+    return result; // Devuelve el resultado de la API
+  } catch (error) {
+    console.error('Error al alternar favorito:', error);
+    throw error; // Lanza el error para manejarlo en el componente
+  }
+}
+
+export async function getUserFavorites(currentUserToken) {
+  const URL = `${HOST}/user-favorites`;
+
+  try {
+    const response = await fetch(URL, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${currentUserToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Error al obtener los favoritos');
+    }
+
+    const favorites = await response.json();
+    return favorites; // Devuelve la lista de favoritos
+  } catch (error) {
+    console.error('Error al obtener los favoritos:', error);
+    throw error;
+  }
 }

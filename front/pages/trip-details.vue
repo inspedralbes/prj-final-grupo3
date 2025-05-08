@@ -19,8 +19,14 @@
         </p>
 
         <div class="relative" v-for="travel in tripDetails.filteredTrips.value" :key="travel.id">
-          <div class="flex justify-end py-2">
-            <img src="../assets/images/delete.svg" alt="" class="size-8 cursor-pointer hover:rotate-180 transition duration-300"
+          <div class="flex justify-end py-2 gap-3 items-center">
+            <img
+              :src="favorites[travel.id] ? favorite : favoritemark"
+              alt="Afegir a favorits"
+              class="size-7 cursor-pointer"
+              @click="handleToggleFavorite(travel.id)"
+            />
+            <img src="../assets/images/delete.svg" alt="Eliminar viatge" class="size-8 cursor-pointer hover:rotate-180 transition duration-300"
               @click="tripDetails.deleteTravel(travel.id)" />
           </div>
           <div class="w-[70vw] h-[40vh] bg-[#ffb300] rounded-md shadow-lg border-t border-b border-[#e89f3d] relative">
@@ -121,12 +127,41 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue';
 import { useTripDetails } from '~/composable/useTripDetails';
+import { getUserFavorites, toggleFavorite } from '~/services/communicationManager';
+import favoritemark from '../assets/images/favoritemark.svg';
+import favorite from '../assets/images/favorite.svg';
+import { useAuthStore } from '~/store/authUser';
 
+const authStore = useAuthStore();
 const tripDetails = useTripDetails();
+const favorites = ref({});
 
+async function fetchFavorites() {
+  try {
+    const favoriteTrips = await getUserFavorites(authStore.token);
+    favoriteTrips.forEach((favorite) => {
+      favorites.value[favorite.travel_id] = true; // Marcar como favorito
+    });
+  } catch (error) {
+    console.error('Error al obtener los favoritos:', error.message);
+  }
+}
 
+async function handleToggleFavorite(travelId) {
+  try {
+    const result = await toggleFavorite(travelId, authStore.user.id, authStore.token);
+    favorites.value[travelId] = !favorites.value[travelId];
+    console.log(result.message);
+  } catch (error) {
+    console.error('Error al alternar favorito:', error.message);
+  }
+}
 
+onMounted(() => {
+  fetchFavorites(); // Cargar los favoritos al montar el componente
+});
 </script>
 
 <style>

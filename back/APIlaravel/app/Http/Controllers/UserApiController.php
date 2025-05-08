@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Travel;
 use Illuminate\Http\Request;
+use App\Models\FavoriteTravel;
 use Illuminate\Support\Facades\Log;
 
 
@@ -73,10 +75,10 @@ class UserApiController extends Controller
         $file = $request->file('avatar');
         $filename = uniqid() . '.' . $file->getClientOriginalExtension();
         $file->move(public_path('avatars'), $filename);
-        
-        $user->avatar = 'avatars/' . $filename; 
+
+        $user->avatar = 'avatars/' . $filename;
       }
-      
+
 
       $user->update([
         'name' => $validated['name'] ?? $user->name,
@@ -95,7 +97,6 @@ class UserApiController extends Controller
         'user' => $user,
         'code' => 200
       ], 200);
-
     } catch (\Illuminate\Validation\ValidationException $e) {
       return response()->json([
         'message' => 'Error de validació',
@@ -129,7 +130,7 @@ class UserApiController extends Controller
     $user = User::with(['travels.country', 'travels.type', 'travels.movility', 'travels.budget', 'travels.user'])->where('id', $id)->first();
     return response()->json($user);
   }
-  
+
   /**
    * Delete travel
    */
@@ -137,15 +138,53 @@ class UserApiController extends Controller
   {
     $user = User::find($userId);
     if (!$user) {
-      return response()->json(['message' => 'Usuari no trobat'], 404);
+      return response()->json(['message' => 'Usuari ' . $userId . ' no trobat'], 404);
     }
 
     $travel = $user->travels()->find($tripId);
     if (!$travel) {
-      return response()->json(['message' => 'Viaje no trobat'], 404);
+      return response()->json(['message' => 'Viaje ' . $tripId . 'no trobat'], 404);
     }
 
     $travel->delete();
-    return response()->json(['message' => 'Viatge eliminat correctament'], 200);
+    return response()->json(['message' => 'Viatge: ' . $tripId . ' eliminat correctament'], 200);
+  }
+
+  public function toggleFavorite(Request $request)
+  {
+    $userId = $request->user()->id; // Obtener el ID del usuario autenticado
+    $travelId = $request->input('travel_id'); // ID del viaje enviado desde el frontend
+
+    // Validar que el viaje existe
+    $travel = Travel::find($travelId);
+
+    if (!$travel) {
+      return response()->json(['message' => 'Viatge no trobat'], 404);
+    }
+
+    // Verificar si ya está en favoritos
+    $favorite = FavoriteTravel::where('user_id', $userId)->where('travel_id', $travelId)->first();
+
+    if ($favorite) {
+      // Si ya está en favoritos, eliminarlo
+      $favorite->delete();
+      return response()->json(['message' => 'Viatge eliminat dels favorits'], 200);
+    } else {
+      // Si no está en favoritos, agregarlo
+      FavoriteTravel::create([
+        'user_id' => $userId,
+        'travel_id' => $travelId,
+      ]);
+      return response()->json(['message' => 'Viatge afegit als favorits'], 201);
+    }
+  }
+  
+  public function getUserFavorites(Request $request)
+  {
+    $user = $request->user();
+
+    $favorites = $user->favoriteTravels()->with('travel')->get();
+
+    return response()->json($favorites);
   }
 }
