@@ -1,4 +1,7 @@
+
+
 <template>
+  <title>Triplan</title>
   <div class="p-6 max-w-screen-xl mx-auto">
     <h1 class="text-4xl font-bold text-center text-blue-700 mb-10">Viatges destacats per inspirar-te ✈️</h1>
 
