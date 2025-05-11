@@ -163,6 +163,9 @@
               :class="['flex', message.isAI ? 'justify-start' : 'justify-end']">
               <div :class="['max-w-[80%] p-3 rounded-lg', message.isAI ? 'bg-gray-100' : 'bg-[#3f9eff] text-white']">
                 <p class="text-sm break-words whitespace-pre-wrap overflow-hidden" v-html="message.text"></p>
+                <div v-if="!planner.isOnline" class="px-3 py-1 text-xs bg-red-500 text-white rounded-t-md mx-auto">
+                  Sense connexió a Internet
+                </div>
               </div>
             </div>
             <div v-if="planner.isTyping.value" class="flex justify-start">
@@ -177,6 +180,7 @@
           </div>
           <div class="flex gap-2 p-4 border-t border-gray-200">
             <textarea v-model="planner.formDataChat.value.interests" placeholder="Escriu el teu missatge..."
+              maxlength="500"
               class="flex-1 border border-gray-300 text-sm rounded-md py-2 px-1 focus:outline-none focus:ring-2 focus:ring-primary resize-none overflow-hidden"
               :disabled="planner.isTyping.value" rows="1"
               @input="$event.target.style.height = ''; $event.target.style.height = $event.target.scrollHeight + 'px'"

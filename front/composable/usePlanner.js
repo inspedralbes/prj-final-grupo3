@@ -21,16 +21,24 @@ export function usePlanner() {
     interests: "",
     type: "",
     budgetmin: 250,
-    budgetmax: 7500,
+    budgetmax: 3500,
     vehicle: "",
     vehicletype: "",
   });
 
   const formDataChat = ref({ interests: "" });
 
+  // Chat bot vars
   const chatMessages = ref([]);
   const isTyping = ref(false);
   const isFirstMessage = ref(true);
+  const isWindowOpen = ref(false)
+  const geminiMemoryBank = ref('');
+  const isLoading = ref(false);
+  const STORAGE_KEY = 'tripplan_chat_memory';
+  const MAX_MESSAGES = 50;
+  const MAX_MEMORY_SIZE = 20000;
+  const isOnline = ref(navigator.onLine);
 
   const dateRange = ref([]);
   const countries = ref([]);
@@ -43,11 +51,6 @@ export function usePlanner() {
   const budgetRange = ref([budgetMin.value, budgetMax.value])
   const types = ref([]);
   const movilities = ref([]);
-  const isWindowOpen = ref(false)
-  const geminiMemoryBank = ref('');
-  const isLoading = ref(false);
-
-  const STORAGE_KEY = 'tripplan_chat_memory';
 
   // Load initial data
   const loadInitialData = async () => {
@@ -321,44 +324,125 @@ export function usePlanner() {
     }
   };
 
+  // Chat bot functions
+
+  // Function for manage size conversation
+  const trimConversationIfNeeded = () => {
+    // Limit number of messages for performance
+    if (chatMessages.value.length > MAX_MESSAGES) {
+      const excessMessages = chatMessages.value.length - MAX_MESSAGES;
+      chatMessages.value = chatMessages.value.slice(excessMessages);
+    }
+
+    // Limit memory bank size
+    if (geminiMemoryBank.value.length > MAX_MEMORY_SIZE) {
+      // Found point for cutting (after a complete message)
+      const cutPoint = geminiMemoryBank.value.indexOf("\n\n", geminiMemoryBank.value.length - MAX_MEMORY_SIZE);
+      if (cutPoint > 0) {
+        // Save initial context and cut the rest
+        const initialContext = geminiMemoryBank.value.substring(0, geminiMemoryBank.value.indexOf("\n\nUsuario:"));
+        const trimmedConversation = geminiMemoryBank.value.substring(cutPoint);
+        geminiMemoryBank.value = initialContext + trimmedConversation;
+      }
+    }
+  };
+
   const simulateTyping = async (text) => {
     isTyping.value = true;
 
-    const typingMessageIndex = chatMessages.value.push({
-      isAI: true,
-      // isTyping: true
-    }) - 1;
-
+    // Wait for typing animation
     await new Promise(resolve => setTimeout(resolve, 1500));
 
-    // Replace message with real response
-    chatMessages.value[typingMessageIndex] = {
+    // Add the final message directly
+    chatMessages.value.push({
       text: text,
       isAI: true,
-      // isTyping: false
-    };
+    });
 
     isTyping.value = false;
   };
 
   // Load memory bank from local storage 
   const loadMemoryBank = () => {
-    const savedMemory = localStorage.getItem(STORAGE_KEY);
-    if (savedMemory) {
-      geminiMemoryBank.value = savedMemory;
+    try {
+      const savedMemory = localStorage.getItem(STORAGE_KEY);
+      const timestamp = localStorage.getItem(STORAGE_KEY + '_timestamp');
 
-      // Load after messafes
-      const savedMessages = localStorage.getItem(STORAGE_KEY + '_messages');
-      if (savedMessages) {
-        chatMessages.value = JSON.parse(savedMessages);
+      // Verificar si los datos son recientes (menos de 24 horas)
+      const isRecent = timestamp && (Date.now() - parseInt(timestamp)) < 24 * 60 * 60 * 1000;
+
+      if (savedMemory && isRecent) {
+        geminiMemoryBank.value = savedMemory;
+
+        // Cargar mensajes y descomprimir
+        const savedMessages = localStorage.getItem(STORAGE_KEY + '_messages');
+        if (savedMessages) {
+          try {
+            const parsedMessages = JSON.parse(savedMessages);
+            chatMessages.value = parsedMessages.map(msg => ({
+              text: msg.t,
+              isAI: msg.a === 1
+            }));
+          } catch {
+            // Si hay error en el parsing, comenzar con chat vacío
+            chatMessages.value = [];
+          }
+        }
+
+        return true;
+      } else if (!isRecent && savedMemory) {
+        // Datos antiguos, ofrecer cargar o comenzar nuevo
+        return 'expired';
       }
+
+      return false;
+    } catch (error) {
+      console.error('Error loading memory bank:', error);
+      return false;
     }
+  };
+
+  // Prevent prompt injection
+  const sanitizePrompt = (prompt) => {
+    // Evitar que el usuario manipule el prompt base
+    return prompt
+      .replace(/actuar como|comportarte como|simular ser|fingir ser|ignorar|olvidar/gi, '[redactado]')
+      .replace(/instrucciones anteriores|cambiar rol|nuevo rol/gi, '[redactado]');
   };
 
   // Safe the memory bank in local storage
   const saveMemoryBank = () => {
-    localStorage.setItem(STORAGE_KEY, geminiMemoryBank.value);
-    localStorage.setItem(STORAGE_KEY + '_messages', JSON.stringify(chatMessages.value));
+    try {
+      if (geminiMemoryBank.value) {
+        localStorage.setItem(STORAGE_KEY, geminiMemoryBank.value);
+        // Añadir timestamp para saber cuándo se guardó
+        localStorage.setItem(STORAGE_KEY + '_timestamp', Date.now().toString());
+      }
+
+      if (chatMessages.value.length > 0) {
+        // Comprimir los mensajes para ahorrar espacio en localStorage
+        const compressedMessages = JSON.stringify(chatMessages.value.map(msg => ({
+          t: msg.text,
+          a: msg.isAI ? 1 : 0
+        })));
+        localStorage.setItem(STORAGE_KEY + '_messages', compressedMessages);
+      }
+
+      // Guardar estado actual para recuperación
+      const currentState = {
+        country: formData.value.country,
+        dateInit: formData.value.datesinit,
+        dateFinal: formData.value.datesfinal,
+        interests: formData.value.interests,
+        // Otros campos relevantes
+      };
+      localStorage.setItem(STORAGE_KEY + '_state', JSON.stringify(currentState));
+
+      return true;
+    } catch (error) {
+      console.error('Error saving memory bank:', error);
+      return false;
+    }
   };
 
   // Function for adding a message to the memory bank
@@ -378,7 +462,7 @@ export function usePlanner() {
       Instrucciones para el asistente:
       - Responder siempre en catalán
       - Proporcionar información precisa sobre viajes y turismo
-      - No usar formato markdown, solo texto plano
+      - No usar formato markdown, solo texto plano, nada de *,' o \`\`\` 
       - Mantener respuestas informativas pero concisas
     `;
     }
@@ -391,11 +475,50 @@ export function usePlanner() {
     return geminiMemoryBank.value;
   };
 
+  // Basic analisys the feelings of the user
+  const analyzeUserSentiment = (message) => {
+    const lowerMsg = message.toLowerCase();
+
+    // Palabras positivas
+    const positiveWords = ['genial', 'fantàstic', 'increïble', 'gràcies', 'bo', 'molt bé', 'excel·lent'];
+
+    // Palabras negativas
+    const negativeWords = ['malament', 'terrible', 'horrible', 'no m\'agrada', 'error', 'problema', 'mala'];
+
+    // Palabras de frustración
+    const frustrationWords = ['no entens', 'no m\'ajudes', 'inútil', 'no funciona', 'repetint'];
+
+    let score = 0;
+
+    // Contar ocurrencias
+    positiveWords.forEach(word => {
+      if (lowerMsg.includes(word)) score += 1;
+    });
+
+    negativeWords.forEach(word => {
+      if (lowerMsg.includes(word)) score -= 1;
+    });
+
+    frustrationWords.forEach(word => {
+      if (lowerMsg.includes(word)) score -= 2; // Doble peso para frustración
+    });
+
+    // Determinar sentimiento
+    if (score >= 2) return 'positive';
+    if (score <= -2) return 'negative';
+    if (score <= -4) return 'frustrated';
+    return 'neutral';
+  };
+
   // Handle send chat messages
   const handleSubmitChat = async () => {
     if (!formDataChat.value.interests.trim()) return;
 
     const userMessage = formDataChat.value.interests;
+    const sanitizedMessage = sanitizePrompt(userMessage);
+
+    // Analyze user sentiment
+    const sentiment = analyzeUserSentiment(userMessage);
 
     // Add message to chat UI user
     chatMessages.value.push({
@@ -403,14 +526,34 @@ export function usePlanner() {
       isAI: false
     });
 
-    // Add message user to memory bank
-    const prompt = updateMemoryBank('Usuario', userMessage);
+    // Add message user to memory bank but sinatized by AI
+    const prompt = updateMemoryBank('Usuario', sanitizedMessage);
+
+    // Adjust prompt based on user sentiment
+    if (sentiment === 'frustrated') {
+      // Add instruction for more direct and helpfule respon
+      prompt += "\n\nATENCIÓN: El usuario muestra frustración. Proporciona respuestas directas, claras y extremadamente útiles. Evita respuestas largas, céntrate en soluciones concretas.";
+    } else if (sentiment === 'negative') {
+      // Be empathetic and solve the problem
+      prompt += "\n\nATENCIÓN: El usuario muestra insatisfacción. Sé empático y céntrate en resolver su problema específico. Ofrece alternativas claras.";
+    } else if (sentiment === 'positive') {
+      // Stay positive and optimist
+      prompt += "\n\nATENCIÓN: El usuario muestra satisfacción. Mantén un tono positivo y optimista en tu respuesta.";
+    }
 
     // Clear input
     formDataChat.value.interests = "";
 
     try {
-      isTyping.value = true;
+      // isTyping.value = true;
+
+      if (!isOnline.value) {
+        chatMessages.value.push({
+          text: "No es poden enviar missatges sense connexió a Internet.",
+          isAI: true
+        });
+        return;
+      }
 
       const response = await getTravelGemini(prompt);
 
@@ -418,16 +561,32 @@ export function usePlanner() {
 
       // Add response to memory bank
       updateMemoryBank('Asistente', response);
+
+      trimConversationIfNeeded()
     } catch (error) {
-      console.error("Error al comunicarse con Gemini:", error);
+      console.error("Error en el chatbot:", error);
 
       // Delete message if exists 
       chatMessages.value = chatMessages.value.filter(msg => !msg.isTyping);
 
-      await simulateTyping("Ho sento, hi ha hagut un error processant la teva petició. Si us plau, torna-ho a intentar.");
-    } finally {
       isTyping.value = false;
+      chatMessages.value.push({
+        text: "Ho sento, ha ocorregut un error inesperat. Pots tornar a provar-ho? Si el problema persisteix, actualitza la pàgina.",
+        isAI: true
+      });
+
+      // Try load the memory bank if is necessary
+      if (error.message.includes('memory') || error.message.includes("storage")) {
+        setTimeout(() => {
+          try {
+            loadMemoryBank();
+          } catch (e) {
+            // Silent recovery
+          }
+        }, 2000);
+      }
     }
+
   };
 
   const resetTextAreaHeight = (event) => {
@@ -491,7 +650,7 @@ export function usePlanner() {
       updateMemoryBank('Sistema', initialPrompt);
 
       try {
-        isTyping.value = true;
+        // isTyping.value = true;
 
         // Get initial response from Gemini
         const response = await getTravelGemini(geminiMemoryBank.value);
@@ -513,19 +672,6 @@ export function usePlanner() {
     isLoading.value = false;
   };
 
-  // const firstMessage = () => {
-  //   // Reset first message state when opening window
-  //   isFirstMessage.value = true;
-  //   // Add welcome message when opening the window
-  //   isTyping.value = false;
-  //   if (chatMessages.value.length === 0) {
-  //     chatMessages.value.push({
-  //       text: `Hola <strong>${authStore.user.name}</strong>! Sóc el teu assistent de viatges. Com puc ajudar-te avui?`,
-  //       isAI: true
-  //     });
-  //   }
-  // }
-
   // Clear conversation
   const clearConversation = () => {
     chatMessages.value = [];
@@ -537,11 +683,24 @@ export function usePlanner() {
       'success',
       'top-end',
       3500);
+
+    isWindowOpen.value = false
   };
 
   // Save when the component is closed
   onBeforeUnmount(() => {
     saveMemoryBank();
+  });
+
+  // Conection detectors
+  onMounted(() => {
+    window.addEventListener('online', () => { isOnline.value = true });
+    window.addEventListener('offline', () => { isOnline.value = false });
+  });
+
+  onBeforeUnmount(() => {
+    window.removeEventListener('online', () => { isOnline.value = true });
+    window.removeEventListener('offline', () => { isOnline.value = false });
   });
 
   return {
@@ -578,5 +737,6 @@ export function usePlanner() {
     saveMemoryBank,
     clearConversation,
     isLoading,
+    isOnline,
   };
 }
