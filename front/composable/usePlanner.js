@@ -53,10 +53,13 @@ export function usePlanner() {
   const movilities = ref([]);
   // Key for local storage form
   const FORM_STORAGE_KEY = 'tripplan_form_data';
+  const isFormLoading = ref(true);
 
   // Load initial data
   const loadInitialData = async () => {
     try {
+      isFormLoading.value = true; // Activar estado de carga
+
       const [countryList, movilityList, typeList] = await Promise.all([
         getCountries(),
         getMovilities(),
@@ -69,12 +72,12 @@ export function usePlanner() {
       filteredMovilities.value = movilityList;
       types.value = typeList;
 
-      // Cargar el estado guardado una vez que tengamos los datos del servidor
-      setTimeout(() => {
-        loadFormState();
-      }, 100);
+      // Cargar el estado guardado inmediatamente
+      await loadFormState();
+
     } catch (error) {
       console.error("Error carregant dades:", error);
+      isFormLoading.value = false; // Desactivar incluso en caso de error
     }
   };
 
@@ -175,12 +178,19 @@ export function usePlanner() {
   };
 
   // Función para cargar el estado del formulario
-  const loadFormState = () => {
+  const loadFormState = async () => {
     try {
+      isFormLoading.value = true;
+
       const savedForm = localStorage.getItem(FORM_STORAGE_KEY);
-      if (!savedForm) return false;
+      if (!savedForm) {
+        isFormLoading.value = false;
+        return false;
+      }
 
       const parsedForm = JSON.parse(savedForm);
+
+      await new Promise(resolve => setTimeout(resolve, 300));
 
       // Actualizar los valores del formulario
       formData.value = {
@@ -208,9 +218,11 @@ export function usePlanner() {
       }
 
       console.log('Estado del formulario cargado');
+      isFormLoading.value = false;
       return true;
     } catch (error) {
       console.error('Error al cargar el estado del formulario:', error);
+      isFormLoading.value = false;
       return false;
     }
   };
@@ -866,5 +878,6 @@ export function usePlanner() {
     saveFormState,
     loadFormState,
     resetForm,
+    isFormLoading,
   };
 }
