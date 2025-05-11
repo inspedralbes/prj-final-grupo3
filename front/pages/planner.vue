@@ -126,9 +126,17 @@
               placeholder="Que t'interessa? (e.x., cultura, aventura, relax)" class="w-full" />
           </el-form-item>
 
-          <el-button type="primary" native-type="submit" class="w-full mt-8 h-12 text-lg font-medium">
-            Planifica el meu viatge
-          </el-button>
+          <div class="flex gap-4 mt-8">
+            <el-button type="primary" native-type="submit" class="flex-1 h-12 text-lg font-medium">
+              Planifica el meu viatge
+            </el-button>
+
+            <el-tooltip content="Netejar formulari" placement="top">
+              <el-button type="default" @click="planner.resetForm" class="h-12 w-12 flex items-center justify-center">
+                <ArrowPathIcon class="h-5 w-5" />
+              </el-button>
+            </el-tooltip>
+          </div>
         </el-form>
       </el-card>
     </main>
@@ -216,7 +224,7 @@
 </template>
 
 <script setup>
-import { ChatBubbleOvalLeftIcon, TrashIcon } from '@heroicons/vue/24/solid'
+import { ChatBubbleOvalLeftIcon, TrashIcon, ArrowPathIcon } from '@heroicons/vue/24/solid'
 import { onMounted } from 'vue';
 import "@vuepic/vue-datepicker/dist/main.css";
 import { usePlanner } from '~/composable/usePlanner';

@@ -46,11 +46,13 @@ export function usePlanner() {
   const filteredMovilities = ref([]);
   const searchQuery = ref("");
   const showDropdown = ref(false);
-  const budgetMax = ref(7500);
+  const budgetMax = ref(3500);
   const budgetMin = ref(250);
   const budgetRange = ref([budgetMin.value, budgetMax.value])
   const types = ref([]);
   const movilities = ref([]);
+  // Key for local storage form
+  const FORM_STORAGE_KEY = 'tripplan_form_data';
 
   // Load initial data
   const loadInitialData = async () => {
@@ -66,6 +68,11 @@ export function usePlanner() {
       movilities.value = movilityList;
       filteredMovilities.value = movilityList;
       types.value = typeList;
+
+      // Cargar el estado guardado una vez que tengamos los datos del servidor
+      setTimeout(() => {
+        loadFormState();
+      }, 100);
     } catch (error) {
       console.error("Error carregant dades:", error);
     }
@@ -139,6 +146,117 @@ export function usePlanner() {
     formData.value.budgetmin = min
     formData.value.budgetmax = max
   })
+
+  // Función para guardar el estado del formulario
+  const saveFormState = () => {
+    try {
+      // Extraer solo los datos necesarios
+      const formDataToSave = {
+        country: formData.value.country,
+        datesinit: formData.value.datesinit,
+        datesfinal: formData.value.datesfinal,
+        travelers: formData.value.travelers,
+        interests: formData.value.interests,
+        type: formData.value.type,
+        budgetmin: formData.value.budgetmin,
+        budgetmax: formData.value.budgetmax,
+        vehicle: formData.value.vehicle,
+        vehicletype: formData.value.vehicletype
+      };
+
+      // Guardar en localStorage
+      localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(formDataToSave));
+      console.log('Estado del formulario guardado');
+      return true;
+    } catch (error) {
+      console.error('Error al guardar el estado del formulario:', error);
+      return false;
+    }
+  };
+
+  // Función para cargar el estado del formulario
+  const loadFormState = () => {
+    try {
+      const savedForm = localStorage.getItem(FORM_STORAGE_KEY);
+      if (!savedForm) return false;
+
+      const parsedForm = JSON.parse(savedForm);
+
+      // Actualizar los valores del formulario
+      formData.value = {
+        ...formData.value,
+        ...parsedForm
+      };
+
+      // Sincronizar otros valores relacionados
+      if (parsedForm.datesinit && parsedForm.datesfinal) {
+        dateRange.value = [parsedForm.datesinit, parsedForm.datesfinal];
+      }
+
+      if (parsedForm.budgetmin !== undefined && parsedForm.budgetmax !== undefined) {
+        budgetMin.value = parsedForm.budgetmin;
+        budgetMax.value = parsedForm.budgetmax;
+        budgetRange.value = [parsedForm.budgetmin, parsedForm.budgetmax];
+      }
+
+      // Actualizar búsqueda de país si está disponible
+      if (parsedForm.country && countries.value.length > 0) {
+        const selectedCountry = countries.value.find(c => c.id === parsedForm.country);
+        if (selectedCountry) {
+          searchQuery.value = selectedCountry.name;
+        }
+      }
+
+      console.log('Estado del formulario cargado');
+      return true;
+    } catch (error) {
+      console.error('Error al cargar el estado del formulario:', error);
+      return false;
+    }
+  };
+
+  // Función para limpiar el estado guardado
+  const clearFormState = () => {
+    localStorage.removeItem(FORM_STORAGE_KEY);
+
+    // Restablecer valores predeterminados
+    formData.value = {
+      country: "",
+      datesinit: "",
+      datesfinal: "",
+      travelers: 1,
+      interests: "",
+      type: "",
+      budgetmin: 250,
+      budgetmax: 3500,
+      vehicle: "",
+      vehicletype: "",
+    };
+
+    dateRange.value = [];
+    budgetMin.value = 250;
+    budgetMax.value = 3500;
+    budgetRange.value = [250, 3500];
+    searchQuery.value = "";
+  };
+
+  // Función para resetear el formulario (para exponer al usuario)
+  const resetForm = () => {
+    clearFormState();
+    customAlert("Formulari restablert correctament.",
+      'info',
+      'info',
+      'top',
+      2000);
+  };
+
+  watch(() => ({ ...formData.value }), () => {
+    saveFormState();
+  }, { deep: true });
+
+  watch([dateRange, budgetRange], () => {
+    saveFormState();
+  });
 
   const validateForm = () => {
     if (budgetMin.value >= budgetMax.value) {
@@ -696,11 +814,18 @@ export function usePlanner() {
   onMounted(() => {
     window.addEventListener('online', () => { isOnline.value = true });
     window.addEventListener('offline', () => { isOnline.value = false });
+
+    window.addEventListener('beforeunload', saveFormState);
+
   });
 
   onBeforeUnmount(() => {
     window.removeEventListener('online', () => { isOnline.value = true });
     window.removeEventListener('offline', () => { isOnline.value = false });
+
+    window.removeEventListener('beforeunload', saveFormState);
+    saveFormState();
+
   });
 
   return {
@@ -738,5 +863,8 @@ export function usePlanner() {
     clearConversation,
     isLoading,
     isOnline,
+    saveFormState,
+    loadFormState,
+    resetForm,
   };
 }
