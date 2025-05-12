@@ -362,6 +362,27 @@ export function usePlanner() {
     return true;
   };
 
+  function cleanGeminiResponse(response) {
+    // Primero, eliminamos cualquier texto antes del primer {
+    let cleanedResponse = response.trim();
+    const firstBraceIndex = cleanedResponse.indexOf('{');
+    if (firstBraceIndex > 0) {
+      cleanedResponse = cleanedResponse.substring(firstBraceIndex);
+    }
+
+    // Eliminamos cualquier texto después del último }
+    const lastBraceIndex = cleanedResponse.lastIndexOf('}');
+    if (lastBraceIndex !== -1 && lastBraceIndex < cleanedResponse.length - 1) {
+      cleanedResponse = cleanedResponse.substring(0, lastBraceIndex + 1);
+    }
+
+    // Eliminar específicamente los bloques de código markdown ```json ... ```
+    cleanedResponse = cleanedResponse.replace(/```json\s*/g, '');
+    cleanedResponse = cleanedResponse.replace(/```\s*$/g, '');
+
+    return cleanedResponse;
+  }
+
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
@@ -434,7 +455,9 @@ export function usePlanner() {
 
         const result = await getTravelGemini(requestText);
 
-        await aiGeminiStore.setInitialResponse(result);
+        const cleanedResult = cleanGeminiResponse(result);
+
+        await aiGeminiStore.setInitialResponse(cleanedResult);
 
         await aiGeminiStore.setResponse(aiGeminiStore.initialResponse);
 
