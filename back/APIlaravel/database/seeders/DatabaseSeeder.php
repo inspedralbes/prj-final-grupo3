@@ -17,6 +17,7 @@ use Database\Seeders\RecommendedTripsSeeder;
 use Database\Seeders\TravelSeeder;
 use Database\Seeders\TravelTypeSeeder;
 use Database\Seeders\UserSeeder;
+use Database\Seeders\CommentSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -46,6 +47,7 @@ class DatabaseSeeder extends Seeder
             MovilitySeeder::class,
             TravelSeeder::class,
             RecommendedTripsSeeder::class,
+            CommentSeeder::class,
         ]);
 
     }

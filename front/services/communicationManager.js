@@ -447,3 +447,48 @@ export async function getTripById(id) {
   }
 }
 
+export async function fetchCommentsForTrip(tripId) {
+  const res = await fetch(`${HOST}/comments?tripId=${tripId}`, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    console.error('Error al carregar comentaris:', errorText);
+    throw new Error(`Error al carregar comentaris: ${res.statusText}`);
+  }
+
+  return await res.json();
+}
+
+
+export async function postComment(tripId, text, token) {
+  const config = useRuntimeConfig()
+  const HOST = config.public.apiUrl
+  const URL = `${HOST}/comments`
+
+  console.log('Enviant comentari a:', URL)
+
+  const res = await fetch(URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ tripId, comment: text }),
+  })
+
+  const responseText = await res.clone().text()
+  console.log('Resposta del backend (comentari):', responseText)
+
+  if (!res.ok) {
+    throw new Error(`Error al enviar comentari: ${res.status} - ${responseText}`)
+  }
+
+  return JSON.parse(responseText)
+}
+
+
+
