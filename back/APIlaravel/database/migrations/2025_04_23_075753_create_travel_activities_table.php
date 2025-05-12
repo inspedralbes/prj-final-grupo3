@@ -16,8 +16,8 @@ return new class extends Migration {
       $table->string('name');
       $table->text('description');
       $table->string('price')->nullable();
-      $table->time('start_time');
-      $table->time('end_time');
+      $table->time('start_time')->nullable();
+      $table->time('end_time')->nullable();
       $table->integer('order');
       $table->timestamps();
     });

@@ -430,7 +430,7 @@ export function usePlanner() {
                 {
                   "dia": "Data del dia",
                   "resumDia": "(resum detallada del plan del dia)",
-                  "paraulaClau": "(Una paraula o 3 paraules clau que facin referència al pla de cada dia mes especific, com ara el nom del lloc més important del dia en anglès o el nom del país)",
+                  "paraulaClau": "(Una paraula o 2 paraules clau que facin referència al pla de cada dia mes especific, com ara el nom del lloc més important del dia en anglès o el nom del país)",
                   "allotjament": "...",
                   "activitats": [
                     {

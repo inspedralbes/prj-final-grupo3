@@ -83,7 +83,7 @@
 
     
     <h1><?php echo e($planning['viatge']['titol'] ?? 'Planificació del viatge'); ?></h1>
-    <h3>Preu total estimat: <?php echo e($planning['viatge']['preuTotal'] ?? 'No disponible'); ?></h3>
+    <h3>Preu total estimat: <?php echo e($planning['viatge']['preuTotal'] ?? 'No disponible'); ?>€</h3>
 
     <div class="page-break"></div>
 

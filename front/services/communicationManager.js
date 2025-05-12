@@ -447,3 +447,29 @@ export async function getTripById(id) {
   }
 }
 
+export async function sendTravelEmail(travelId, user, token) {
+  const URL = `${HOST}/travel/${travelId}/send-email`;
+
+  try {
+    const response = await fetch(URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+      body: JSON.stringify(user),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Error al enviar el correo.");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en sendTravelEmail:", error);
+    throw error;
+  }
+}

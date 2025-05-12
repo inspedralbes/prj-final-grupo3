@@ -2,7 +2,7 @@ import { useRoute, useRouter } from "vue-router";
 import { computed, ref } from "vue";
 import { marked } from "marked";
 import { jsPDF } from "jspdf";
-import { getTravelGemini, savePlaning } from '@/services/communicationManager';
+import { getTravelGemini, savePlaning, sendTravelEmail } from '@/services/communicationManager';
 import { useAIGeminiStore } from "~/store/aiGeminiStore";
 import { useAuthStore } from "~/store/authUser";
 
@@ -53,26 +53,24 @@ export function useResult() {
         }
         console.log("Enviant correu per al viatge amb ID:", aiGeminiStore.lastTravelId, "al usuario amb ID:", userStore.user.id);
 
-        console.log("Enviant correu per al viatge amb ID:", aiGeminiStore.lastTravelId, "al usuario amb ID:", userStore.user.id);
+        router.push("/loading");
 
-        const res = await $fetch(`/api/travel/${aiGeminiStore.lastTravelId}/send-email`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${userStore.token}`,
-            Accept: "application/json",
-          },
-          body: JSON.stringify(userStore.user),
-        });
+        const data = await sendTravelEmail(aiGeminiStore.lastTravelId, userStore.user, userStore.token);
   
-        console.log("Resposta del backend:", res);
+        console.log("Resposta del backend:", data);
   
-        if (!res || !res.viatge) {
-          throw new Error("Resposta incompleta del backend");
+        if (!data) {
+          alert("Error: El servidor no ha retornat cap resposta en enviar el correu.");
+          return;
+        }
+    
+        if (!data.viatge) {
+          alert("Error: Les dades del viatge no s'han rebut correctament del servidor.");
+          return;
         }
   
-        aiGeminiStore.responseText = JSON.stringify({ viatge: res.viatge });
+        aiGeminiStore.responseText = JSON.stringify({ viatge: data.viatge });
   
-        // Redirigir després d’assegurar que tenim les dades
         router.push("/");
       }
     } catch (error) {
@@ -191,6 +189,8 @@ export function useResult() {
               "dies": [
                 {
                   "dia": número de dia y dia de la setmana,
+                  "resumDia": "(resum detallada del plan del dia)",
+                  "paraulaClau": "(Una paraula o 2 paraules (amb espai) si es necesari clau que facin referència al pla de cada dia mes especific, com ara el nom del lloc més important del dia en anglès o el nom del país)",
                   "allotjament": "...",
                   "activitats": [
                     {

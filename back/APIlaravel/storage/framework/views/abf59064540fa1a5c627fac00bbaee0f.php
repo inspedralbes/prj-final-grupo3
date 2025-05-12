@@ -10,7 +10,7 @@
     <p>Ja tens preparat el teu pla de viatge! T'adjuntem un PDF amb tota la planificació.</p>
 
     <p><strong>Títol:</strong> <?php echo e($planning['viatge']['titol'] ?? 'Sense títol'); ?></p>
-    <p><strong>Preu estimat:</strong> <?php echo e($planning['viatge']['preuTotal'] ?? 'No disponible'); ?></p>
+    <p><strong>Preu estimat:</strong> <?php echo e($planning['viatge']['preuTotal'] ?? 'No disponible'); ?> €</p>
     <p><strong>Dies:</strong> <?php echo e(count($planning['viatge']['dies'] ?? [])); ?></p>
 
     <p>Bon viatge! 🌍</p>

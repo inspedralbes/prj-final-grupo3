@@ -50,9 +50,9 @@ Route::post('/travel-plans', [TravelPlanController::class, 'storeTravelPlan']);
 //Route::middleware('auth:sanctum')->post('/travel/{id}/send-email', [TravelMailController::class, 'send']);
 // Route::middleware('auth:sanctum')->post('/travel/{id}/send-email', [TravelMailController::class, 'send']);
 // routes/api.php
-Route::middleware('auth:sanctum')->post('/travel/{id}/send-email', [TravelMailController::class, 'send']);
-
 // Route::middleware('auth:sanctum')->post('/travel/{id}/send-email', [TravelMailController::class, 'send']);
+
+Route::post('/travel/{id}/send-email', [TravelMailController::class, 'send']);
 
 Route::get('/travel-plan/{id}', [TravelsController::class, 'getByTravelId']);
 

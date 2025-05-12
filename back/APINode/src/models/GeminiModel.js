@@ -29,7 +29,8 @@ export class GeminiModel {
         console.log("ResponseText recibido de Gemini");
       }
 
-      if (responseText) {
+      if (data) {
+        console.log("ResponseText antes de añadir imágenes:", responseText);
         try {
           const tripData = JSON.parse(responseText);
 
@@ -42,6 +43,8 @@ export class GeminiModel {
 
               if (imageUrl) {
                 dia.imatgeUrl = imageUrl;
+              } else {
+                console.log("No se encontró imagen para la query:", searchQuery);
               }
             }
           }
