@@ -49,20 +49,23 @@ export function useNavBar() {
 
     if (process.client) {
       await authStore.initialize();
-      const response = await com.getCurrentUser(authStore.token);
-      console.log('🖼️ authStore.user.avatar =', response.avatar);
-
-
-      if (response && response.status !== 'error') {
-        authStore.user = response; // 🔁 actualitza l'usuari a l'store
       
-        const baseURL = config.public.appName;
-        avatar.value = `${baseURL}/${response.avatar}`; // 🔁 actualitza l'avatar immediatament
-        console.log('🧠 avatar.value =', avatar.value);
+      // First check if there's no token
+      if (!authStore.token) {
+        authStore.logout();
+        await navigateTo('/');
+        return;
       }
-      
 
-      if (!authStore.token && response.status === 'error') {
+      // Only try to get current user if we have a token
+      const response = await com.getCurrentUser(authStore.token);
+      
+      if (response && response.status !== 'error') {
+        authStore.user = response;
+        const baseURL = config.public.appName;
+        avatar.value = `${baseURL}/${response.avatar}`;
+      } else {
+        // Handle error response
         authStore.logout();
         await navigateTo('/');
       }
