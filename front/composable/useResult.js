@@ -303,6 +303,12 @@ export function useResult() {
     }
   };
 
+  onBeforeMount(() => {
+    localStorage.removeItem('tripplan_form_data');
+    localStorage.removeItem('tripplan_chat_memory');
+    localStorage.removeItem('tripplan_chat_memory' + '_messages');
+  })
+
   return {
     response,
     responseText,

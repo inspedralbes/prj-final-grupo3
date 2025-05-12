@@ -10,7 +10,7 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: user
     ports:
-      - 3306:3306
+      - 3307:3306
     volumes:
       - ./back/mysql_data:/var/lib/mysql
 
@@ -31,10 +31,23 @@ services:
       - 8000:8000
     volumes:
       - ./back/APIlaravel:/var/www/
+      - /var/www/vendor
     working_dir: /var/www/
     depends_on:
       - db
-    command: bash -c 'composer update && php artisan serve --host=0.0.0.0'
+    command: bash -c 'composer install && php artisan key:generate && php artisan migrate --force && php artisan serve --host=0.0.0.0'
+
+  # NODEJS
+  node:
+    build: ./back/APINode
+    ports:
+      - 3006:3006
+    volumes:
+      - ./back/APINode:/app
+      - /app/node_modules
+    working_dir: /app
+    restart: always
+    command: bash -c "npm install && npm run dev"
 
   # NUXT
   nuxt:
@@ -45,6 +58,7 @@ services:
       - 3000:3000
     volumes:
       - ./front:/app
+      - /app/node_modules
     depends_on:
       - laravel
     environment:
