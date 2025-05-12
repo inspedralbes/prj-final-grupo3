@@ -189,7 +189,7 @@ export function useResult() {
               "dies": [
                 {
                   "dia": número de dia y dia de la setmana,
-                  "resumDia": "(resum detallada del plan del dia)",
+                  "resumDia": "(resum curt pero detallada del plan del dia)",
                   "paraulaClau": "(Una paraula o 2 paraules (amb espai) si es necesari clau que facin referència al pla de cada dia mes especific, com ara el nom del lloc més important del dia en anglès o el nom del país)",
                   "allotjament": "...",
                   "activitats": [

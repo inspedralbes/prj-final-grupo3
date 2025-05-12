@@ -27,37 +27,46 @@ export class GeminiModel {
       ) {
         responseText = data.candidates[0].content.parts[0].text;
         console.log("ResponseText recibido de Gemini");
-      }
 
-      if (data) {
-        console.log("ResponseText antes de añadir imágenes:", responseText);
-        try {
-          const tripData = JSON.parse(responseText);
-
-          if (tripData.viatge && tripData.viatge.dies && Array.isArray(tripData.viatge.dies)) {
-            for (const dia of tripData.viatge.dies) {
-
-              const searchQuery = dia.paraulaClau;
-              console.log("Buscando imagen para la query:", searchQuery);
-              const imageUrl = await PexelsService.getImageByQuery(searchQuery);
-
-              if (imageUrl) {
-                dia.imatgeUrl = imageUrl;
-              } else {
-                console.log("No se encontró imagen para la query:", searchQuery);
-              }
-            }
-          }
-
-          return JSON.stringify(tripData);
-        } catch (error) {
-          console.error("Error procesando el JSON o añadiendo imágenes:", error);
-          console.error("Contenido de responseText:", responseText);
-          return responseText;
+        responseText = responseText.trim();
+        if (responseText.startsWith("```")) {
+          responseText = responseText.replace(/^```(?:json)?/, "").replace(/```$/, "").trim();
         }
       }
 
-      return responseText;
+      try {
+        const tripData = JSON.parse(responseText);
+        console.log("JSON parseado:", tripData);
+
+        if (
+          tripData.viatge &&
+          tripData.viatge.dies &&
+          Array.isArray(tripData.viatge.dies) &&
+          tripData.viatge.dies.length > 0
+        ) {
+          for (const dia of tripData.viatge.dies) {
+            const searchQuery = dia.paraulaClau;
+            console.log("Buscando imagen para la query:", searchQuery);
+
+            const imageUrl = await PexelsService.getImageByQuery(searchQuery);
+
+            if (imageUrl) {
+              dia.imatgeUrl = imageUrl;
+            } else {
+              console.log("No se encontró imagen para la query:", searchQuery);
+            }
+          }
+        } else {
+          console.warn("El JSON recibido no contiene 'viatge.dies' o está vacío.");
+        }
+
+        return JSON.stringify(tripData);
+      } catch (error) {
+        console.error("Error procesando el JSON o añadiendo imágenes:", error);
+        console.error("Contenido de responseText:", responseText);
+        return responseText;
+      }
+
     } catch (error) {
       console.error(error);
       throw new Error("Error en la solicitud");

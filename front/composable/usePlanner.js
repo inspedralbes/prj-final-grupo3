@@ -429,8 +429,8 @@ export function usePlanner() {
               "dies": [
                 {
                   "dia": "Data del dia",
-                  "resumDia": "(resum detallada del plan del dia)",
-                  "paraulaClau": "(Una paraula o 2 paraules clau que facin referència al pla de cada dia mes especific, com ara el nom del lloc més important del dia en anglès o el nom del país)",
+                  "paraulaClau": "(Una paraula o 2 paraules (amb espai) si es necesari clau que facin referència al pla de cada dia mes especific, com ara el nom del lloc més important del dia en anglès o el nom del país)",
+                  "resumDia": "(resum curt pero detallada del plan del dia)",
                   "allotjament": "...",
                   "activitats": [
                     {
