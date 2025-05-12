@@ -62,7 +62,7 @@ export function useResult() {
           },
           body: JSON.stringify(userStore.user),
         });
-        
+
         console.log("Resposta del backend:", res);
 
         aiGeminiStore.responseText = null;
@@ -304,9 +304,9 @@ export function useResult() {
   };
 
   onBeforeMount(() => {
-    localStorage.removeItem('tripplan_form_data');
-    localStorage.removeItem('tripplan_chat_memory');
-    localStorage.removeItem('tripplan_chat_memory' + '_messages');
+    // localStorage.removeItem('tripplan_form_data');
+    // localStorage.removeItem('tripplan_chat_memory');
+    // localStorage.removeItem('tripplan_chat_memory' + '_messages');
   })
 
   return {

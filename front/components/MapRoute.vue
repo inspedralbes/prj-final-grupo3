@@ -29,6 +29,13 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useAIGeminiStore } from "~/store/aiGeminiStore";
+
+const aiGeminiStore = useAIGeminiStore();
+
+console.log(JSON.parse(aiGeminiStore.responseText).viatge.coordenades.llocs.map(llocs => llocs));
+
+const coords = JSON.parse(aiGeminiStore.responseText).viatge.coordenades
 
 const mapContainer = ref(null);
 const mapLoaded = ref(false);
@@ -54,6 +61,9 @@ const touristSpots = [
     description: "Famoso teatro de ópera con más de 200 años de historia"
   }
 ];
+
+console.log(touristSpots[0].coords);
+
 
 onMounted(async () => {
   if (process.client) {
@@ -92,21 +102,29 @@ onMounted(async () => {
         };
 
         // Añadir marcadores para cada punto de interés
-        const markers = touristSpots.map(spot => {
+        // const markers = touristSpots.map(spot => {
+        //   const marker = L.marker(spot.coords, {
+        //     icon: createCustomIcon(spot.color)
+        //   }).addTo(map);
+
+
+        const markers = coords.llocs.map(spot => {
+          console.log(spot.coords);
+
           const marker = L.marker(spot.coords, {
             icon: createCustomIcon(spot.color)
           }).addTo(map);
 
           marker.bindPopup(`
-            <div class="font-bold">${spot.name}</div>
-            <div>${spot.description}</div>
+            <div class="font-bold">${spot.nom}</div>
+            <div>${spot.descripcio}</div>
           `);
 
           return marker;
         });
 
         // Crear una línea que conecte los puntos (la ruta)
-        const routeCoordinates = touristSpots.map(spot => spot.coords);
+        const routeCoordinates = coords.llocs.map(spot => spot.coords);
 
         // Crear y añadir la ruta al mapa
         const route = L.polyline(routeCoordinates, {
