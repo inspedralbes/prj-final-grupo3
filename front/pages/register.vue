@@ -9,12 +9,12 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="Nom*">
-              <el-input v-model="registerAuth.registerData.name" placeholder="Carles" />
+              <el-input v-model="registerAuth.registerData.name" placeholder="Carles" clearable />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="Cognoms*">
-              <el-input v-model="registerAuth.registerData.surname" placeholder="Fernández Marín" />
+              <el-input v-model="registerAuth.registerData.surname" placeholder="Fernández Martín" clearable/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -22,7 +22,7 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="Gènere*">
-              <el-select v-model="registerAuth.registerData.gender" placeholder="Selecciona" class="w-full">
+              <el-select v-model="registerAuth.registerData.gender" placeholder="Selecciona" class="w-full" clearable>
                 <el-option label="Masculí" value="male" />
                 <el-option label="Femení" value="female" />
                 <el-option label="Prefereixo no dir-ho" value="other" />
@@ -38,16 +38,16 @@
         </el-row>
 
         <el-form-item label="Número de telèfon*">
-          <el-input v-model="registerAuth.registerData.phone_number" placeholder="655767876" />
+          <el-input v-model="registerAuth.registerData.phone_number" placeholder="655767876" clearable/>
         </el-form-item>
 
         <el-form-item label="Correu*">
-          <el-input v-model="registerAuth.registerData.email" type="email" placeholder="elteucorreu@gmail.com" />
+          <el-input v-model="registerAuth.registerData.email" type="email" placeholder="elteucorreu@gmail.com" clearable/>
         </el-form-item>
 
         <el-form-item label="Correu alternatiu*">
           <el-input v-model="registerAuth.registerData.email_alternative" type="email"
-            placeholder="elteucorreualternatiu@gmail.com" />
+            placeholder="elteucorreualternatiu@gmail.com" clearable/>
         </el-form-item>
 
         <div class="space-y-6">

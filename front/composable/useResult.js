@@ -44,20 +44,24 @@ export function useResult() {
         alert("Planning del viatge guardat correctament");
   
         console.log("ID del viatge:", aiGeminiStore.lastTravelId);
-        console.log("ID de l'usuari:", userStore.user.id);
+        console.log("ID de l'usuari:", userStore.user);
         console.log("Token:", userStore.token);
   
         if (!aiGeminiStore.lastTravelId || !userStore.user.id) {
           console.error("Falta l'ID del viatge o l'id de l'usuari.");
           return;
         }
-  
+        console.log("Enviant correu per al viatge amb ID:", aiGeminiStore.lastTravelId, "al usuario amb ID:", userStore.user.id);
+
+        console.log("Enviant correu per al viatge amb ID:", aiGeminiStore.lastTravelId, "al usuario amb ID:", userStore.user.id);
+
         const res = await $fetch(`/api/travel/${aiGeminiStore.lastTravelId}/send-email`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${userStore.token}`,
             Accept: "application/json",
           },
+          body: JSON.stringify(userStore.user),
         });
   
         console.log("Resposta del backend:", res);
@@ -305,6 +309,12 @@ export function useResult() {
       // modeVista.value = "resum";
     }
   };
+
+  onBeforeMount(() => {
+    localStorage.removeItem('tripplan_form_data');
+    localStorage.removeItem('tripplan_chat_memory');
+    localStorage.removeItem('tripplan_chat_memory' + '_messages');
+  })
 
   return {
     response,

@@ -8,23 +8,40 @@
           <input v-model="tripDetails.searchQuery.value" type="search"
             placeholder="Buscar viatge (quantitat de dies, pres. min, pres. max, destí, data, movilitat ...)"
             class="p-3 border border-gray-300 rounded-lg flex-grow" />
+          <!-- Botón de favoritos -->
+          <button @click="toggleShowFavorites"
+            class="p-3 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white text-bold transition flex items-center gap-2">
+            <img :src="showOnlyFavorites ? favorite : favoritemark" alt="Favoritos" class="size-5" />
+            <span>{{ showOnlyFavorites ? 'Mostrar todos' : 'Solo favoritos' }}</span>
+          </button>
         </div>
       </div>
     </div>
     <div class="min-h-[50vh] max-h-[80vh] w-[80%] rounded-lg shadow-2xl bg-white p-6 flex flex-col overflow-y-auto">
       <div class="flex flex-col gap-6 items-center">
-        <p v-if="tripDetails.filteredTrips.length === 0"
+        <p v-if="filteredTrips.length === 0"
           class="text-center text-lg font-semibold text-gray-300 flex items-center justify-center min-h-[50vh]">
-          No hi ha cap historial de viatges. Has de viatjar més!
+          {{ showOnlyFavorites ? 'No tens viatges favorits' : 'No hi ha cap historial de viatges. Has de viatjar més!' }}
         </p>
 
-        <div class="relative" v-for="travel in tripDetails.filteredTrips.value" :key="travel.id">
+        <div class="relative" v-for="travel in filteredTrips" :key="travel.id">
+          <div class="flex justify-end py-2 gap-3 items-center">
+            <img
+              :src="favorites[travel.id] ? favorite : favoritemark"
+              alt="Afegir a favorits"
+              class="size-7 cursor-pointer"
+              @click="handleToggleFavorite(travel.id)"
+            />
+            <img src="../assets/images/delete.svg" alt="Eliminar viatge" class="size-8 cursor-pointer hover:rotate-180 transition duration-300"
+              @click="tripDetails.deleteTravel(travel.id)" />
+          </div>
           <div class="w-[70vw] h-[40vh] bg-[#ffb300] rounded-md shadow-lg border-t border-b border-[#e89f3d] relative">
             <div class="absolute top-[0.5vh] left-2.5 right-2.5 flex justify-between text-white px-2.5">
               <p class="flex text-2xl font-bold font-['Arial'] text-blue-950">TRIPLAN</p>
               <p class="flex text-xl font-['Arial'] text-gray-100">Informació del viatge</p>
               <p class="flex text-sm font-bold font-['Arial'] text-blue-950">VIATGE #00{{ travel.id }}</p>
             </div>
+
 
             <div class="absolute top-10 w-full h-[17vh] bg-gray-200">
               <div
@@ -116,9 +133,57 @@
 </template>
 
 <script setup>
+import { ref, computed, onMounted } from 'vue';
 import { useTripDetails } from '~/composable/useTripDetails';
+import { getUserFavorites, toggleFavorite } from '~/services/communicationManager';
+import favoritemark from '../assets/images/favoritemark.svg';
+import favorite from '../assets/images/favorite.svg';
+import { useAuthStore } from '~/store/authUser';
 
+const authStore = useAuthStore();
 const tripDetails = useTripDetails();
+const favorites = ref({});
+const showOnlyFavorites = ref(false);
+
+// Computed property para filtrar los viajes según búsqueda y favoritos
+const filteredTrips = computed(() => {
+  let trips = tripDetails.filteredTrips.value;
+  
+  if (showOnlyFavorites.value) {
+    trips = trips.filter(trip => favorites.value[trip.id]);
+  }
+  
+  return trips;
+});
+
+async function fetchFavorites() {
+  try {
+    const favoriteTrips = await getUserFavorites(authStore.token);
+    favoriteTrips.forEach((favorite) => {
+      favorites.value[favorite.travel_id] = true;
+    });
+  } catch (error) {
+    console.error('Error al obtener los favoritos:', error.message);
+  }
+}
+
+async function handleToggleFavorite(travelId) {
+  try {
+    const result = await toggleFavorite(travelId, authStore.user.id, authStore.token);
+    favorites.value[travelId] = !favorites.value[travelId];
+    console.log(result.message);
+  } catch (error) {
+    console.error('Error al alternar favorito:', error.message);
+  }
+}
+
+function toggleShowFavorites() {
+  showOnlyFavorites.value = !showOnlyFavorites.value;
+}
+
+onMounted(() => {
+  fetchFavorites();
+});
 </script>
 
 <style>

@@ -87,7 +87,7 @@ class TravelMailController extends Controller
                         ]);
             });
 
-            Log::info("Correu enviat correctament a {$user->email}");
+            // Log::info("Correu enviat correctament a {$user->email}");
 
             return response()->json([
                 'status' => 200,

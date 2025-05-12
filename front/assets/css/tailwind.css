@@ -3,3 +3,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  @keyframes bounce-out-down {
+    0% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    20% {
+      transform: translateY(-10px);
+    }
+
+    100% {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+  }
+
+  .animate-bounce-out-down {
+    animation: bounce-out-down 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+}
