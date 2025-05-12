@@ -35,9 +35,9 @@ class CommentSeeder extends Seeder
                     'trip_id' => $tripId,
                     'user_id' => rand(1, 15),
                     'text' => $texts[array_rand($texts)],
+                    'rating' => rand(4, 5), 
                 ]);
             }
         }
     }
 }
-

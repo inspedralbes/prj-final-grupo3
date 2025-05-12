@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('trip_id')->constrained('recommended_trips')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->unsignedTinyInteger('rating')->default(5); 
             $table->text('text');
             $table->timestamps();
         });

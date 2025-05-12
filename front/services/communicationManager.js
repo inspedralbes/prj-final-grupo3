@@ -463,13 +463,10 @@ export async function fetchCommentsForTrip(tripId) {
   return await res.json();
 }
 
-
-export async function postComment(tripId, text, token) {
+export async function postComment(tripId, text, token, rating) {
   const config = useRuntimeConfig()
   const HOST = config.public.apiUrl
   const URL = `${HOST}/comments`
-
-  console.log('Enviant comentari a:', URL)
 
   const res = await fetch(URL, {
     method: 'POST',
@@ -477,16 +474,11 @@ export async function postComment(tripId, text, token) {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ tripId, comment: text }),
+    body: JSON.stringify({ tripId, comment: text, rating }),
   })
 
   const responseText = await res.clone().text()
-  console.log('Resposta del backend (comentari):', responseText)
-
-  if (!res.ok) {
-    throw new Error(`Error al enviar comentari: ${res.status} - ${responseText}`)
-  }
-
+  if (!res.ok) throw new Error(responseText)
   return JSON.parse(responseText)
 }
 
