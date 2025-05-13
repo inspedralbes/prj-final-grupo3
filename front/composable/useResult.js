@@ -308,7 +308,7 @@ export function useResult() {
               ]
             }
           ],
-          "preuTotal": "...",
+          "preuTotal": "ha de ser numeric sense el símbol d'euro",
           "comentaris": "comentari/s curt sobre el preu total del viatge, com ara si és un pressupost ajustat o si es poden fer ajustos per reduir costos.",
           "coordenades": {
             "centre_mapa": {

@@ -497,7 +497,7 @@ export function usePlanner() {
                 ]
               }
             ],
-            "preuTotal": "...",
+            "preuTotal": "ha de ser numeric sense el símbol d'euro",
             "coordenades": {
               "centre_mapa": {
                 "coords": [00.000000, 00.000000]
