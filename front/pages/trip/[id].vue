@@ -5,7 +5,10 @@
         { label: trip?.title || 'Carregant...' }
       ]" />
   
-      <TripDetails v-if="trip" :trip="trip" />
+      <TripDetails v-if="trip" :trip="trip" />      
+
+      <TripComment v-if="trip" :tripId="trip.id" />
+
   
       <div v-else-if="loading" role="status" class="p-4 border border-gray-200 rounded-xl shadow animate-pulse md:p-6">
         <div class="h-64 bg-gray-300 rounded w-full mb-4"></div>
@@ -17,6 +20,8 @@
       </div>
   
       <div v-else-if="error" class="text-red-500 text-center">{{ error }}</div>
+
+
     </div>
   </template>
   
@@ -27,6 +32,8 @@
   import { getTripById } from '~/services/communicationManager'
   import TripDetails from '~/components/TripDetails.vue'
   import Breadcrumb from '~/components/Breadcrumb.vue'
+  import TripComment from '~/components/TripComment.vue'
+
   
   const route = useRoute()
   const trip = ref(null)

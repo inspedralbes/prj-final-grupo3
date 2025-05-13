@@ -12,7 +12,9 @@ use App\Http\Controllers\MovilityController;
 use App\Http\Controllers\TravelTypeController;
 use App\Http\Controllers\TravelMailController;
 use App\Http\Controllers\RecommendedTripController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\CommentLikeController;
 use App\Models\RecommendedTrip;
 
 
@@ -59,3 +61,12 @@ Route::get('/travel-plan/{id}', [TravelsController::class, 'getByTravelId']);
 Route::get('/trips/highlighted', [RecommendedTripController::class, 'highlighted']);
 
 Route::get('/trips/{id}', [RecommendedTripController::class, 'show']);
+
+Route::get('/comments', [CommentController::class, 'index']);
+
+Route::middleware('auth:sanctum')->post('/comments', [CommentController::class, 'store']);
+Route::middleware('auth:sanctum')->delete('/comments/{id}', [CommentController::class, 'destroy']);
+
+Route::middleware('auth:sanctum')->post('/comment-like', [CommentLikeController::class, 'store']);
+
+
