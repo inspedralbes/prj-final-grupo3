@@ -8,10 +8,11 @@ export default defineNuxtConfig({
   ],
   css: [
     '~/assets/css/tailwind.css',
-    'element-plus/dist/index.css'
+    'element-plus/dist/index.css',
+    'leaflet/dist/leaflet.css',
   ],
   build: {
-    transpile: ['element-plus/es'],
+    transpile: ['element-plus/es', '@vue-leaflet/vue-leaflet'],
   },
   ssr: false,
   runtimeConfig: {

@@ -11,22 +11,26 @@
             :index="i" :expandit="diaExpandit === i" @toggle="diaExpandit = diaExpandit === i ? null : i" />
         </div>
 
+        <div class="flex place-content-end px-2">
+          <button @click="showMapAllRoute">
+            <MapIcon class="w-6 h-6 text-blue-600" />
+          </button>
+        </div>
+
+        <MapRouteAll :show="mapInteractiveAllRoute" />
+
         <div class="p-1 text-sm text-gray-400 text-end flex flex-col gap-2">
           <div>
             <p class="text-md font-bold">Preu total:</p>
             <p class="text-xs">{{ result.preuTotal.value }} €</p>
             <p class="text-xs">{{ result.comentaris.value }}</p>
           </div>
-          <!-- <div class="flex justify-end">
-            <button
-              class="border-2 border-blue-600/50 p-1 text-blue-600/50 hover:text-blue-600 transition duration-200 hover:border-blue-600 rounded-lg"
-              @click="result.modeVista.value = 'resum'">Veure resum</button>
-          </div> -->
         </div>
       </div>
 
       <!--buttons accept or decline-->
-      <div v-if="!result.showConfirmation.value" class="flex flex-col md:flex-row md:justify-between mt-8 gap-2 md-gap-0">
+      <div v-if="!result.showConfirmation.value"
+        class="flex flex-col md:flex-row md:justify-between mt-8 gap-2 md-gap-0">
         <!--download pdf-->
         <button @click="result.downloadPDF"
           class="text-green-600 hover:text-white border-2 border-green-600 py-2 px-4 rounded-lg hover:bg-green-700 transition duration-500 text-md font-semibold">
@@ -65,9 +69,18 @@
 
 <script setup>
 import { useResult } from '~/composable/useResult';
+import { MapIcon } from '@heroicons/vue/24/solid'
 
 const result = useResult();
 const diaExpandit = ref(null);
+const mapInteractiveAllRoute = ref(false);
+
+
+const showMapAllRoute = () => {
+  console.log(mapInteractiveAllRoute.value);
+
+  mapInteractiveAllRoute.value = !mapInteractiveAllRoute.value
+}
 </script>
 
 <style>

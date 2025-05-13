@@ -38,15 +38,15 @@ export function useResult() {
   const handleAccept = async () => {
     const response = savePlaning(responseText.value, aiGeminiStore.currentUserToken, aiGeminiStore.lastTravelId);
     console.log(response);
-  
+
     try {
       if (response) {
         alert("Planning del viatge guardat correctament");
-  
+
         console.log("ID del viatge:", aiGeminiStore.lastTravelId);
         console.log("ID de l'usuari:", userStore.user);
         console.log("Token:", userStore.token);
-  
+
         if (!aiGeminiStore.lastTravelId || !userStore.user.id) {
           console.error("Falta l'ID del viatge o l'id de l'usuari.");
           return;
@@ -56,21 +56,21 @@ export function useResult() {
         router.push("/loading");
 
         const data = await sendTravelEmail(aiGeminiStore.lastTravelId, userStore.user, userStore.token);
-  
+
         console.log("Resposta del backend:", data);
-  
+
         if (!data) {
           alert("Error: El servidor no ha retornat cap resposta en enviar el correu.");
           return;
         }
-    
+
         if (!data.viatge) {
           alert("Error: Les dades del viatge no s'han rebut correctament del servidor.");
           return;
         }
-  
+
         aiGeminiStore.responseText = JSON.stringify({ viatge: data.viatge });
-  
+
         router.push("/");
       }
     } catch (error) {
@@ -78,7 +78,7 @@ export function useResult() {
       alert("Hi ha hagut un error en enviar el correu.");
     }
   };
-  
+
 
   const handleCancel = () => {
     alert("El viatge s'ha cancel·lat.");

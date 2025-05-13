@@ -411,45 +411,139 @@ export function usePlanner() {
         };
 
         const requestText = `
-          Planifica un viatge per a ${formData.value.travelers} persones ${formData.value.type === 1 ? "sol" : `amb ${formData.value.type}`}.
-          Destí: ${currentCountry.name}.
-          Dates: del ${formData.value.datesinit} al ${formData.value.datesfinal}.
-          Pressupost: entre ${formData.value.budgetmin}€ i ${formData.value.budgetmax}€.
-          Interessos: ${formData.value.interests}.
-          Vehicle: ${formData.value.vehicletype}.
-          Tipus de vehicle: ${vehicleTypes[formData.value.vehicletype] || "No especificat"}.
-          Cada dia ha d'incloure tots els seus detalls.
-          El nombre de dies ha de coincidir amb els dies que t'he indicat abans. Gràcies.
-          Bastant detallat i a més que el resultat ha d'estar estructurat com un objecte que contingui un array anomenat dies, on cada element representa un dia del viatge.
-          📌 **Important:** la resposta ha de ser **només un JSON vàlid**, sense text introductori, sense cap bloc de codi (res de '\`\`\`json'), i sense formatació markdown. Retorna només l'objecte JSON pur.
-          Exemple esperat:
-          {
-            "viatge": {
-              "titol": "...",
-              "dies": [
+        Planifica un viatge per a ${formData.value.travelers} persones ${formData.value.type === 1 ? "sol" : `amb ${formData.value.type}`}.
+        Destí: ${currentCountry.name}.
+        Dates: del ${formData.value.datesinit} al ${formData.value.datesfinal}.
+        Pressupost: entre ${formData.value.budgetmin}€ i ${formData.value.budgetmax}€.
+        Interessos: ${formData.value.interests}.
+        Vehicle: ${formData.value.vehicletype}.
+        Tipus de vehicle: ${vehicleTypes[formData.value.vehicletype] || "No especificat"}.
+        Cada dia ha d'incloure tots els seus detalls.
+        El nombre de dies ha de coincidir amb els dies que t'he indicat abans. Gràcies.
+        Bastant detallat i a més que el resultat ha d'estar estructurat com un objecte que contingui un array anomenat dies, on cada element representa un dia del viatge.
+        
+        HA D'INCLOURE OBLIGATÒRIAMENT la següent informació per poder representar la ruta en un mapa:
+        
+        "coordenades": {
+          "centre_mapa": {
+            "coords": [00.000000, 00.000000]
+          },
+          "nivel_zoom": 15,
+          "rutes_per_dia": [
+            {
+              "dia_index": 0,
+              "color": "#HEX",
+              "llocs": [
                 {
-                  "dia": "Data del dia",
-                  "paraulaClau": "(Una paraula o 2 paraules (amb espai) si es necesari clau que facin referència al pla de cada dia mes especific, com ara el nom del lloc més important del dia en anglès o el nom del país)",
-                  "resumDia": "(resum curt pero detallada del plan del dia)",
-                  "allotjament": "...",
-                  "activitats": [
-                    {
-                      "nom": "...",
-                      "descripcio": "...",
-                      "preu": "...",
-                      "horari": "..."
-                    }
-                  ]
+                  "id": 1,
+                  "nom": "Nom del lloc",
+                  "descripcio": "Descripció del lloc",
+                  "google_maps_url": "https://www.google.com/maps/search/nom+del+lloc",
+                  "coords": [00.000000, 00.000000]
+                },
+                {
+                  "id": 2,
+                  "nom": "Nom del lloc",
+                  "descripcio": "Descripció del lloc",
+                  "google_maps_url": "https://www.google.com/maps/search/nom+del+lloc",
+                  "coords": [00.000000, 00.000000]
                 }
               ],
-              "preuTotal": "ha de ser un integer, sense text, i ha de ser un preu total aproximat del viatge, incloent allotjament i activitats.",
-              "comentaris": "comentari/s curt sobre el preu total del viatge, com ara si és un pressupost ajustat o si es poden fer ajustos per reduir costos.",
+              "orden_visita": [1, 2, ...],
+              "distancia_total_metres": 1200
+            },
+            {
+              "dia_index": 1,
+              "color": "#DIFERENT_HEX",
+              "llocs": [
+                // llocs pel segon dia
+              ],
+              "orden_visita": [5, 6, ...],
+              "distancia_total_metres": 1500
+            }
+            // Continua per cada dia...
+          ]
+        }
+        
+        Les coordenades han de ser precises amb 6 decimals. 
+        Cada dia ha de tenir un color diferent i distintiu en format hexadecimal (#FF5733, #4287f5, etc.).
+        Els colors han de ser llegibles en un mapa i han de contrastar entre ells.
+        Suggeriments de colors per dia: Dia 1 = "#3366CC", Dia 2 = "#DC3912", Dia 3 = "#FF9900", Dia 4 = "#109618", Dia 5 = "#990099".
+        
+        📌 **Important:** la resposta ha de ser **només un JSON vàlid**, **sense text introductori**, sense cap bloc de codi (res de \`\`\`json), i sense formatació markdown. Retorna només l'objecte JSON pur.
+        Exemple esperat:
+        {
+          "viatge": {
+            "titol": "...",
+            "dies": [
+              {
+                "dia": "Data del dia",
+                "paraulaClau": "(Una paraula o 2 paraules (amb espai) si es necesari clau que facin referència al pla de cada dia mes especific, com ara el nom del lloc més important del dia en anglès o el nom del país)",
+                "resumDia": "(resum curt pero detallada del plan del dia)",
+                "allotjament": "...",
+                "color_dia": "#HEX", // Color que identifica aquest dia, igual que a rutes_per_dia
+                "activitats": [
+                  {
+                    "nom": "...",
+                    "descripcio": "...",
+                    "preu": "...",
+                    "horari": "...",
+                    "ubicacio": {
+                      "nom": "Nom del lloc",
+                      "google_maps_url": "https://www.google.com/maps/search/nom+del+lloc"
+                    }
+                  },
+                  ...
+                ]
+              }
+            ],
+            "preuTotal": "...",
+            "coordenades": {
+              "centre_mapa": {
+                "coords": [00.000000, 00.000000]
+              },
+              "nivel_zoom": 15,
+              "rutes_per_dia": [
+                {
+                  "dia_index": 0,
+                  "color": "#HEX", // Mateix color que color_dia del primer dia
+                  "llocs": [
+                    {
+                      "id": 1,
+                      "nom": "Nom del lloc",
+                      "descripcio": "Descripció del lloc",
+                      "google_maps_url": "nom del lloc amb adreça completa",
+                      "coords": [00.000000, 00.000000]
+                    },
+                    ...
+                  ],
+                  "orden_visita": [1, 2, ...],
+                  "distancia_total_metres": 1200
+                },
+                ...
+              ]
             }
           }
-          Tota la informació ha d'estar en català.
-          📌 **Important:** la resposta ha de ser **només un JSON vàlid**, **sense text introductori**, sense cap bloc de codi (res de \`\`\`json), i sense formatació markdown. Retorna només l'objecte JSON pur.
-          Gràcies!
-          `;
+        }
+        
+        📌 **MOLT IMPORTANT sobre les URLs de Google Maps:**
+        
+        Per a cada lloc, DEUS generar una URL de Google Maps completa i funcional.
+
+        Quan retornis l'google_maps_url, te que se com si jo anes a google maps i busques el lloc.
+        
+        La URL ha de ser completa i funcional, ja que quan es carregui al mapa, ha de mostrar el lloc exactament com si anes a Google Maps.
+        
+        NO deixis cap lloc sense URL de Google Maps.
+        NO proporcions només el nom del lloc en el camp google_maps_url.
+        
+        Els colors tenen que representar un dia en concret i ser consistents en tot el JSON.
+        Si una activitat del dia 1 té color "#3366CC", totes les activitats i rutes d'aquell dia han de tenir el mateix color.
+        Els colors han de ser diferents per cada dia per distingir clarament les rutes al mapa.
+        
+        Tota la informació ha d'estar en català.
+        Gràcies!
+       `;
 
         router.push({ name: "loading" });
 

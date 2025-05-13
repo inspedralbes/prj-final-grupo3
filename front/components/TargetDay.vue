@@ -21,6 +21,15 @@
         </div>
       </div>
     </transition>
+
+    <div class="flex place-content-end px-2">
+      <button @click="showMap">
+        <MapIcon class="w-6 h-6 text-blue-600" />
+      </button>
+    </div>
+
+    <MapRoute :show="mapInteractive" :diaIndex="prop.index" />
+
   </div>
 
   <div v-else-if="prop.vista === 'resum' && dia">
@@ -30,10 +39,12 @@
   <div v-else>
     No hi ha cap resultat a mostrar.
   </div>
+
 </template>
 
 <script setup>
 import { ref, watch } from 'vue'
+import { MapIcon } from '@heroicons/vue/24/solid'
 import downArrow from '../assets/images/down-arrow.svg'
 import upArrow from '../assets/images/up-arrow.svg'
 
@@ -43,6 +54,12 @@ const prop = defineProps({
   index: Number,
   expandit: Boolean
 })
+
+const mapInteractive = ref(false);
+
+const showMap = () => {
+  mapInteractive.value = !mapInteractive.value
+}
 
 const emit = defineEmits(['toggle']);
 const mostrandoDetalles = ref(false);
