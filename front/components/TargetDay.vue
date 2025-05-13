@@ -28,7 +28,7 @@
       </button>
     </div>
 
-    <MapRoute v-if="mapInteractive" />
+    <MapRoute :show="mapInteractive" :diaIndex="prop.index" />
 
   </div>
 
@@ -39,6 +39,7 @@
   <div v-else>
     No hi ha cap resultat a mostrar.
   </div>
+
 </template>
 
 <script setup>
@@ -57,8 +58,6 @@ const prop = defineProps({
 const mapInteractive = ref(false);
 
 const showMap = () => {
-  console.log(mapInteractive.value);
-
   mapInteractive.value = !mapInteractive.value
 }
 

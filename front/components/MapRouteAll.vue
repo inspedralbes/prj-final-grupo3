@@ -30,30 +30,36 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, defineProps } from 'vue';
 import { useAIGeminiStore } from "~/store/aiGeminiStore";
+
+// Añadir prop para controlar si el mapa está visible
+const props = defineProps({
+  show: {
+    type: Boolean,
+    default: true
+  }
+});
 
 const aiGeminiStore = useAIGeminiStore();
 
 console.log(JSON.parse(aiGeminiStore.responseText).viatge.coordenades);
 
-const mapContainer = ref(null);
-const mapLoaded = ref(false);
-let map = null;
+const coords = JSON.parse(aiGeminiStore.responseText).viatge.coordenades
+console.log(coords.centre_mapa);
 
-const props = defineProps({
-  diaIndex: {
-    type: Number,
-    required: true
-  },
-  show: {
-    type: Boolean,
-    default: true
-  },
+coords.rutes_per_dia.map(daily_route => {
+  console.log(daily_route);
 });
 
+const mapContainer = ref(null);
+const mapLoaded = ref(false);
+let map = null; // Variable para mantener referencia al mapa
+
+// Función para inicializar el mapa
 const initMap = async () => {
   if (!mapContainer.value || !process.client) return;
+
   try {
     // Importar Leaflet solo del lado del cliente
     const L = await import('leaflet');
@@ -66,11 +72,8 @@ const initMap = async () => {
       shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
     });
 
-    // Obtener datos de coordenadas del store
-    const coords = JSON.parse(aiGeminiStore.responseText).viatge.coordenades;
-
     // Crear el mapa centrado en el punto medio aproximado
-    const map = L.map(mapContainer.value).setView([coords.centre_mapa.coords[0], coords.centre_mapa.coords[1]], coords.nivel_zoom);
+    map = L.map(mapContainer.value).setView([coords.centre_mapa.coords[0], coords.centre_mapa.coords[1]], coords.nivel_zoom);
 
     // Añadir la capa de OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -89,90 +92,72 @@ const initMap = async () => {
       });
     };
 
-    // MODIFICADO: Filtrar para mostrar solo la ruta del día seleccionado
-    const rutaDia = coords.rutes_per_dia.find(ruta => ruta.dia_index === props.diaIndex);
-
-    if (rutaDia) {
-      // Crear bounds para ajustar la vista
-      const bounds = L.latLngBounds();
-
-      // Añadir marcadores para los lugares de este día específico, respetando orden_visita
-      const markers = [];
-
-      rutaDia.orden_visita.forEach(id => {
-        const spot = rutaDia.llocs.find(lugar => lugar.id === id);
-        if (spot) {
-          // Añadir marcador
-          const marker = L.marker([spot.coords[0], spot.coords[1]], {
-            icon: createCustomIcon(rutaDia.color)
-          }).addTo(map);
-
-          // Configurar popup
-          let googleMapsUrl = spot.google_maps_url || `https://www.google.com/maps?q=${spot.coords[0]},${spot.coords[1]}`;
-
-          marker.bindPopup(`
-                <div class="font-bold">${spot.nom}</div>
-                <div>${spot.descripcio}</div>
-                <div>
-                  <a href="${googleMapsUrl}" target="_blank" class="text-blue-500 underline">Veure més.</a>
-                </div>
-              `);
-
-          // Añadir al bounds
-          bounds.extend([spot.coords[0], spot.coords[1]]);
-
-          markers.push(marker);
-        }
-      });
-
-      // Crear la línea que conecte los puntos (la ruta)
-      const routePoints = rutaDia.orden_visita.map(id => {
-        const spot = rutaDia.llocs.find(lugar => lugar.id === id);
-        return spot ? [spot.coords[0], spot.coords[1]] : null;
-      }).filter(point => point !== null);
-
-      if (routePoints.length > 1) {
-        // Crear y añadir la ruta al mapa
-        const route = L.polyline(routePoints, {
-          color: rutaDia.color || '#3B82F6',
-          weight: 4,
-          opacity: 0.7,
-          dashArray: '10, 10',
-          lineCap: 'round'
+    // Añadir marcadores para cada punto de interés
+    const markers = coords.rutes_per_dia.map(daily_route => {
+      // console.log(daily_route.llocs.map(spot => spot.coords));
+      const marker = daily_route.llocs.map(spot => {
+        console.log(spot);
+        const markerSpot = L.marker([spot.coords[0], spot.coords[1]], {
+          icon: createCustomIcon(daily_route.color)
         }).addTo(map);
 
-        // Ajustar el mapa para mostrar todos los puntos
-        map.fitBounds(bounds, { padding: [30, 30] });
+        let googleMapsUrl = spot.google_maps_url || `https://www.google.com/maps?q=${spot.coords[0]},${spot.coords[1]}`;
 
-        // Animar la ruta
-        const animateRoute = () => {
-          let dashOffsetValue = 0;
-          const animationInterval = setInterval(() => {
-            dashOffsetValue -= 1;
-            const routeElement = document.querySelector('.leaflet-overlay-pane path');
-            if (routeElement) {
-              routeElement.style.strokeDashoffset = dashOffsetValue;
-            } else {
-              clearInterval(animationInterval);
-            }
-          }, 50);
-        };
+        markerSpot.bindPopup(`
+          <div class="font-bold">${spot.nom}</div>
+          <div>${spot.descripcio}</div>
+          <div>
+            <a href="${googleMapsUrl}" target="_blank" class="text-blue-500 underline">Veure més.</a>
+        `);
+        return markerSpot;
+      })
+      return marker;
+    });
 
-        // Iniciar animación
+    // Crear una línea que conecte los puntos (la ruta)
+    const routeCoordinates = coords.rutes_per_dia.map(daily_route => {
+      return daily_route.llocs.map(spot => [spot.coords[0], spot.coords[1]]);
+    });
+
+    // Crear y añadir la ruta al mapa
+    const route = L.polyline(routeCoordinates, {
+      color: '#3B82F6', // Azul
+      weight: 4,
+      opacity: 0.7,
+      dashArray: '10, 10', // Línea punteada
+      lineCap: 'round'
+    }).addTo(map);
+
+    // Animar la ruta
+    const animateRoute = () => {
+      let dashOffsetValue = 0;
+      const animationInterval = setInterval(() => {
+        dashOffsetValue -= 1;
+        const routeElement = document.querySelector('.leaflet-overlay-pane path');
+        if (routeElement) {
+          routeElement.style.strokeDashoffset = dashOffsetValue;
+        } else {
+          clearInterval(animationInterval);
+        }
+      }, 50);
+    };
+
+    // Ajustar el mapa para que se vean todos los puntos
+    map.fitBounds(route.getBounds(), { padding: [50, 50] });
+
+    // Mostrar el mapa y animar la ruta
+    setTimeout(() => {
+      if (map) {
+        map.invalidateSize();
+        mapLoaded.value = true;
         animateRoute();
       }
-    }
-
-    // Mostrar el mapa
-    setTimeout(() => {
-      map.invalidateSize();
-      mapLoaded.value = true;
     }, 200);
 
   } catch (error) {
     console.error('Error loading map:', error);
   }
-}
+};
 
 // Hooks de los eventos de transición
 const onEnter = (el) => {

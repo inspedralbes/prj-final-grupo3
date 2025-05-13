@@ -426,50 +426,70 @@ export function usePlanner() {
         
         "coordenades": {
           "centre_mapa": {
-            "latitud": 00.000000,
-            "longitud": 00.000000
+            "coords": [00.000000, 00.000000]
           },
           "nivel_zoom": 15,
-          "llocs": [
+          "rutes_per_dia": [
             {
-              "id": 1,
-              "nom": "Nom del lloc",
-              "descripcio": "Descripció del lloc",
-              "coords": [00.000000, 00.000000],
-              "color": "#HEX"
+              "dia_index": 0,
+              "color": "#HEX",
+              "llocs": [
+                {
+                  "id": 1,
+                  "nom": "Nom del lloc",
+                  "descripcio": "Descripció del lloc",
+                  "google_maps_url": "https://www.google.com/maps/search/nom+del+lloc",
+                  "coords": [00.000000, 00.000000]
+                },
+                {
+                  "id": 2,
+                  "nom": "Nom del lloc",
+                  "descripcio": "Descripció del lloc",
+                  "google_maps_url": "https://www.google.com/maps/search/nom+del+lloc",
+                  "coords": [00.000000, 00.000000]
+                }
+              ],
+              "orden_visita": [1, 2, ...],
+              "distancia_total_metres": 1200
             },
             {
-              "id": 2,
-              "nom": "Nom del lloc",
-              "descripcio": "Descripció del lloc",
-              "coords": [00.000000, 00.000000],
-              "color": "#HEX"
+              "dia_index": 1,
+              "color": "#DIFERENT_HEX",
+              "llocs": [
+                // llocs pel segon dia
+              ],
+              "orden_visita": [5, 6, ...],
+              "distancia_total_metres": 1500
             }
-          ],
-          "ruta": {
-            "orden_visita": [1, 2, ...],
-            "distancia_total_metres": 1200
-          }
+            // Continua per cada dia...
+          ]
         }
         
-        Les coordenades han de ser precises amb 6 decimals. Els colors en format hexadecimal han de ser llegibles en un mapa (com #FF5733, #4287f5, etc.).
+        Les coordenades han de ser precises amb 6 decimals. 
+        Cada dia ha de tenir un color diferent i distintiu en format hexadecimal (#FF5733, #4287f5, etc.).
+        Els colors han de ser llegibles en un mapa i han de contrastar entre ells.
+        Suggeriments de colors per dia: Dia 1 = "#3366CC", Dia 2 = "#DC3912", Dia 3 = "#FF9900", Dia 4 = "#109618", Dia 5 = "#990099".
         
         📌 **Important:** la resposta ha de ser **només un JSON vàlid**, **sense text introductori**, sense cap bloc de codi (res de \`\`\`json), i sense formatació markdown. Retorna només l'objecte JSON pur.
         Exemple esperat:
-        Retorna la resposta sempre en el mateix format.
         {
           "viatge": {
             "titol": "...",
             "dies": [
               {
-                "dia": Data del dia,
+                "dia": "Data del dia",
                 "allotjament": "...",
+                "color_dia": "#HEX", // Color que identifica aquest dia, igual que a rutes_per_dia
                 "activitats": [
                   {
                     "nom": "...",
                     "descripcio": "...",
                     "preu": "...",
-                    "horari": "..."
+                    "horari": "...",
+                    "ubicacio": {
+                      "nom": "Nom del lloc",
+                      "google_maps_url": "https://www.google.com/maps/search/nom+del+lloc"
+                    }
                   },
                   ...
                 ]
@@ -478,26 +498,47 @@ export function usePlanner() {
             "preuTotal": "...",
             "coordenades": {
               "centre_mapa": {
-                "coords": [00.000000, 00.000000],
+                "coords": [00.000000, 00.000000]
               },
               "nivel_zoom": 15,
-              "llocs": [
+              "rutes_per_dia": [
                 {
-                  "id": 1,
-                  "nom": "Nom del lloc",
-                  "descripcio": "Descripcio del lloc",
-                  "coords": [00.000000, 00.000000],
-                  "color": "#HEX"
+                  "dia_index": 0,
+                  "color": "#HEX", // Mateix color que color_dia del primer dia
+                  "llocs": [
+                    {
+                      "id": 1,
+                      "nom": "Nom del lloc",
+                      "descripcio": "Descripció del lloc",
+                      "google_maps_url": "nom del lloc amb adreça completa",
+                      "coords": [00.000000, 00.000000]
+                    },
+                    ...
+                  ],
+                  "orden_visita": [1, 2, ...],
+                  "distancia_total_metres": 1200
                 },
                 ...
-              ],
-              "ruta": {
-                "orden_visita": [1, 2, ...],
-                "distancia_total_metres": 1200
-              }
+              ]
             }
           }
         }
+        
+        📌 **MOLT IMPORTANT sobre les URLs de Google Maps:**
+        
+        Per a cada lloc, DEUS generar una URL de Google Maps completa i funcional.
+
+        Quan retornis l'google_maps_url, te que se com si jo anes a google maps i busques el lloc.
+        
+        La URL ha de ser completa i funcional, ja que quan es carregui al mapa, ha de mostrar el lloc exactament com si anes a Google Maps.
+        
+        NO deixis cap lloc sense URL de Google Maps.
+        NO proporcions només el nom del lloc en el camp google_maps_url.
+        
+        Els colors tenen que representar un dia en concret i ser consistents en tot el JSON.
+        Si una activitat del dia 1 té color "#3366CC", totes les activitats i rutes d'aquell dia han de tenir el mateix color.
+        Els colors han de ser diferents per cada dia per distingir clarament les rutes al mapa.
+        
         Tota la informació ha d'estar en català.
         Gràcies!
        `;
