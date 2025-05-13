@@ -19,13 +19,13 @@
     <!-- Comentaris -->
     <transition-group name="fade" tag="div" v-else-if="comments.length" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div v-for="comment in comments" :key="comment.id" class="p-4 bg-white rounded-lg shadow flex space-x-4">
-        <div
-          class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-bold uppercase">
-          {{ comment.user.name.charAt(0) }}
+        <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-bold uppercase">
+          {{ comment.user?.name?.charAt(0) || 'U' }}
         </div>
         <div class="flex-1">
           <p class="font-semibold text-gray-800 mb-1 text-sm">
-            {{ comment.user.name }}
+            {{ comment.user?.name || 'Usuari' }}
+            <span v-if="authStore.user && comment.user?.id === authStore.user.id" class="ml-2 text-blue-500 text-xs">(El teu comentari)</span>
           </p>
           <div class="flex items-center mb-1">
             <span v-for="n in 5" :key="n" class="text-sm mr-0.5">
@@ -35,15 +35,19 @@
           <div class="flex justify-between items-center mt-2">
             <p class="text-xs text-gray-400">{{ formatDate(comment.created_at) }}</p>
 
-            <button v-if="comment.user.id === authStore.user.id" @click="handleDelete(comment.id)"
-              class="text-red-500 hover:text-red-700 text-xs ml-2" title="Eliminar comentari"
+            <!-- Botó eliminar -->
+            <button v-if="authStore.user && comment.user?.id === authStore.user.id"
+              @click="handleDelete(comment.id)"
+              class="text-red-500 hover:text-red-700 text-xs ml-2"
+              title="Eliminar comentari"
               :disabled="deletingCommentId === comment.id">
               <span v-if="deletingCommentId === comment.id">Eliminant...</span>
               <span v-else>🗑️ Elimina</span>
             </button>
           </div>
+
           <!-- Botó de Like toggle -->
-          <div v-if="comment.user.id !== authStore.user?.id" class="flex items-center gap-1 text-xs ml-2">
+          <div v-if="authStore.user && comment.user?.id !== authStore.user.id" class="flex items-center gap-1 text-xs ml-2">
             <button
               @click="handleLike(comment.id)"
               :disabled="likingCommentId === comment.id"
@@ -59,10 +63,7 @@
             <span class="text-gray-500 text-xs">{{ comment.likes?.length || 0 }}</span>
           </div>
 
-          <p class="text-gray-700 text-sm">{{ comment.text }}</p>
-          <p class="text-xs text-gray-400 mt-2">
-            {{ formatDate(comment.created_at) }}
-          </p>
+          <p class="text-gray-700 text-sm mt-2">{{ comment.text }}</p>
         </div>
       </div>
     </transition-group>
@@ -87,7 +88,6 @@
             </button>
           </template>
         </div>
-
 
         <!-- Botó d'enviament -->
         <button @click="submitComment"
@@ -116,11 +116,10 @@ import { useAuthStore } from "@/store/authUser";
 import {
   fetchCommentsForTrip,
   postComment,
+  deleteComment,
+  likeComment
 } from "~/services/communicationManager";
-
-import { deleteComment } from '~/services/communicationManager'
-import { likeComment } from '~/services/communicationManager'
-
+import Swal from 'sweetalert2'
 
 
 const props = defineProps({ tripId: Number });
@@ -133,40 +132,52 @@ const loading = ref(true);
 const sending = ref(false);
 const successMessage = ref("");
 const rating = ref(null);
-const deletingCommentId = ref(null)
-const likingCommentId = ref(null)
-const hasLiked = (comment) => {
-  return comment.likes?.some((like) => like.user_id === authStore.user?.id);
-}
+const deletingCommentId = ref(null);
+const likingCommentId = ref(null);
 
+const hasLiked = (comment) => {
+  return authStore.user && comment.likes?.some((like) => like.user_id === authStore.user.id);
+};
 
 const handleLike = async (commentId) => {
-  likingCommentId.value = commentId
+  likingCommentId.value = commentId;
   try {
-    await likeComment(commentId, authStore.token)
-    await loadComments()
+    await likeComment(commentId, authStore.token);
+    await loadComments();
   } catch (err) {
-    console.error('Error fent like:', err)
+    console.error("Error fent like:", err);
   } finally {
-    likingCommentId.value = null
+    likingCommentId.value = null;
   }
-}
+};
 
 const handleDelete = async (commentId) => {
-  if (!confirm('Segur que vols eliminar aquest comentari?')) return;
+  const result = await Swal.fire({
+    title: 'Estàs segur?',
+    text: 'Aquesta acció eliminarà el comentari definitivament.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#e53e3e',
+    cancelButtonColor: '#718096',
+    confirmButtonText: 'Sí, elimina-ho!',
+    cancelButtonText: 'Cancel·la',
+  });
 
-  deletingCommentId.value = commentId
+  if (!result.isConfirmed) return;
+
+  deletingCommentId.value = commentId;
 
   try {
-    await deleteComment(commentId, authStore.token)
-    await loadComments()
+    await deleteComment(commentId, authStore.token);
+    await loadComments();
+    Swal.fire('Eliminat!', 'El teu comentari ha estat eliminat.', 'success');
   } catch (err) {
-    console.error('Error eliminant comentari:', err)
+    console.error('Error eliminant comentari:', err);
+    Swal.fire('Error!', 'No s\'ha pogut eliminar el comentari.', 'error');
   } finally {
-    deletingCommentId.value = null
+    deletingCommentId.value = null;
   }
-}
-
+};
 
 const formatDate = (isoString) => {
   return new Date(isoString).toLocaleString("ca-ES", {
@@ -192,7 +203,6 @@ const loadComments = async () => {
 
 const submitComment = async () => {
   if (!newComment.value.trim()) return;
-
   try {
     sending.value = true;
     await postComment(props.tripId, newComment.value, authStore.token, rating.value);
