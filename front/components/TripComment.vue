@@ -25,7 +25,7 @@
         <div class="flex-1">
           <p class="font-semibold text-gray-800 mb-1 text-sm">
             {{ comment.user?.name || 'Usuari' }}
-            <span v-if="authStore.user && comment.user?.id === authStore.user.id" class="ml-2 text-blue-500 text-xs">(El teu comentari)</span>
+            <span v-if="authStore.user && comment.user?.id === authStore.user.id" class="ml-2 text-blue-500 text-xs"></span>
           </p>
           <div class="flex items-center mb-1">
             <span v-for="n in 5" :key="n" class="text-sm mr-0.5">
