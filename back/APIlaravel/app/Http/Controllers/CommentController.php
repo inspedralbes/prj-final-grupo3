@@ -37,5 +37,19 @@ class CommentController extends Controller
 
         return response()->json($comment->load('user'));
     }
+
+    public function destroy($id)
+    {
+        $comment = Comment::findOrFail($id);
+
+        if ($comment->user_id !== auth()->id()) {
+            return response()->json(['error' => 'No tens permís per eliminar aquest comentari.'], 403);
+        }
+
+        $comment->delete();
+
+        return response()->json(['success' => true]);
+    }
+
 }
 

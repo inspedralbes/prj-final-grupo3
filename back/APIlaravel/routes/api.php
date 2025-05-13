@@ -61,3 +61,5 @@ Route::get('/trips/{id}', [RecommendedTripController::class, 'show']);
 Route::get('/comments', [CommentController::class, 'index']);
 
 Route::middleware('auth:sanctum')->post('/comments', [CommentController::class, 'store']);
+Route::middleware('auth:sanctum')->delete('/comments/{id}', [CommentController::class, 'destroy']);
+

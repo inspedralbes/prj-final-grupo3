@@ -478,9 +478,30 @@ export async function postComment(tripId, text, token, rating) {
   })
 
   const responseText = await res.clone().text()
+  
   if (!res.ok) throw new Error(responseText)
   return JSON.parse(responseText)
 }
+
+export async function deleteComment(commentId, token) {
+  const config = useRuntimeConfig()
+  const HOST = config.public.apiUrl
+
+  const res = await fetch(`${HOST}/comments/${commentId}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+
+  if (!res.ok) {
+    const err = await res.json()
+    throw new Error(err?.error || 'Error eliminant el comentari.')
+  }
+
+  return await res.json()
+}
+
 
 
 
