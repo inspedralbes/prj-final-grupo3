@@ -11,8 +11,10 @@
             :index="i" :expandit="diaExpandit === i" @toggle="diaExpandit = diaExpandit === i ? null : i" />
         </div>
 
-        <div class="flex place-content-end px-2">
-          <button @click="showMapAllRoute">
+        <div class="flex items-center justify-between px-2">
+          <div class="w-6"></div> <!-- Elemento vacío para equilibrar el layout -->
+          <p class="text-md text-center">Mapa complet</p>
+          <button @click="showMapAllRoute" class="flex">
             <MapIcon class="w-6 h-6 text-blue-600" />
           </button>
         </div>
@@ -73,7 +75,7 @@ import { MapIcon } from '@heroicons/vue/24/solid'
 
 const result = useResult();
 const diaExpandit = ref(null);
-const mapInteractiveAllRoute = ref(false);
+const mapInteractiveAllRoute = ref(true);
 
 
 const showMapAllRoute = () => {

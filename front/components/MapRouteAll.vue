@@ -43,7 +43,7 @@ const props = defineProps({
 
 const aiGeminiStore = useAIGeminiStore();
 
-console.log(JSON.parse(aiGeminiStore.responseText).viatge.coordenades);
+// console.log(JSON.parse(aiGeminiStore.responseText).viatge.coordenades);
 
 const coords = JSON.parse(aiGeminiStore.responseText).viatge.coordenades
 console.log(coords.centre_mapa);

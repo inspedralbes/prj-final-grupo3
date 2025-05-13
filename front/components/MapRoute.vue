@@ -35,7 +35,7 @@ import { useAIGeminiStore } from "~/store/aiGeminiStore";
 
 const aiGeminiStore = useAIGeminiStore();
 
-console.log(JSON.parse(aiGeminiStore.responseText).viatge.coordenades);
+// console.log(JSON.parse(aiGeminiStore.responseText).viatge.coordenades);
 
 const mapContainer = ref(null);
 const mapLoaded = ref(false);
@@ -52,6 +52,36 @@ const props = defineProps({
   },
 });
 
+function cleanJsonText(jsonText) {
+  if (!jsonText) return null;
+
+  // Eliminar marcadores de bloque de código
+  let cleanText = jsonText;
+
+  // Eliminar ```json al inicio
+  cleanText = cleanText.replace(/^\s*```json\s*/g, '');
+
+  // Eliminar ``` al final
+  cleanText = cleanText.replace(/\s*```\s*$/g, '');
+
+  // Eliminar cualquier ``` restante
+  cleanText = cleanText.replace(/```/g, '');
+
+  // Eliminar espacios en blanco al principio y final
+  cleanText = cleanText.trim();
+
+  // Asegurarse de que el texto comienza con { y termina con }
+  if (!cleanText.startsWith('{') || !cleanText.endsWith('}')) {
+    // Intentar encontrar el objeto JSON dentro del texto
+    const match = cleanText.match(/\{[\s\S]*\}/);
+    if (match) {
+      cleanText = match[0];
+    }
+  }
+
+  return cleanText;
+}
+
 const initMap = async () => {
   if (!mapContainer.value || !process.client) return;
   try {
@@ -67,7 +97,18 @@ const initMap = async () => {
     });
 
     // Obtener datos de coordenadas del store
-    const coords = JSON.parse(aiGeminiStore.responseText).viatge.coordenades;
+    const jsonText = cleanJsonText(aiGeminiStore.responseText);
+    const coords = jsonText ? JSON.parse(jsonText).viatge.coordenades : null;
+
+    if (coords) {
+      console.log(coords.centre_mapa);
+
+      coords.rutes_per_dia.map(daily_route => {
+        console.log(daily_route);
+      });
+    } else {
+      console.error("No se pudieron obtener las coordenadas. Texto original:", aiGeminiStore.responseText);
+    }
 
     // Crear el mapa centrado en el punto medio aproximado
     const map = L.map(mapContainer.value).setView([coords.centre_mapa.coords[0], coords.centre_mapa.coords[1]], coords.nivel_zoom);
