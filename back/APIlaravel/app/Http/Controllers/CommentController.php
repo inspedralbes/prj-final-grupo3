@@ -11,7 +11,7 @@ class CommentController extends Controller
     {
         $tripId = $request->query('tripId');
 
-        $comments = Comment::with('user:id,name')
+        $comments = Comment::with('user:id,name','likes')
             ->where('trip_id', $tripId)
             ->latest()
             ->get();

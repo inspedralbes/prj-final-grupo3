@@ -41,7 +41,22 @@
               <span v-if="deletingCommentId === comment.id">Eliminant...</span>
               <span v-else>🗑️ Elimina</span>
             </button>
-
+          </div>
+          <!-- Botó de Like toggle -->
+          <div v-if="comment.user.id !== authStore.user?.id" class="flex items-center gap-1 text-xs ml-2">
+            <button
+              @click="handleLike(comment.id)"
+              :disabled="likingCommentId === comment.id"
+              :class="[
+                'text-sm transition',
+                hasLiked(comment) ? 'text-pink-600 hover:text-pink-700' : 'text-gray-400 hover:text-pink-500'
+              ]"
+              title="Like / Unlike"
+            >
+              <span v-if="likingCommentId === comment.id">💬...</span>
+              <span v-else>{{ hasLiked(comment) ? '💖' : '🤍' }}</span>
+            </button>
+            <span class="text-gray-500 text-xs">{{ comment.likes?.length || 0 }}</span>
           </div>
 
           <p class="text-gray-700 text-sm">{{ comment.text }}</p>
@@ -104,6 +119,8 @@ import {
 } from "~/services/communicationManager";
 
 import { deleteComment } from '~/services/communicationManager'
+import { likeComment } from '~/services/communicationManager'
+
 
 
 const props = defineProps({ tripId: Number });
@@ -117,7 +134,23 @@ const sending = ref(false);
 const successMessage = ref("");
 const rating = ref(null);
 const deletingCommentId = ref(null)
+const likingCommentId = ref(null)
+const hasLiked = (comment) => {
+  return comment.likes?.some((like) => like.user_id === authStore.user?.id);
+}
 
+
+const handleLike = async (commentId) => {
+  likingCommentId.value = commentId
+  try {
+    await likeComment(commentId, authStore.token)
+    await loadComments()
+  } catch (err) {
+    console.error('Error fent like:', err)
+  } finally {
+    likingCommentId.value = null
+  }
+}
 
 const handleDelete = async (commentId) => {
   if (!confirm('Segur que vols eliminar aquest comentari?')) return;
