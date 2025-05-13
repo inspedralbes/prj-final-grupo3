@@ -12,7 +12,7 @@
           <button @click="toggleShowFavorites"
             class="p-3 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white text-bold transition flex items-center gap-2">
             <img :src="showOnlyFavorites ? favorite : favoritemark" alt="Favoritos" class="size-5" />
-            <span>{{ showOnlyFavorites ? 'Mostrar todos' : 'Solo favoritos' }}</span>
+            <span>{{ showOnlyFavorites ? 'Mostrar tots' : 'Només favorits' }}</span>
           </button>
         </div>
       </div>
@@ -21,18 +21,16 @@
       <div class="flex flex-col gap-6 items-center">
         <p v-if="filteredTrips.length === 0"
           class="text-center text-lg font-semibold text-gray-300 flex items-center justify-center min-h-[50vh]">
-          {{ showOnlyFavorites ? 'No tens viatges favorits' : 'No hi ha cap historial de viatges. Has de viatjar més!' }}
+          {{ showOnlyFavorites ? 'No tens viatges favorits' : 'No hi ha cap historial de viatges. Has de viatjar més!'
+          }}
         </p>
 
         <div class="relative" v-for="travel in filteredTrips" :key="travel.id">
           <div class="flex justify-end py-2 gap-3 items-center">
-            <img
-              :src="favorites[travel.id] ? favorite : favoritemark"
-              alt="Afegir a favorits"
-              class="size-7 cursor-pointer"
-              @click="handleToggleFavorite(travel.id)"
-            />
-            <img src="../assets/images/delete.svg" alt="Eliminar viatge" class="size-8 cursor-pointer hover:rotate-180 transition duration-300"
+            <img :src="favorites[travel.id] ? favorite : favoritemark" alt="Afegir a favorits"
+              class="size-7 cursor-pointer" @click="handleToggleFavorite(travel.id)" />
+            <img src="../assets/images/delete.svg" alt="Eliminar viatge"
+              class="size-8 cursor-pointer hover:rotate-180 transition duration-300"
               @click="tripDetails.deleteTravel(travel.id)" />
           </div>
           <div class="w-[70vw] h-[40vh] bg-[#ffb300] rounded-md shadow-lg border-t border-b border-[#e89f3d] relative">
@@ -148,11 +146,11 @@ const showOnlyFavorites = ref(false);
 // Computed property para filtrar los viajes según búsqueda y favoritos
 const filteredTrips = computed(() => {
   let trips = tripDetails.filteredTrips.value;
-  
+
   if (showOnlyFavorites.value) {
     trips = trips.filter(trip => favorites.value[trip.id]);
   }
-  
+
   return trips;
 });
 

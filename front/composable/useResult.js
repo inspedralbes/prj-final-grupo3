@@ -5,6 +5,7 @@ import { jsPDF } from "jspdf";
 import { getTravelGemini, savePlaning, sendTravelEmail } from '@/services/communicationManager';
 import { useAIGeminiStore } from "~/store/aiGeminiStore";
 import { useAuthStore } from "~/store/authUser";
+import { useAlert } from './useAlert';
 
 export function useResult() {
   const aiGeminiStore = useAIGeminiStore();
@@ -15,6 +16,7 @@ export function useResult() {
   const diaActualIndex = ref(0);
   const diaActual = computed(() => diesViatge.value[diaActualIndex.value] || null);
   const modeVista = ref("pas-a-pas");
+  const { customAlert } = useAlert();
 
   // En useResult.js, modifica la definición del computed property responseText
   const responseText = computed(() => {
@@ -69,7 +71,7 @@ export function useResult() {
 
     try {
       if (response) {
-        alert("Planning del viatge guardat correctament");
+        customAlert("Planning del viatge guardat correctament", 'positive', 'success', 'top', 3500);
 
         console.log("ID del viatge:", aiGeminiStore.lastTravelId);
         console.log("ID de l'usuari:", userStore.user);
@@ -88,12 +90,24 @@ export function useResult() {
         console.log("Resposta del backend:", data);
 
         if (!data) {
-          alert("Error: El servidor no ha retornat cap resposta en enviar el correu.");
+          customAlert(
+            "Error: El servidor no ha retornat cap resposta en enviar el correu.",
+            'negative',
+            'error',
+            'top',
+            5000
+          );
           return;
         }
 
         if (!data.viatge) {
-          alert("Error: Les dades del viatge no s'han rebut correctament del servidor.");
+          customAlert(
+            "Error: Les dades del viatge no s'han rebut correctament del servidor.",
+            'negative',
+            'error',
+            'top',
+            5000
+          );
           return;
         }
 
@@ -105,14 +119,19 @@ export function useResult() {
       }
     } catch (error) {
       console.error("Error en enviar el correu:", error);
-      alert("Hi ha hagut un error en enviar el correu.");
+      customAlert(
+        "Hi ha hagut un error en enviar el correu.",
+        'negative',
+        'error',
+        'top',
+        5000
+      );
     }
   };
 
 
   const handleCancel = () => {
-    alert("El viatge s'ha cancel·lat.");
-    // aiGeminiStore.responseText = null;
+    customAlert("El viatge s'ha cancel·lat.", 'negative', 'info', 'top', 3500);
     router.push("/");
   };
 
