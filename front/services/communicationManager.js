@@ -439,7 +439,7 @@ export async function getTripById(id) {
     if (!response.ok) {
       throw new Error(`Error al obtenir viatge: ${response.statusText}`)
     }
-
+    
     return await response.json()
   } catch (error) {
     console.error('Error en getTripById:', error)
@@ -447,85 +447,21 @@ export async function getTripById(id) {
   }
 }
 
-export async function fetchCommentsForTrip(tripId) {
-  const res = await fetch(`${HOST}/comments?tripId=${tripId}`, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+// export async function fetchCommentsForTrip(tripId) {
+//   const res = await fetch(`${HOST}/comments?tripId=${tripId}`, {
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//   });
 
-  if (!res.ok) {
-    const errorText = await res.text();
-    console.error('Error al carregar comentaris:', errorText);
-    throw new Error(`Error al carregar comentaris: ${res.statusText}`);
-  }
+//   if (!res.ok) {
+//     const errorText = await res.text();
+//     console.error('Error al carregar comentaris:', errorText);
+//     throw new Error(`Error al carregar comentaris: ${res.statusText}`);
+//   }
 
-  return await res.json();
-}
-
-export async function postComment(tripId, text, token, rating) {
-  const config = useRuntimeConfig()
-  const HOST = config.public.apiUrl
-  const URL = `${HOST}/comments`
-
-  const res = await fetch(URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ tripId, comment: text, rating }),
-  })
-
-  const responseText = await res.clone().text()
-
-  if (!res.ok) throw new Error(responseText)
-  return JSON.parse(responseText)
-}
-
-export async function deleteComment(commentId, token) {
-  const config = useRuntimeConfig()
-  const HOST = config.public.apiUrl
-
-  const res = await fetch(`${HOST}/comments/${commentId}`, {
-    method: 'DELETE',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-
-  if (!res.ok) {
-    const err = await res.json()
-    throw new Error(err?.error || 'Error eliminant el comentari.')
-  }
-
-  return await res.json()
-}
-
-
-export async function likeComment(commentId, token) {
-  const config = useRuntimeConfig()
-  const HOST = config.public.apiUrl
-
-  const res = await fetch(`${HOST}/comment-like`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ comment_id: commentId }),
-  })
-
-  if (!res.ok) {
-    const errorText = await res.text()
-    throw new Error(`Error fent like: ${errorText}`)
-  }
-
-  return await res.json()
-}
-
-
-
+//   return await res.json();
+// }
 
 export async function fetchCommentsForTrip(tripId) {
   const res = await fetch(`${HOST}/comments?tripId=${tripId}`, {
@@ -542,7 +478,6 @@ export async function fetchCommentsForTrip(tripId) {
 
   return await res.json();
 }
-
 export async function postComment(tripId, text, token, rating) {
   const config = useRuntimeConfig()
   const HOST = config.public.apiUrl
