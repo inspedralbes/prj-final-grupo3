@@ -91,7 +91,7 @@ export function useResult() {
 
         if (!data) {
           customAlert(
-            "Error: El servidor no ha retornat cap resposta en enviar el correu.",
+            "Error: No ha retornat cap resposta en enviar el correu.",
             'negative',
             'error',
             'top',
@@ -102,7 +102,7 @@ export function useResult() {
 
         if (!data.viatge) {
           customAlert(
-            "Error: Les dades del viatge no s'han rebut correctament del servidor.",
+            "Error: Les dades del viatge no s'han rebut correctament.",
             'negative',
             'error',
             'top',

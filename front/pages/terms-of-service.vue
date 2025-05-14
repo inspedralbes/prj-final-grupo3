@@ -9,8 +9,7 @@
 
     <h2 class="text-2xl font-semibold text-blue-600 mb-4">1. Aceptació de les condicions</h2>
     <p class="text-gray-700 text-lg mb-6">
-      En accedir o utilitzar la plataforma Triplan, acceptes aquestes condicions. Si no estàs d'acord amb les condicions
-      aquí establertes, no utilitzis els nostres serveis.
+      En accedir o utilitzar la plataforma Triplan, acceptes aquestes condicions. Si no estàs d'acord amb les condicions aquí establertes, no facis servir els nostres serveis.
     </p>
 
     <h2 class="text-2xl font-semibold text-blue-600 mb-4">2. Modificacions del servei</h2>

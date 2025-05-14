@@ -9,8 +9,7 @@
                 <p class="text-8xl font-bold font-['Arial'] text-[#dc4028]">Oops!</p>
                 <p class="text-2xl font-bold font-['Arial'] text-[#dc4028]">La pàgina que busques no existeix.</p>
                 <p class="text-md text-gray-500">Hem buscat per tot arreu, però sembla que la pàgina que estàs intentant
-                    visitar no existeix, ha estat
-                    eliminada o l’enllaç és incorrecte.
+                    visitar no existeix, ha estat eliminada o l’enllaç és incorrecte. 
                     És possible que hagis escrit malament l’adreça o que el contingut s’hagi mogut recentment.
                 </p>
             </div>

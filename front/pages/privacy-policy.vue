@@ -3,8 +3,7 @@
     <h1 class="text-4xl font-bold mb-6 text-center text-blue-600">Política de Privacitat</h1>
 
     <p class="text-gray-700 text-lg mb-6">
-      A Triplan, la teva privacitat és molt important per a nosaltres. Aquesta Política de Privacitat explica com
-      recopilem, utilitzem, compartim i protegim la teva informació personal quan utilitzes els nostres serveis.
+      A Triplan, la teva privacitat és molt important per a nosaltres. Aquesta Política de Privacitat explica com recopilem, utilitzem, compartim i protegim la teva informació personal quan fas servir els nostres serveis.
     </p>
 
     <h2 class="text-2xl font-semibold text-blue-600 mb-4">1. Quina informació recopilem?</h2>
@@ -24,8 +23,7 @@
     <h2 class="text-2xl font-semibold text-blue-600 mb-4">3. Compartició de la informació</h2>
     <p class="text-gray-700 text-lg mb-6">
       La teva informació <strong>NO es ven ni es comparteix amb tercers amb fins comercials</strong>. Només compartirem
-      informació
-      amb tercers en els següents casos:
+      informació amb tercers en els següents casos:
     </p>
     <ul class="list-disc pl-8 text-gray-700 text-lg mb-6">
       <li>Amb els nostres socis i proveïdors de serveis per a proporcionar-te els serveis de viatge que has sol·licitat
@@ -57,11 +55,14 @@
 
     <h2 class="text-2xl font-semibold text-blue-600 mb-4">7. Contacte</h2>
     <p class="text-gray-700 text-lg mb-6">
-      Si tens qualsevol dubte o pregunta sobre la nostra Política de Privacitat, pots contactar-nos a:
+      Si tens qualsevol dubte o pregunta sobre la nostra Política de Privacitat, pots contactar amb nosaltres a:
     </p>
     <p class="text-gray-700 text-lg">
-      📧 <a href="mailto:triplan.contacte@gmail.com"
-        class="text-blue-600 hover:underline">triplan.contacte@gmail.com</a><br>
+      📧 <a href="https://mail.google.com/mail/?view=cm&fs=1&to=triplan25@gmail.com" target="_blank"
+        class="text-blue-600 hover:underline">
+        triplan.contacte@gmail.com
+      </a>
+      <br>
       📞 <a href="tel:+34612345678" class="text-blue-600 hover:underline">+34 612 345 678</a>
     </p>
   </div>
