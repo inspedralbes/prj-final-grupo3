@@ -169,7 +169,6 @@ export function usePlanner() {
 
       // Guardar en localStorage
       localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(formDataToSave));
-      console.log('Estado del formulario guardado');
       return true;
     } catch (error) {
       console.error('Error al guardar el estado del formulario:', error);
@@ -216,8 +215,6 @@ export function usePlanner() {
           searchQuery.value = selectedCountry.name;
         }
       }
-
-      console.log('Estado del formulario cargado');
       isFormLoading.value = false;
       return true;
     } catch (error) {
@@ -557,9 +554,7 @@ export function usePlanner() {
         await aiGeminiStore.setResponse(aiGeminiStore.initialResponse);
 
         await aiGeminiStore.setLatestTravelId(dbResponse.travel_id);
-
-        console.log('Persistencia en pinia: ', aiGeminiStore.initialResponse);
-
+        
         router.push({ name: "result" });
       }
     } catch (error) {

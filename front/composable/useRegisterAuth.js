@@ -50,21 +50,17 @@ export function useRegisterAuth() {
       return;
     }
 
-    try {
-      console.log(registerData.gender);
-      
+    try {      
       const response = await com.register(registerData);
       // Here pass the info to a store
       if (response.status === 'error') {
         error.value = response.message;
-        console.log(error.value);
 
         customAlert(error.value, 'negative', 'error', 'top', 5000);
         return;
       } else {
 
         authStore.login(response.user, response.token);
-        console.log(authStore.token, authStore.user);
 
         navigateTo('/');
         success.value = true; // Indicate success register

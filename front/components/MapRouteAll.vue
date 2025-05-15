@@ -43,14 +43,7 @@ const props = defineProps({
 
 const aiGeminiStore = useAIGeminiStore();
 
-// console.log(JSON.parse(aiGeminiStore.responseText).viatge.coordenades);
-
 const coords = JSON.parse(aiGeminiStore.responseText).viatge.coordenades
-console.log(coords.centre_mapa);
-
-coords.rutes_per_dia.map(daily_route => {
-  console.log(daily_route);
-});
 
 const mapContainer = ref(null);
 const mapLoaded = ref(false);
@@ -94,9 +87,7 @@ const initMap = async () => {
 
     // Añadir marcadores para cada punto de interés
     const markers = coords.rutes_per_dia.map(daily_route => {
-      // console.log(daily_route.llocs.map(spot => spot.coords));
       const marker = daily_route.llocs.map(spot => {
-        console.log(spot);
         const markerSpot = L.marker([spot.coords[0], spot.coords[1]], {
           icon: createCustomIcon(daily_route.color)
         }).addTo(map);

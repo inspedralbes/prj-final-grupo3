@@ -31,17 +31,11 @@ export function useLoginAuth() {
     loading.value = true;
     // success.value = false;
 
-    console.log(loginData);
-
     try {
       const response = await com.login(loginData);
 
-      console.log(response);
-
-
       if (response.status === 'error') {
         error.value = response.message;
-        console.log(error.value);
 
         customAlert(error.value, 'negative', 'error', 'top', 5000);
         console.error("Error en el login", error.value);
@@ -51,8 +45,6 @@ export function useLoginAuth() {
         success.value = true; // Indicate success register
         navigateTo('/');
         if (rememberMe) {
-          console.log('El mensaje es exitoso para el login con remember me');
-
           sessionStorage.setItem('token', response.token);
           sessionStorage.setItem('user', JSON.stringify(response.user));
         }

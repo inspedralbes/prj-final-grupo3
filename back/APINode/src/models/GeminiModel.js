@@ -26,7 +26,6 @@ export class GeminiModel {
         data.candidates[0]?.content?.parts[0]?.text
       ) {
         responseText = data.candidates[0].content.parts[0].text;
-        console.log("ResponseText recibido de Gemini");
 
         responseText = responseText.trim();
         if (responseText.startsWith("```")) {
@@ -36,7 +35,6 @@ export class GeminiModel {
 
       try {
         const tripData = JSON.parse(responseText);
-        console.log("JSON parseado:", tripData);
 
         if (
           tripData.viatge &&
@@ -46,14 +44,12 @@ export class GeminiModel {
         ) {
           for (const dia of tripData.viatge.dies) {
             const searchQuery = dia.paraulaClau;
-            console.log("Buscando imagen para la query:", searchQuery);
 
             const imageUrl = await PexelsService.getImageByQuery(searchQuery);
 
             if (imageUrl) {
               dia.imatgeUrl = imageUrl;
             } else {
-              console.log("No se encontró imagen para la query:", searchQuery);
             }
           }
         } else {

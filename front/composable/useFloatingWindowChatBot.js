@@ -14,12 +14,7 @@ export default function useFloatingWindowChatBot(props) {
   // }
 
   const chatIsOpen = () => {
-    console.log(isOpen.value);
-
     isOpen.value = !isOpen.value
-
-    console.log(isOpen.value);
-
   }
 
   return {

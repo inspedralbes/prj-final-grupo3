@@ -11,7 +11,6 @@ export function useTripDetails() {
     try {
       const data = await getUserTravelHistory(authStore.user.id, authStore.token);
       travelData.value = data.travels;
-      console.log('Historial de viatges carregat:', travelData.value);
     } catch (error) {
       console.error('Error carregant el historial de viatges:', error);
     }
@@ -43,7 +42,6 @@ export function useTripDetails() {
 
   const deleteTravel = async (travelId) => {
     if (confirm('Vols eliminar aquest viatge?')) {
-      console.log('Deleting travel with ID:', travelId);
 
       navigateTo('/loading');
 
@@ -51,7 +49,6 @@ export function useTripDetails() {
         const data = await deleteTravelTicket(authStore.user.id, travelId, authStore.token);
 
         if (data) {
-          console.log('Viatge eliminat correctament:', data);
           navigateTo('/trip-details');
         }
       } catch (error) {

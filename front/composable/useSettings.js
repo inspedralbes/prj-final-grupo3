@@ -19,7 +19,6 @@ export function useSettings() {
     const response = await com.getCurrentUser(authStore.token);
     const baseURL = config.public.appName;
     avatar.value = `${baseURL}/${response.avatar}`	
-    // console.log(response);
     if (response.status === 'error') {
       customAlert(response.message, 'negative', 'error', 'top', 1500);
       authStore.logout();

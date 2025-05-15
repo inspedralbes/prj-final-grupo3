@@ -35,8 +35,6 @@ import { useAIGeminiStore } from "~/store/aiGeminiStore";
 
 const aiGeminiStore = useAIGeminiStore();
 
-// console.log(JSON.parse(aiGeminiStore.responseText).viatge.coordenades);
-
 const mapContainer = ref(null);
 const mapLoaded = ref(false);
 let map = null;
@@ -101,11 +99,6 @@ const initMap = async () => {
     const coords = jsonText ? JSON.parse(jsonText).viatge.coordenades : null;
 
     if (coords) {
-      console.log(coords.centre_mapa);
-
-      coords.rutes_per_dia.map(daily_route => {
-        console.log(daily_route);
-      });
     } else {
       console.error("No se pudieron obtener las coordenadas. Texto original:", aiGeminiStore.responseText);
     }

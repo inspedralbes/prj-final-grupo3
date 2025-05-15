@@ -79,8 +79,6 @@ const mapInteractiveAllRoute = ref(true);
 
 
 const showMapAllRoute = () => {
-  console.log(mapInteractiveAllRoute.value);
-
   mapInteractiveAllRoute.value = !mapInteractiveAllRoute.value
 }
 </script>

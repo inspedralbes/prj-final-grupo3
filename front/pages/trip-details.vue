@@ -169,7 +169,6 @@ async function handleToggleFavorite(travelId) {
   try {
     const result = await toggleFavorite(travelId, authStore.user.id, authStore.token);
     favorites.value[travelId] = !favorites.value[travelId];
-    console.log(result.message);
   } catch (error) {
     console.error('Error al alternar favorito:', error.message);
   }

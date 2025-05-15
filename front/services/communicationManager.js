@@ -74,8 +74,6 @@ export async function getCountries() {
 export const register = async (userData) => {
   const URL = `${HOST}/auth/register`;
 
-  console.log(userData);
-
   const response = await fetch(URL, {
     method: "POST",
     headers: {
@@ -85,7 +83,6 @@ export const register = async (userData) => {
   });
 
   const json = await response.json();
-  // console.log(json);
   return json;
 };
 
@@ -100,8 +97,6 @@ export const login = async (userData) => {
     body: JSON.stringify(userData),
   });
 
-  console.log(response);
-
   const json = await response.json();
   return json;
 };
@@ -112,8 +107,6 @@ export async function logout() {
   const response = await fetch(URL);
 
   const json = await response.json();
-
-  console.log(json);
 
   return json;
 }
@@ -184,15 +177,10 @@ export async function changeInfoUser(currentUserToken, userData) {
       formData.append("avatar", userData.avatarFile.raw);
     }
 
-    console.log("Dades que senvien:");
-
     for (const [key, val] of formData.entries()) {
       if (val instanceof File) {
-        console.log(
-          `${key}: [Fitxer] nom=${val.name}, tipus=${val.type}, mida=${val.size}B`
-        );
+
       } else {
-        console.log(`${key}:`, val);
       }
     }
 
@@ -221,7 +209,6 @@ export async function changeInfoUser(currentUserToken, userData) {
 
 export async function getUserTravelHistory(userId, currentUserToken) {
   const URL = `${HOST}/trip-details/${userId}`;
-  console.log(currentUserToken);
 
   try {
     const response = await fetch(URL, {
@@ -240,7 +227,6 @@ export async function getUserTravelHistory(userId, currentUserToken) {
     }
 
     const travelHistory = await response.json();
-    // console.log("Respuesta del servidor:", travelHistory);
     return travelHistory;
   } catch (error) {
     console.error(
@@ -270,7 +256,6 @@ export async function deleteTravelTicket(userId, travelId, currentUserToken) {
     }
 
     const travelHistory = await response.json();
-    console.log("Respuesta del servidor:", travelHistory);
     return travelHistory;
   } catch (error) {
     console.error(
@@ -282,7 +267,6 @@ export async function deleteTravelTicket(userId, travelId, currentUserToken) {
 }
 
 export async function postTravel(travelData, currentUserToken) {
-  console.log(travelData);
 
   const response = await fetch(`${HOST}/travels`, {
     method: "POST",
@@ -294,7 +278,6 @@ export async function postTravel(travelData, currentUserToken) {
   });
 
   const json = await response.json();
-  console.log("Respuesta desde el communication manager", json);
 
   return json;
 }
@@ -332,8 +315,6 @@ export async function getTravelGemini(text) {
 export async function savePlaning(travelPlanData, currentUserToken, travelId) {
 
   travelPlanData.travel_id = travelId;
-
-  console.log("Travel plan data:", travelPlanData);
 
   const response = await fetch(`${HOST}/travel-plans`, {
     method: "POST",

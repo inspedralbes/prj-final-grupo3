@@ -44,11 +44,9 @@ export function useResult() {
 
         // Intentar analizar el JSON limpio
         const json = JSON.parse(cleanText);
-        console.log("JSON RESPONSE (limpio):", json);
         return json;
       } catch (error) {
         console.error("Error al procesar JSON:", error);
-        console.log("Texto original:", aiGeminiStore.responseText);
         return null; // o un objeto de error/estado
       }
     }
@@ -67,27 +65,19 @@ export function useResult() {
 
   const handleAccept = async () => {
     const response = savePlaning(responseText.value, aiGeminiStore.currentUserToken, aiGeminiStore.lastTravelId);
-    console.log(response);
 
     try {
       if (response) {
         customAlert("Planning del viatge guardat correctament", 'positive', 'success', 'top', 3500);
 
-        console.log("ID del viatge:", aiGeminiStore.lastTravelId);
-        console.log("ID de l'usuari:", userStore.user);
-        console.log("Token:", userStore.token);
-
         if (!aiGeminiStore.lastTravelId || !userStore.user.id) {
           console.error("Falta l'ID del viatge o l'id de l'usuari.");
           return;
         }
-        console.log("Enviant correu per al viatge amb ID:", aiGeminiStore.lastTravelId, "al usuario amb ID:", userStore.user.id);
 
         router.push("/loading");
 
         const data = await sendTravelEmail(aiGeminiStore.lastTravelId, userStore.user, userStore.token);
-
-        console.log("Resposta del backend:", data);
 
         if (!data) {
           customAlert(
@@ -446,33 +436,17 @@ export function useResult() {
     return modeVista.value === 'resum';
   });
 
-  // const mostrarSeguentDia = () => {
-  //   if (diaActualIndex.value < diesViatge.value.length - 1) {
-  //     console.log('avanço');
-  //     diaActualIndex.value++;
-  //   } else {
-  //     console.log('no avanço, ja que @click no m"magrada');
-  //     modeVista.value = "resum";
-  //   }
-  // };
-
   const mostrarDiaAnterior = () => {
     if (diaActualIndex.value > 0) {
-      console.log('torno');
       diaActualIndex.value--;
     } else {
-      console.log('no avanço, ja estic al primer dia');
-      // modeVista.value = "resum";
     }
   };
 
   const mostrarDiaSeguent = () => {
     if (diaActualIndex.value < diesViatge.value.length - 1) {
-      console.log('avanço');
       diaActualIndex.value++;
     } else {
-      console.log('no avanço, ja estic al ultim dia');
-      // modeVista.value = "resum";
     }
   };
 

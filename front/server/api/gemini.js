@@ -2,8 +2,6 @@
 export default defineEventHandler(async (event) => {
   const { text } = await readBody(event);  // Usa readBody en lugar de useBody
 
-  console.log('Text rebut:', text);  // Log del texto recibido
-
   const GEMINI_API_KEY = 'AIzaSyCV945dJTTupmcS0Tmu2QC9eqDbR4Wn1og';  // La teva clau API
 
   try {
