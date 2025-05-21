@@ -42,7 +42,7 @@ Això iniciarà:
 - Front-end Nuxt a http://localhost:3000
 - API Laravel a http://localhost:8000
 - API Node.js a http://localhost:3006
-- Base de dades MySQL a localhost:3307
+- Base de dades MySQL a http://localhost:3307
 - Adminer (gestor de BD) a http://localhost:8080
 
 ## Gestor de tasques
