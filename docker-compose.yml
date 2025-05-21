@@ -1,0 +1,71 @@
+services:
+  # DATABASE
+  db:
+    image: mysql:8.2
+    container_name: mysqlDB
+    restart: always
+    environment:
+      MYSQL_DATABASE: triplan
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    ports:
+      - 3307:3306
+    volumes:
+      - ./back/mysql_data:/var/lib/mysql
+
+  # ADMINER
+  adminer:
+    image: adminer
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+
+  # LARAVEL
+  laravel:
+    build: ./back/APIlaravel
+    restart: always
+    ports:
+      - 8000:8000
+    volumes:
+      - ./back/APIlaravel:/var/www/
+      - /var/www/vendor
+    working_dir: /var/www/
+    depends_on:
+      - db
+    command: bash -c 'composer install && php artisan key:generate && php artisan migrate --force && php artisan serve --host=0.0.0.0'
+
+  # NODEJS
+  node:
+    build: ./back/APINode
+    ports:
+      - 3006:3006
+    volumes:
+      - ./back/APINode:/app
+      - /app/node_modules
+    working_dir: /app
+    restart: always
+    command: bash -c "npm install && npm run dev"
+
+  # NUXT
+  nuxt:
+    build:
+      context: ./front
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - ./front:/app
+      - /app/node_modules
+    depends_on:
+      - laravel
+    environment:
+      NUXT_APP_API_URL: http://laravel:8000
+      CHOKIDAR_USEPOLLING: true
+    command: bash -c "npm install && npm run dev"
+
+# Add this at the bottom of your docker-compose.yml
+volumes:
+  mysql_data:
